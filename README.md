@@ -1,6 +1,6 @@
 # My personal project - A Text Editor
-This project is a ***light-weight text editor*** similar to Notepad++. Users will be able to create new files in 
-computer, open existing files, update the content, and save them to system. 
+This project is a ***light-weight text editor*** similar to Notepad++ intended for computer users. The editor allows 
+users to create new files in computer, open existing files, update the content, and save them to system. 
 
 The reason I decide to create this project is that some seemingly simple desktop software could have a complex 
 logic behind the screen, such as the Windows' built-in Notepad software. Although reinventing the wheel is not a good
