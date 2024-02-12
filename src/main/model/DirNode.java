@@ -8,7 +8,12 @@ import java.util.ArrayList;
  * Like a general file system, all files in the directory should have unique names.
  */
 public class DirNode {
+    private String name;
+    private boolean isRootDir;
+    private DirNode parentNode;
+    private List<DirNode> childrenNodes;
     private List<File> files;
+    private int numFiles;
 
     /*
      * EFFECTS: create an empty root directory with name "root"
