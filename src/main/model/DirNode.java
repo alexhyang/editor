@@ -66,7 +66,6 @@ public class DirNode {
         return false;
     }
 
-    // TODO: should I just cache all filenames in a new field?
     /*
      * EFFECTS:   return filenames in alphabetical order
      */
