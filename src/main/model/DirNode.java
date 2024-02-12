@@ -37,15 +37,6 @@ public class DirNode {
     }
 
     /*
-     * REQUIRES:  there is a file in the directory that has the same name as given file
-     * MODIFIES:  this
-     * EFFECTS:   update file that has the given name
-     */
-    public void updateFile(File file) {
-    }
-
-    /*
-     * REQUIRES:  there is a file in the directory with the given filename
      * MODIFIES:  this
      * EFFECTS:   delete file with the given filename, do nothing if file
      *                doesn't exist
