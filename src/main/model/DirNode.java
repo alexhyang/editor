@@ -25,7 +25,6 @@ public class DirNode {
     public void addFile(File file) {
     }
 
-    // TODO: ask TA about where to check filename, also deleteFile(). ?? Return file if exists, null otherwise ??
     /*
      * REQUIRES:  there is a file in the directory with the given filename
      * EFFECTS:   return file that has the given name
@@ -34,8 +33,6 @@ public class DirNode {
         return null;
     }
 
-    // TODO: isn't updateFile() doing the same thing as addFile()? should I combine the two methods?
-    // TODO: dateCreated and dateModified fields should be updated in different ways
     /*
      * REQUIRES:  there is a file in the directory that has the same name as given file
      * MODIFIES:  this
