@@ -11,23 +11,26 @@ public class DirNode {
     private List<File> files;
 
     /*
-     * EFFECTS: create an empty directory
+     * EFFECTS: create an empty root directory with name "root"
      */
     public DirNode() {
         files = new ArrayList<>();
     }
 
     /*
-     * REQUIRES:  there is no file in the directory that has the same name as given file
      * MODIFIES:  this
-     * EFFECTS:   add given file to the directory
+     * EFFECTS:   add given file if there is no file in the directory with
+     *                the same filename, do nothing if the filename exists;
+     *                return true if file is added successfully, return false
+     *                otherwise
      */
-    public void addFile(File file) {
+    public boolean addFile(File file) {
+        return false;
     }
 
     /*
-     * REQUIRES:  there is a file in the directory with the given filename
-     * EFFECTS:   return file that has the given name
+     * EFFECTS:   return file that has the given name, return null if the
+     *                file with the given name cannot be found
      */
     public File getFile(String fileName) {
         return null;
@@ -44,9 +47,12 @@ public class DirNode {
     /*
      * REQUIRES:  there is a file in the directory with the given filename
      * MODIFIES:  this
-     * EFFECTS:   delete file with the given filename
+     * EFFECTS:   delete file with the given filename, do nothing if file
+     *                doesn't exist
+     *            return true if delete process is successful, false otherwise
      */
-    public void deleteFile(String fileName) {
+    public boolean deleteFile(String fileName) {
+        return false;
     }
 
     // TODO: should I just cache all filenames in a new field?
@@ -58,7 +64,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   returns true if directory contains file with the given name
+     * EFFECTS:   returns true if directory containsFile file with the given name
      *            returns false otherwise
      */
     public boolean contains(String fileName) {
