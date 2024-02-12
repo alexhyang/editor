@@ -20,6 +20,21 @@ public class DirNode {
      */
     public DirNode() {
         files = new ArrayList<>();
+        childrenNodes = new ArrayList<>();
+        name = "root";
+        isRootDir = true;
+        numFiles = 0;
+    }
+
+    /*
+     * EFFECTS: create an empty non-root directory with the given name
+     */
+    public DirNode(String name) {
+        files = new ArrayList<>();
+        childrenNodes = new ArrayList<>();
+        this.name = name;
+        isRootDir = false;
+        numFiles = 0;
     }
 
     /*
