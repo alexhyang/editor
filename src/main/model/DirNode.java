@@ -45,7 +45,12 @@ public class DirNode {
      *                otherwise
      */
     public boolean addFile(File file) {
-        return false;
+        if (!containsFile(file.getName())) {
+            files.add(file);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -53,6 +58,11 @@ public class DirNode {
      *                file with the given name cannot be found
      */
     public File getFile(String fileName) {
+        for (File file: files) {
+            if (file.getName() == fileName) {
+                return file;
+            }
+        }
         return null;
     }
 
@@ -63,12 +73,12 @@ public class DirNode {
      *            return true if delete process is successful, false otherwise
      */
     public boolean deleteFile(String fileName) {
-        return false;
+        return files.removeIf(file -> file.getName() == fileName);
     }
-
     /*
      * EFFECTS:   return filenames in alphabetical order
      */
+
     public List<String> getOrderedFilenames() {
         return null;
     }
@@ -100,6 +110,11 @@ public class DirNode {
      *            returns false otherwise
      */
     public boolean containsFile(String fileName) {
+        for (File file: files) {
+            if (file.getName() == fileName) {
+                return true;
+            }
+        }
         return false;
     }
 
