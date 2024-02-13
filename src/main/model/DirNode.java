@@ -74,6 +74,21 @@ public class DirNode {
     }
 
     /*
+     * EFFECTS:   return true if current directory is root directory,
+     *                   false otherwise
+     */
+    public boolean isRootDir() {
+        return isRootDir;
+    }
+
+    /*
+     * EFFECTS:   return the number of files in directory
+     */
+    public int getNumFiles() {
+        return numFiles;
+    }
+
+    /*
      * EFFECTS:   returns true if directory containsFile file with the given name
      *            returns false otherwise
      */
