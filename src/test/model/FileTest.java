@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FileTest {
     private File emptyFile;
@@ -45,5 +46,9 @@ public class FileTest {
         assertEquals(testString.get(2), emptyFile.getContent());
     }
 
-    // TODO: do I need to test toString()?
+    @Test
+    public void testToString() {
+        String containStr = "file2 (size: " + testString.get(0).length() + ")";
+        assertTrue(nonEmptyFile.toString().contains(containStr));
+    }
 }

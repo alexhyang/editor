@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DirNodeTest {
-    // delete or rename this class!
     private DirNode dirRoot;
     private DirNode dirNonRoot;
     private List<File> files;
@@ -95,5 +94,10 @@ class DirNodeTest {
 
         files.forEach(file -> dirRoot.addFile(file));
         assertEquals(nameList, dirRoot.getOrderedFilenames());
+    }
+
+    @Test
+    public void testToString() {
+        assertTrue(dirRoot.toString().contains("root (0 files)"));
     }
 }
