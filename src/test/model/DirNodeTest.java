@@ -72,4 +72,28 @@ class DirNodeTest {
 
         assertFalse(dirRoot.deleteFile("SomeClass.java"));
     }
+
+    @Test
+    public void testGetOrderedFilenamesSingleFile() {
+        ArrayList<String> nameList = new ArrayList<>();
+        nameList.add("notes.md");
+
+        assertEquals(new ArrayList<String>(), dirRoot.getOrderedFilenames());
+        dirRoot.addFile(new File("notes.md"));
+        assertEquals(nameList, dirRoot.getOrderedFilenames());
+    }
+
+    @Test
+    public void testGetOrderFilenameMultipleFiles() {
+        ArrayList<String> nameList = new ArrayList<>();
+
+        nameList.add("data.json");
+        nameList.add("DirNode.java");
+        nameList.add("Editor.java");
+        nameList.add("File.java");
+        nameList.add("README.md");
+
+        files.forEach(file -> dirRoot.addFile(file));
+        assertEquals(nameList, dirRoot.getOrderedFilenames());
+    }
 }
