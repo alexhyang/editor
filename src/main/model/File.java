@@ -88,7 +88,7 @@ public class File {
      */
     @Override
     public String toString() {
-        return name + " modified at: " + dateModified;
+        return name + " (size: " + getSize() + ")";
     }
 
 }

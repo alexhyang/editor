@@ -127,6 +127,6 @@ public class DirNode {
      */
     @Override
     public String toString() {
-        return getName();
+        return getName() + " (" + getNumFiles() + " files)";
     }
 }
