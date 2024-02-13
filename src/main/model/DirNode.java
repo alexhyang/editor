@@ -77,7 +77,7 @@ public class DirNode {
      * EFFECTS:   returns true if directory containsFile file with the given name
      *            returns false otherwise
      */
-    public boolean contains(String fileName) {
+    public boolean containsFile(String fileName) {
         return false;
     }
 
@@ -86,6 +86,13 @@ public class DirNode {
      */
     @Override
     public String toString() {
-        return "This directory: " + getOrderedFilenames();
+        return getName();
+    }
+
+    /*
+     * EFFECTS:   return the name of directory
+     */
+    public String getName() {
+        return name;
     }
 }
