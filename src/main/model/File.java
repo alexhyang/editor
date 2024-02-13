@@ -22,6 +22,8 @@ public class File {
         this.name = name;
         this.dateCreated = Calendar.getInstance().getTime();
         this.dateModified = this.dateCreated;
+        this.content = "";
+        this.size = 0;
     }
 
     /*
@@ -44,6 +46,20 @@ public class File {
     }
 
     /*
+     * EFFECTS:   return created date of file
+     */
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    /*
+     * EFFECTS:   return created date of file
+     */
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    /*
      * EFFECTS:   return content of file
      */
     public String getContent() {
@@ -61,9 +77,10 @@ public class File {
      * MODIFIES:  this
      * EFFECTS:   save given content to file
      */
-    public void saveContent(String content) {
+    public void save(String content) {
         this.content = content;
         this.size = content.length();
+        this.dateModified = Calendar.getInstance().getTime();
     }
 
     /*
