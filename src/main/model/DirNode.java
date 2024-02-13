@@ -1,7 +1,8 @@
 package model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents a directory in file system.
@@ -75,12 +76,15 @@ public class DirNode {
     public boolean deleteFile(String fileName) {
         return files.removeIf(file -> file.getName() == fileName);
     }
+
     /*
      * EFFECTS:   return filenames in alphabetical order
      */
-
     public List<String> getOrderedFilenames() {
-        return null;
+        ArrayList<String> nameList = new ArrayList<>();
+        files.forEach(file -> nameList.add(file.getName()));
+        Collections.sort(nameList, String.CASE_INSENSITIVE_ORDER);
+        return nameList;
     }
 
     /*
