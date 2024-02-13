@@ -74,6 +74,13 @@ public class DirNode {
     }
 
     /*
+     * EFFECTS:   return the name of directory
+     */
+    public String getName() {
+        return name;
+    }
+
+    /*
      * EFFECTS:   return true if current directory is root directory,
      *                   false otherwise
      */
@@ -102,12 +109,5 @@ public class DirNode {
     @Override
     public String toString() {
         return getName();
-    }
-
-    /*
-     * EFFECTS:   return the name of directory
-     */
-    public String getName() {
-        return name;
     }
 }
