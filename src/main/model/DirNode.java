@@ -82,7 +82,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   returns a string representation of directory
+     * EFFECTS:   returns a string representation of a directory
      */
     @Override
     public String toString() {
