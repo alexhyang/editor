@@ -48,6 +48,7 @@ public class DirNode {
     public boolean addFile(File file) {
         if (!containsFile(file.getName())) {
             files.add(file);
+            numFiles++;
             return true;
         } else {
             return false;
@@ -74,7 +75,12 @@ public class DirNode {
      *            return true if delete process is successful, false otherwise
      */
     public boolean deleteFile(String fileName) {
-        return files.removeIf(file -> file.getName() == fileName);
+        if (files.removeIf(file -> file.getName().equals(fileName))) {
+            numFiles--;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
