@@ -60,7 +60,7 @@ public class DirNode {
      */
     public File getFile(String fileName) {
         for (File file: files) {
-            if (file.getName() == fileName) {
+            if (file.getName().equals(fileName)) {
                 return file;
             }
         }
@@ -115,7 +115,7 @@ public class DirNode {
      */
     public boolean containsFile(String fileName) {
         for (File file: files) {
-            if (file.getName() == fileName) {
+            if (file.getName().equals(fileName)) {
                 return true;
             }
         }
