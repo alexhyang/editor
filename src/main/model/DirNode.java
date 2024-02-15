@@ -80,7 +80,7 @@ public class DirNode {
     /*
      * EFFECTS:   return filenames in alphabetical order
      */
-    public List<String> getOrderedFilenames() {
+    public List<String> getOrderedFileNames() {
         ArrayList<String> nameList = new ArrayList<>();
         files.forEach(file -> nameList.add(file.getName()));
         Collections.sort(nameList, String.CASE_INSENSITIVE_ORDER);

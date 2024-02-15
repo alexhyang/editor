@@ -73,17 +73,17 @@ class DirNodeTest {
     }
 
     @Test
-    public void testGetOrderedFilenamesSingleFile() {
+    public void testGetOrderedFileNamesSingleFile() {
         ArrayList<String> nameList = new ArrayList<>();
         nameList.add("notes.md");
 
-        assertEquals(new ArrayList<String>(), dirRoot.getOrderedFilenames());
+        assertEquals(new ArrayList<String>(), dirRoot.getOrderedFileNames());
         dirRoot.addFile(new File("notes.md"));
-        assertEquals(nameList, dirRoot.getOrderedFilenames());
+        assertEquals(nameList, dirRoot.getOrderedFileNames());
     }
 
     @Test
-    public void testGetOrderFilenameMultipleFiles() {
+    public void testGetOrderFileNameMultipleFiles() {
         ArrayList<String> nameList = new ArrayList<>();
 
         nameList.add("data.json");
@@ -93,7 +93,7 @@ class DirNodeTest {
         nameList.add("README.md");
 
         files.forEach(file -> dirRoot.addFile(file));
-        assertEquals(nameList, dirRoot.getOrderedFilenames());
+        assertEquals(nameList, dirRoot.getOrderedFileNames());
     }
 
     @Test
