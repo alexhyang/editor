@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,10 +9,10 @@ import java.util.List;
  */
 public class DirNode {
     private String name;
-    private boolean isRootDir;
+    private final boolean isRootDir;
     private DirNode parentNode;
     private List<DirNode> childrenNodes;
-    private List<File> files;
+    private final List<File> files;
     private int numFiles;
 
     /*
@@ -89,7 +88,7 @@ public class DirNode {
     public List<String> getOrderedFileNames() {
         ArrayList<String> nameList = new ArrayList<>();
         files.forEach(file -> nameList.add(file.getName()));
-        Collections.sort(nameList, String.CASE_INSENSITIVE_ORDER);
+        nameList.sort(String.CASE_INSENSITIVE_ORDER);
         return nameList;
     }
 
