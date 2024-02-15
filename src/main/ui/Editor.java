@@ -3,10 +3,13 @@ package ui;
 import model.DirNode;
 import model.File;
 
+import java.util.List;
 import java.util.Scanner;
 
 // represents the editor ui
 public class Editor {
+    private static final String TERMINAL_NAME = "esh";
+    private static final String HELP_COMMAND = "help";
     private static final String CREATE_FILE_COMMAND = "touch";
     private static final String VIEW_FILE_COMMAND = "cat";
     private static final String EDIT_FILE_COMMAND = "vim";
@@ -24,12 +27,16 @@ public class Editor {
         rootDir = new DirNode();
     }
 
+    // start the terminal editor
     public void start() {
+        printTermIntro();
+        printHelp();
+
         String str;
         addDummyFiles();
 
         while (runProgram) {
-            printMenu();
+            printPrompt();
             if (input.hasNext()) {
                 str = input.nextLine();
                 selectMenuOption(str);
@@ -46,7 +53,11 @@ public class Editor {
             if (args.length == 2) {
                 fileName = args[1];
             }
+
             switch (cmd) {
+                case HELP_COMMAND:
+                    printHelp();
+                    break;
                 case CREATE_FILE_COMMAND:
                     createFile(fileName);
                     break;
@@ -66,22 +77,21 @@ public class Editor {
                     runProgram = false;
                     break;
                 default:
-                    System.out.println("Unknown command. Please try again.");
+                    System.out.println(TERMINAL_NAME + ": command not found: " + cmd);
                     break;
             }
         }
     }
 
-    // EFFECTS: prints menu of editor
-    private void printMenu() {
-        System.out.println("\nPlease select the following options: ");
-        System.out.println("Enter '" + CREATE_FILE_COMMAND + " <file name>' to create a file");
-        System.out.println("Enter '" + VIEW_FILE_COMMAND + " <file name>' to view content of a file");
-        System.out.println("Enter '" + EDIT_FILE_COMMAND + " <file name>' to edit a file");
-        System.out.println("Enter '" + REMOVE_FILE_COMMAND + " <file name>' to remove a file");
-        System.out.println("Enter '" + LIST_ALL_FILES_COMMAND + "' to list all files");
-        System.out.println("Enter '" + QUIT_COMMAND + "' to quit editor");
-        System.out.println(rootDir);
+    // EFFECTS: prints help information of terminal editor
+    private void printHelp() {
+        System.out.println("Editor commands: ");
+        System.out.println("   " + CREATE_FILE_COMMAND    + " <file name>    create a file");
+        System.out.println("   " + VIEW_FILE_COMMAND      + " <file name>      view content of a file");
+        System.out.println("   " + EDIT_FILE_COMMAND      + " <file name>      edit a file");
+        System.out.println("   " + REMOVE_FILE_COMMAND    + " <file name>       remove a file");
+        System.out.println("   " + LIST_ALL_FILES_COMMAND + "                   list all files");
+        System.out.println("   " + QUIT_COMMAND + "                    quit editor");
     }
 
     // EFFECTS: create a file
@@ -91,9 +101,9 @@ public class Editor {
         } else {
             File newFile = new File(fileName);
             if (rootDir.addFile(newFile)) {
-                System.out.println(fileName + " was created successfully!");
+                System.out.println("'" + fileName + "' was created successfully!");
             } else {
-                System.out.println(fileName + " already exists");
+                System.out.println("'" + fileName + "' already exists!");
             }
         }
     }
@@ -105,9 +115,14 @@ public class Editor {
         } else {
             File file = rootDir.getFile(fileName);
             if (file != null) {
-                System.out.println(file.getContent());
+                String content = file.getContent();
+                if (content.length() == 0) {
+                    System.out.println("'" + fileName + "' is empty!");
+                } else {
+                    System.out.println(file.getContent());
+                }
             } else {
-                System.out.println(fileName + " doesn't exist!");
+                System.out.println("'" + fileName + "' doesn't exist!");
             }
         }
     }
@@ -127,16 +142,18 @@ public class Editor {
             System.out.println("Please enter a valid file name");
         } else {
             if (rootDir.deleteFile(fileName)) {
-                System.out.println(fileName + " has been removed!");
+                System.out.println("'" + fileName + "' has been removed!");
             } else {
-                System.out.println(fileName + " doesn't exist!");
+                System.out.println("'" + fileName + "' doesn't exist!");
             }
         }
     }
 
     // EFFECTS: list all files in dir
     private void listAllFiles() {
-        System.out.println(rootDir.getOrderedFileNames().toString());
+        List<String> fileNames = rootDir.getOrderedFileNames();
+        fileNames.forEach(name -> System.out.print(name + "  "));
+        System.out.println();
     }
 
     // EFFECTS: add dummy files with some content
@@ -157,10 +174,19 @@ public class Editor {
         rootDir.addFile(new File("dummy3.txt", longStr1));
     }
 
+    // EFFECTS: print terminal introduction
+    private void printTermIntro() {
+        System.out.println("This is a terminal emulator. I call it " + TERMINAL_NAME + ". Type 'help' to get commands");
+    }
+
+    // EFFECTS: print prompt symbol
+    private void printPrompt() {
+        System.out.print("\n~ > ");
+    }
+
     // EFFECTS: end the program
     public void endProgram() {
         System.out.println("Bye...");
         input.close();
     }
-
 }
