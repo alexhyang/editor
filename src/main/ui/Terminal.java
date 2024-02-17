@@ -15,7 +15,7 @@ public class Terminal {
     private static final String VIEW_FILE_COMMAND = "cat";
     private static final String EDIT_FILE_COMMAND = "vim";
     private static final String REMOVE_FILE_COMMAND = "rm";
-    private static final String LIST_ALL_FILES_COMMAND = "ls";
+    private static final String LIST_ALL_COMMAND = "ls";
     private static final String CHANGE_DIRECTORY_COMMAND = "cd";
     private static final String CREATE_DIRECTORY_COMMAND = "mkdir";
     private static final String REMOVE_DIRECTORY_COMMAND = "rmdir";
@@ -80,7 +80,7 @@ public class Terminal {
                 case REMOVE_FILE_COMMAND:
                     removeFile(arg);
                     break;
-                case LIST_ALL_FILES_COMMAND:
+                case LIST_ALL_COMMAND:
                     listAll();
                     break;
                 case CHANGE_DIRECTORY_COMMAND:
@@ -104,16 +104,16 @@ public class Terminal {
 
     // EFFECTS: prints help information in terminal
     private void printHelp() {
-        System.out.println("Editor commands: ");
+        System.out.println("Terminal commands: ");
         System.out.println("   " + CREATE_FILE_COMMAND    + " <file name>    create a file");
         System.out.println("   " + VIEW_FILE_COMMAND      + " <file name>      view content of a file");
         System.out.println("   " + EDIT_FILE_COMMAND      + " <file name>      edit a file");
         System.out.println("   " + REMOVE_FILE_COMMAND    + " <file name>       remove a file");
-        System.out.println("   " + CHANGE_DIRECTORY_COMMAND + " <dir name>        list all files");
+        System.out.println("   " + CHANGE_DIRECTORY_COMMAND + " <dir name>        change directory");
         System.out.println("   " + CREATE_DIRECTORY_COMMAND + " <dir name>     create new directory");
         System.out.println("   " + REMOVE_DIRECTORY_COMMAND + " <dir name>     remove directory");
-        System.out.println("   " + LIST_ALL_FILES_COMMAND + "                   list all files");
-        System.out.println("   " + QUIT_COMMAND + "                    quit editor");
+        System.out.println("   " + LIST_ALL_COMMAND + "                   list all directories and files");
+        System.out.println("   " + QUIT_COMMAND + "                    quit terminal");
     }
 
     // MODIFIES: this
