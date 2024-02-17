@@ -11,13 +11,13 @@ import java.util.Set;
  * and all subdirectories should have unique names.
  */
 public class DirNode {
-    private String name;
+    private final String name;
     private final boolean isRootDir;
     private DirNode parentDir;
-    private List<DirNode> subDirs;
+    private final List<DirNode> subDirs;
     private final List<File> files;
-    private Set<String> subDirNames;
-    private Set<String> fileNames;
+    private final Set<String> subDirNames;
+    private final Set<String> fileNames;
     private int numFiles;
 
     /*
@@ -99,9 +99,8 @@ public class DirNode {
     /*
      * EFFECTS:   return names in the given name set in alphabetical order
      */
-    private List<String> getOrderedNames(Set nameSet) {
-        ArrayList<String> nameList = new ArrayList<>();
-        nameList.addAll(nameSet);
+    private List<String> getOrderedNames(Set<String> nameSet) {
+        ArrayList<String> nameList = new ArrayList<>(nameSet);
         nameList.sort(String.CASE_INSENSITIVE_ORDER);
         return nameList;
 
