@@ -121,7 +121,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   return the parent directory of the current directory,
+     * EFFECTS:   return the subdirectory of the current directory with the given name,
      *            return null if the current directory is root directory
      */
     public DirNode getSubDir(String dirName) {
