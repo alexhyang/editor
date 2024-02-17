@@ -127,7 +127,9 @@ class DirNodeTest {
     }
 
     @Test
-    public void testGetParentDirAndSubDir() {
+    public void testGetSubDir() {
+        assertNull(dirRoot.getSubDir("no subdir"));
+
         dirRoot.addSubDir("subdir1");
         DirNode subdir1 = dirRoot.getSubDir("subdir1");
         assertEquals("subdir1", subdir1.getName());
