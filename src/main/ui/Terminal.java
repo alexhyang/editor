@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 // represents the editor terminal ui
 // the design of fields and some methods are based on FitLifeGymKiosk project from CPSC210 class
-public class Editor {
+public class Terminal {
     private static final String TERMINAL_NAME = "esh";
     private static final String HELP_COMMAND = "help";
     private static final String CREATE_FILE_COMMAND = "touch";
@@ -28,7 +28,7 @@ public class Editor {
 
     // Citation: code of this method is based on FitLifeGymKiosk project
     // EFFECTS:  create an editor with empty root directory in the file system
-    public Editor() {
+    public Terminal() {
         input = new Scanner(System.in);
         runProgram = true;
         rootDir = new DirNode();
