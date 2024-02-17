@@ -147,7 +147,7 @@ public class Editor {
                     System.out.println(file.getContent());
                 }
             } else {
-                System.out.println("'" + fileName + "' doesn't exist!");
+                System.out.println("cat: '" + fileName + "' No such file");
             }
         }
     }
@@ -171,7 +171,7 @@ public class Editor {
             if (rootDir.deleteFile(fileName)) {
                 System.out.println("'" + fileName + "' has been removed!");
             } else {
-                System.out.println("'" + fileName + "' doesn't exist!");
+                System.out.println("rm: cannot remove '" + fileName + "': No such file");
             }
         }
     }
