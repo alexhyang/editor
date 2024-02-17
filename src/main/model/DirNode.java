@@ -7,7 +7,8 @@ import java.util.Set;
 
 /**
  * Represents a directory in file system.
- * Like a general file system, all files in the directory should have unique names.
+ * Like a general file system, all files in the directory should have unique names,
+ * and all subdirectories should have unique names.
  */
 public class DirNode {
     private String name;
@@ -49,8 +50,7 @@ public class DirNode {
      * MODIFIES:  this
      * EFFECTS:   add given file if there is no file in the directory with
      *                the same filename, do nothing if the filename exists;
-     *                return true if file is added successfully, return false
-     *                otherwise
+     *                return true if file is added successfully, false otherwise
      */
     public boolean addFile(File file) {
         if (!containsFile(file.getName())) {
@@ -79,8 +79,8 @@ public class DirNode {
     /*
      * MODIFIES:  this
      * EFFECTS:   delete file with the given filename, do nothing if file
-     *                doesn't exist
-     *            return true if delete process is successful, false otherwise
+     *                doesn't exist;
+     *                return true if delete process is successful, false otherwise
      */
     public boolean deleteFile(String fileName) {
         if (files.removeIf(file -> file.getName().equals(fileName))) {
@@ -110,8 +110,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   return true if current directory is root directory,
-     *                   false otherwise
+     * EFFECTS:   return true if current directory is root directory, false otherwise
      */
     public boolean isRootDir() {
         return isRootDir;
@@ -125,7 +124,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   returns true if directory containsFile file with the given name
+     * EFFECTS:   returns true if directory contains file with the given name
      *            returns false otherwise
      */
     public boolean containsFile(String fileName) {
