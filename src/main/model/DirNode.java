@@ -58,9 +58,8 @@ public class DirNode {
             fileNames.add(file.getName());
             numFiles++;
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /*
@@ -87,9 +86,8 @@ public class DirNode {
             numFiles--;
             fileNames.remove(fileName);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /*
