@@ -176,6 +176,47 @@ public class Editor {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS:  change directory to given directory if it exists, do nothing otherwise
+    private void changeDirectory(String dirName) {
+        if (dirName.equals("..")) {
+            if (currentDir.isRootDir()) {
+                System.out.println("Already at root directory");
+            } else {
+                currentDir = currentDir.getParentDir();
+            }
+        } else if (dirName.equals("~")) {
+            currentDir = rootDir;
+        } else if (currentDir.containsSubDir(dirName)) {
+            currentDir = currentDir.getSubDir(dirName);
+        } else {
+            System.out.println("cd: no such directory: " + dirName);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS:  create a subdirectory in current directory if it doesn't exist,
+    //               do nothing otherwise
+    private void createDirectory(String dirName) {
+        if (!currentDir.containsSubDir(dirName)) {
+            currentDir.addSubDir(dirName);
+        } else {
+            System.out.println("mkdir: cannot create directory '" + dirName + "': Directory exists");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS:  remove a subdirectory in current directory if it exists,
+    //               do nothing otherwise
+    private void removeDirectory(String dirName) {
+        if (currentDir.containsSubDir(dirName)) {
+            currentDir.deleteSubDir(dirName);
+        } else {
+            System.out.println("rmdir: failed to remove '" + dirName + "': No such directory");
+        }
+    }
+
+
     // EFFECTS: list all subdirectories and files in current directory
     private void listAll() {
         list("Folders", currentDir.getOrderedSubDirNames());
