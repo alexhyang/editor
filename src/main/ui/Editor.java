@@ -16,10 +16,14 @@ public class Editor {
     private static final String EDIT_FILE_COMMAND = "vim";
     private static final String REMOVE_FILE_COMMAND = "rm";
     private static final String LIST_ALL_FILES_COMMAND = "ls";
+    private static final String CHANGE_DIRECTORY_COMMAND = "cd";
+    private static final String CREATE_DIRECTORY_COMMAND = "mkdir";
+    private static final String REMOVE_DIRECTORY_COMMAND = "rmdir";
     private static final String QUIT_COMMAND = "q";
 
     private final Scanner input;
     private final DirNode rootDir;
+    private DirNode currentDir;
     private boolean runProgram;
 
     // Citation: code of this method is based on FitLifeGymKiosk project
@@ -28,6 +32,7 @@ public class Editor {
         input = new Scanner(System.in);
         runProgram = true;
         rootDir = new DirNode();
+        currentDir = rootDir;
     }
 
     // Citation: code of this method is based on FitLifeGymKiosk project
@@ -76,7 +81,16 @@ public class Editor {
                     removeFile(arg);
                     break;
                 case LIST_ALL_FILES_COMMAND:
-                    listAllFiles();
+                    listAll();
+                    break;
+                case CHANGE_DIRECTORY_COMMAND:
+                    changeDirectory(arg);
+                    break;
+                case CREATE_DIRECTORY_COMMAND:
+                    createDirectory(arg);
+                    break;
+                case REMOVE_DIRECTORY_COMMAND:
+                    removeDirectory(arg);
                     break;
                 case QUIT_COMMAND:
                     runProgram = false;
@@ -95,6 +109,9 @@ public class Editor {
         System.out.println("   " + VIEW_FILE_COMMAND      + " <file name>      view content of a file");
         System.out.println("   " + EDIT_FILE_COMMAND      + " <file name>      edit a file");
         System.out.println("   " + REMOVE_FILE_COMMAND    + " <file name>       remove a file");
+        System.out.println("   " + CHANGE_DIRECTORY_COMMAND + " <dir name>        list all files");
+        System.out.println("   " + CREATE_DIRECTORY_COMMAND + " <dir name>     create new directory");
+        System.out.println("   " + REMOVE_DIRECTORY_COMMAND + " <dir name>     remove directory");
         System.out.println("   " + LIST_ALL_FILES_COMMAND + "                   list all files");
         System.out.println("   " + QUIT_COMMAND + "                    quit editor");
     }
