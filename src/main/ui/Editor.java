@@ -54,9 +54,9 @@ public class Editor {
         if (str.length() > 0) {
             String[] args = str.split(" ");
             String cmd = args[0];
-            String fileName = "";
+            String arg = "";
             if (args.length == 2) {
-                fileName = args[1];
+                arg = args[1];
             }
 
             switch (cmd) {
@@ -64,16 +64,16 @@ public class Editor {
                     printHelp();
                     break;
                 case CREATE_FILE_COMMAND:
-                    createFile(fileName);
+                    createFile(arg);
                     break;
                 case VIEW_FILE_COMMAND:
-                    viewFile(fileName);
+                    viewFile(arg);
                     break;
                 case EDIT_FILE_COMMAND:
-                    editFile(fileName);
+                    editFile(arg);
                     break;
                 case REMOVE_FILE_COMMAND:
-                    removeFile(fileName);
+                    removeFile(arg);
                     break;
                 case LIST_ALL_FILES_COMMAND:
                     listAllFiles();
