@@ -13,8 +13,8 @@ import java.util.Set;
 public class DirNode {
     private String name;
     private final boolean isRootDir;
-    private DirNode parentNode;
-    private List<DirNode> childrenNodes;
+    private DirNode parentDir;
+    private List<DirNode> subDirs;
     private final List<File> files;
     private Set<String> subDirNames;
     private Set<String> fileNames;
@@ -25,7 +25,7 @@ public class DirNode {
      */
     public DirNode() {
         files = new ArrayList<>();
-        childrenNodes = new ArrayList<>();
+        subDirs = new ArrayList<>();
         name = "root";
         isRootDir = true;
         subDirNames = new HashSet<>();
@@ -38,7 +38,7 @@ public class DirNode {
      */
     public DirNode(String name) {
         files = new ArrayList<>();
-        childrenNodes = new ArrayList<>();
+        subDirs = new ArrayList<>();
         this.name = name;
         isRootDir = false;
         subDirNames = new HashSet<>();
