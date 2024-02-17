@@ -126,12 +126,7 @@ public class DirNode {
      *            returns false otherwise
      */
     public boolean containsFile(String fileName) {
-        for (File file: files) {
-            if (file.getName().equals(fileName)) {
-                return true;
-            }
-        }
-        return false;
+        return fileNames.contains(fileName);
     }
 
     /*
