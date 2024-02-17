@@ -176,11 +176,19 @@ public class Editor {
         }
     }
 
-    // EFFECTS: list all files in dir
-    private void listAllFiles() {
-        List<String> fileNames = rootDir.getOrderedFileNames();
-        fileNames.forEach(name -> System.out.print(name + "  "));
-        System.out.println();
+    // EFFECTS: list all subdirectories and files in current directory
+    private void listAll() {
+        list("Folders", currentDir.getOrderedSubDirNames());
+        list("Files", currentDir.getOrderedFileNames());
+    }
+
+    // EFFECTS: print list head and names in given name list
+    private void list(String listHead, List<String> nameList) {
+        if (nameList.size() != 0) {
+            System.out.print(listHead + ": ");
+            nameList.forEach(name -> System.out.print(name + "  "));
+            System.out.println();
+        }
     }
 
     // EFFECTS: add dummy files with some content
