@@ -74,7 +74,6 @@ class DirNodeTest {
 
     @Test
     public void testGetOrderedFileNamesEmptyDirectory() {
-        ArrayList<String> nameList = new ArrayList<>();
         assertEquals(new ArrayList<String>(), dirRoot.getOrderedFileNames());
     }
 
