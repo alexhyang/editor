@@ -102,6 +102,55 @@ class DirNodeTest {
     }
 
     @Test
+    public void testAddAndDeleteSubDir() {
+        assertTrue(dirRoot.addSubDir("subdir1"));
+        assertTrue(dirRoot.containsSubDir("subdir1"));
+        assertEquals(1, dirRoot.getNumSubDirs());
+
+        assertTrue(dirRoot.addSubDir("subdir2"));
+        assertTrue(dirRoot.containsSubDir("subdir2"));
+        assertEquals(2, dirRoot.getNumSubDirs());
+
+        assertFalse(dirRoot.addSubDir("subdir1"));
+        assertFalse(dirRoot.addSubDir("subdir2"));
+
+        dirRoot.deleteSubDir("subdir1");
+        assertFalse(dirRoot.containsSubDir("subdir1"));
+        assertEquals(1, dirRoot.getNumSubDirs());
+
+        dirRoot.deleteSubDir("subdir2");
+        assertFalse(dirRoot.containsSubDir("subdir2"));
+        assertEquals(0, dirRoot.getNumSubDirs());
+
+        assertFalse(dirRoot.deleteSubDir("subdir1"));
+        assertFalse(dirRoot.deleteSubDir("subdir2"));
+    }
+
+    @Test
+    public void testGetParentDirAndSubDir() {
+        dirRoot.addSubDir("subdir1");
+        DirNode subdir1 = dirRoot.getSubDir("subdir1");
+        assertEquals("subdir1", subdir1.getName());
+        assertEquals(0, subdir1.getNumFiles());
+        assertEquals(dirRoot, subdir1.getParentDir());
+    }
+
+    @Test
+    public void testGetOrderedSubDirNames() {
+        dirRoot.addSubDir("model");
+        dirRoot.addSubDir("ui");
+        dirRoot.addSubDir("data");
+        dirRoot.addSubDir("Settings");
+
+        List<String> nameList = new ArrayList<>();
+        nameList.add("data");
+        nameList.add("model");
+        nameList.add("Settings");
+        nameList.add("ui");
+        assertEquals(nameList, dirRoot.getOrderedSubDirNames());
+    }
+
+    @Test
     public void testToString() {
         assertTrue(dirRoot.toString().contains("root (0 files)"));
     }
