@@ -34,7 +34,6 @@ public class Editor {
     // EFFECTS:  start the editor in terminal, add dummy files
     public void start() {
         printTermIntro();
-        printHelp();
 
         String str;
         addDummyFiles();
@@ -43,7 +42,7 @@ public class Editor {
             printPrompt();
             if (input.hasNext()) {
                 str = input.nextLine();
-                selectMenuOption(str);
+                handleUserInput(str);
             }
         }
     }
@@ -51,7 +50,7 @@ public class Editor {
     // Citation: code of this method is based on FitLifeGymKiosk project
     // EFFECTS:  handle user command input
     @SuppressWarnings("methodlength")
-    private void selectMenuOption(String str) {
+    private void handleUserInput(String str) {
         if (str.length() > 0) {
             String[] args = str.split(" ");
             String cmd = args[0];
@@ -188,6 +187,7 @@ public class Editor {
     // EFFECTS: print terminal introduction
     private void printTermIntro() {
         System.out.println("This is a terminal emulator. I call it " + TERMINAL_NAME + ". Type 'help' to get commands");
+        printHelp();
     }
 
     // EFFECTS: print prompt symbol
