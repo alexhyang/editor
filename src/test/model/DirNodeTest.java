@@ -73,6 +73,12 @@ class DirNodeTest {
     }
 
     @Test
+    public void testGetOrderedFileNamesEmptyDirectory() {
+        ArrayList<String> nameList = new ArrayList<>();
+        assertEquals(new ArrayList<String>(), dirRoot.getOrderedFileNames());
+    }
+
+    @Test
     public void testGetOrderedFileNamesSingleFile() {
         ArrayList<String> nameList = new ArrayList<>();
         nameList.add("notes.md");
