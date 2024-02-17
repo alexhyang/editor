@@ -21,7 +21,7 @@ public class DirNode {
     private int numFiles;
 
     /*
-     * EFFECTS: create an empty root directory with name "root"
+     * EFFECTS: create an empty (no file, no subdirectory) root directory with name "root"
      */
     public DirNode() {
         files = new ArrayList<>();
@@ -34,7 +34,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS: create an empty non-root directory with the given name
+     * EFFECTS: create an empty (no file, no subdirectory) non-root directory with the given name
      */
     public DirNode(String name) {
         files = new ArrayList<>();
@@ -77,8 +77,7 @@ public class DirNode {
 
     /*
      * MODIFIES:  this
-     * EFFECTS:   delete file with the given filename, do nothing if file
-     *                doesn't exist;
+     * EFFECTS:   delete file with the given filename, do nothing if file doesn't exist;
      *                return true if delete process is successful, false otherwise
      */
     public boolean deleteFile(String fileName) {
@@ -91,7 +90,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   return filenames in alphabetical order
+     * EFFECTS:   return file names in alphabetical order
      */
     public List<String> getOrderedFileNames() {
         ArrayList<String> nameList = new ArrayList<>();
