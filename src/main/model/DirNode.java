@@ -93,10 +93,18 @@ public class DirNode {
      * EFFECTS:   return file names in alphabetical order
      */
     public List<String> getOrderedFileNames() {
+        return getOrderedNames(fileNames);
+    }
+
+    /*
+     * EFFECTS:   return names in the given name set in alphabetical order
+     */
+    private List<String> getOrderedNames(Set nameSet) {
         ArrayList<String> nameList = new ArrayList<>();
-        nameList.addAll(fileNames);
+        nameList.addAll(nameSet);
         nameList.sort(String.CASE_INSENSITIVE_ORDER);
         return nameList;
+
     }
 
     /*
