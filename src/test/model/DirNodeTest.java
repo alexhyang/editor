@@ -131,10 +131,17 @@ class DirNodeTest {
         assertNull(dirRoot.getSubDir("no subdir"));
 
         dirRoot.addSubDir("subdir1");
+        dirRoot.addSubDir("subdir2");
         DirNode subdir1 = dirRoot.getSubDir("subdir1");
+        DirNode subdir2 = dirRoot.getSubDir("subdir2");
+
         assertEquals("subdir1", subdir1.getName());
         assertEquals(0, subdir1.getNumFiles());
         assertEquals(dirRoot, subdir1.getParentDir());
+
+        assertEquals("subdir2", subdir2.getName());
+        assertEquals(0, subdir2.getNumFiles());
+        assertEquals(dirRoot, subdir2.getParentDir());
     }
 
     @Test
