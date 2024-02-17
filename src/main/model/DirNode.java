@@ -1,7 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a directory in file system.
@@ -13,6 +15,8 @@ public class DirNode {
     private DirNode parentNode;
     private List<DirNode> childrenNodes;
     private final List<File> files;
+    private Set<String> subDirNames;
+    private Set<String> fileNames;
     private int numFiles;
 
     /*
@@ -23,6 +27,8 @@ public class DirNode {
         childrenNodes = new ArrayList<>();
         name = "root";
         isRootDir = true;
+        subDirNames = new HashSet<>();
+        fileNames = new HashSet<>();
         numFiles = 0;
     }
 
@@ -34,6 +40,8 @@ public class DirNode {
         childrenNodes = new ArrayList<>();
         this.name = name;
         isRootDir = false;
+        subDirNames = new HashSet<>();
+        fileNames = new HashSet<>();
         numFiles = 0;
     }
 
@@ -47,6 +55,7 @@ public class DirNode {
     public boolean addFile(File file) {
         if (!containsFile(file.getName())) {
             files.add(file);
+            fileNames.add(file.getName());
             numFiles++;
             return true;
         } else {
@@ -76,6 +85,7 @@ public class DirNode {
     public boolean deleteFile(String fileName) {
         if (files.removeIf(file -> file.getName().equals(fileName))) {
             numFiles--;
+            fileNames.remove(fileName);
             return true;
         } else {
             return false;
@@ -87,7 +97,7 @@ public class DirNode {
      */
     public List<String> getOrderedFileNames() {
         ArrayList<String> nameList = new ArrayList<>();
-        files.forEach(file -> nameList.add(file.getName()));
+        nameList.addAll(fileNames);
         nameList.sort(String.CASE_INSENSITIVE_ORDER);
         return nameList;
     }
