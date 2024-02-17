@@ -6,7 +6,8 @@ import model.File;
 import java.util.List;
 import java.util.Scanner;
 
-// represents the editor ui
+// represents the editor terminal ui
+// the design of fields and some methods are based on FitLifeGymKiosk project from CPSC210 class
 public class Editor {
     private static final String TERMINAL_NAME = "esh";
     private static final String HELP_COMMAND = "help";
@@ -21,13 +22,16 @@ public class Editor {
     private final DirNode rootDir;
     private boolean runProgram;
 
+    // Citation: code of this method is based on FitLifeGymKiosk project
+    // EFFECTS:  create an editor with empty root directory in the file system
     public Editor() {
         input = new Scanner(System.in);
         runProgram = true;
         rootDir = new DirNode();
     }
 
-    // start the terminal editor
+    // Citation: code of this method is based on FitLifeGymKiosk project
+    // EFFECTS:  start the editor in terminal, add dummy files
     public void start() {
         printTermIntro();
         printHelp();
@@ -44,6 +48,8 @@ public class Editor {
         }
     }
 
+    // Citation: code of this method is based on FitLifeGymKiosk project
+    // EFFECTS:  handle user command input
     @SuppressWarnings("methodlength")
     private void selectMenuOption(String str) {
         if (str.length() > 0) {
@@ -83,7 +89,7 @@ public class Editor {
         }
     }
 
-    // EFFECTS: prints help information of terminal editor
+    // EFFECTS: prints help information in terminal
     private void printHelp() {
         System.out.println("Editor commands: ");
         System.out.println("   " + CREATE_FILE_COMMAND    + " <file name>    create a file");
@@ -94,7 +100,9 @@ public class Editor {
         System.out.println("   " + QUIT_COMMAND + "                    quit editor");
     }
 
-    // EFFECTS: create a file
+    // MODIFIES: this
+    // EFFECTS:  create a file with the given file name in the current directory
+    //               if file already exists, print error message
     private void createFile(String fileName) {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
@@ -108,7 +116,8 @@ public class Editor {
         }
     }
 
-    // EFFECTS: print file content
+    // EFFECTS: print content of file with the given file name in the current directory
+    //              if the file doesn't exist, print error message
     private void viewFile(String fileName) {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
@@ -127,7 +136,8 @@ public class Editor {
         }
     }
 
-    // EFFECTS: edit file content and save to dir
+    // MODIFIES:  this
+    // EFFECTS:   edit and save file, if file doesn't exist, print error message
     private void editFile(String fileName) {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
@@ -136,7 +146,8 @@ public class Editor {
         }
     }
 
-    // EFFECTS: remove file from dir
+    // MODIFIES:  this
+    // EFFECTS:   remove file from current directory, if file doesn't exist, print error message
     private void removeFile(String fileName) {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
