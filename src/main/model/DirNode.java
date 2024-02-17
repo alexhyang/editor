@@ -19,6 +19,7 @@ public class DirNode {
     private final Set<String> subDirNames;
     private final Set<String> fileNames;
     private int numFiles;
+    private int numSubDirs;
 
     /*
      * EFFECTS: create an empty (no file, no subdirectory) root directory with name "root"
@@ -90,10 +91,82 @@ public class DirNode {
     }
 
     /*
+     * REQUIRES:  must not add self as subdirectory
+     * MODIFIES:  this
+     * EFFECTS:   add a subdirectory with the given name,
+     *            return true if the process is successful,
+     *            return false otherwise
+     */
+    public boolean addSubDir(String dirName) {
+        if (!containsSubDir(dirName)) {
+            DirNode child = new DirNode(dirName);
+            subDirs.add(child);
+            child.addParentDir(this);
+            numSubDirs++;
+            subDirNames.add(dirName);
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * REQUIRES:  must not add self as parent directory
+     * MODIFIES:  this
+     * EFFECTS:   add a parent directory,
+     *            return true if the process is successful,
+     *            return false otherwise
+     */
+    private void addParentDir(DirNode dirNode) {
+        parentDir = dirNode;
+    }
+
+    /*
+     * EFFECTS:   return the parent directory of the current directory,
+     *            return null if the current directory is root directory
+     */
+    public DirNode getSubDir(String dirName) {
+        for (DirNode dirNode: subDirs) {
+            if (dirNode.getName().equals(dirName)) {
+                return dirNode;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * EFFECTS:   return the parent directory of the current directory,
+     *            return null if the current directory is root directory
+     */
+    public DirNode getParentDir() {
+        return parentDir;
+    }
+
+    /*
+     * EFFECTS:   delete subdirectory with the given name if it exits, do
+     *            nothing if it doesn't exist
+     *            return true if the deletion is successful, false otherwise
+     */
+    public boolean deleteSubDir(String nodeName) {
+        if (subDirs.removeIf(child -> child.getName().equals(nodeName))) {
+            numSubDirs--;
+            subDirNames.remove(nodeName);
+            return true;
+        }
+        return false;
+    }
+
+    /*
      * EFFECTS:   return file names in alphabetical order
      */
     public List<String> getOrderedFileNames() {
         return getOrderedNames(fileNames);
+    }
+
+    /*
+     * EFFECTS:   return file names in alphabetical order
+     */
+    public List<String> getOrderedSubDirNames() {
+        return getOrderedNames(subDirNames);
     }
 
     /*
@@ -128,11 +201,26 @@ public class DirNode {
     }
 
     /*
+     * EFFECTS:   return the number of subdirectories in directory
+     */
+    public int getNumSubDirs() {
+        return numSubDirs;
+    }
+
+    /*
      * EFFECTS:   returns true if directory contains file with the given name
      *            returns false otherwise
      */
     public boolean containsFile(String fileName) {
         return fileNames.contains(fileName);
+    }
+
+    /*
+     * EFFECTS:   returns true if directory contains subdirectory with the given name
+     *            returns false otherwise
+     */
+    public boolean containsSubDir(String dirName) {
+        return subDirNames.contains(dirName);
     }
 
     /*
