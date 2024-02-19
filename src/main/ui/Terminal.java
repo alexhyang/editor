@@ -231,7 +231,7 @@ public class Terminal {
 
     // EFFECTS: list all subdirectories and files in current directory
     private void listAll() {
-        list("\033[0;34m", currentDir.getOrderedSubDirNames());
+        list("\033[0;36m", currentDir.getOrderedSubDirNames());
         list("", currentDir.getOrderedFileNames());
     }
 
@@ -268,9 +268,9 @@ public class Terminal {
         printHelp();
     }
 
-    // EFFECTS: print prompt symbol
+    // EFFECTS: print command line prompt
     private void printPrompt() {
-        System.out.print("\n" + currentDir.getAbsPath() + " > ");
+        System.out.print("\n" + "\033[1;94m" + currentDir.getAbsPath() + "\033[1;30m > " + "\033[0m");
     }
 
     // EFFECTS: end the program
