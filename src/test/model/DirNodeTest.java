@@ -160,6 +160,18 @@ class DirNodeTest {
     }
 
     @Test
+    public void getGetAbsPath() {
+        dirRoot.addSubDir("folder1");
+        DirNode folder1 = dirRoot.getSubDir("folder1");
+        folder1.addSubDir("folder2");
+        DirNode folder2 = folder1.getSubDir("folder2");
+
+        assertEquals("~", dirRoot.getAbsPath());
+        assertEquals("~/folder1", folder1.getAbsPath());
+        assertEquals("~/folder1/folder2", folder2.getAbsPath());
+    }
+
+    @Test
     public void testToString() {
         assertTrue(dirRoot.toString().contains("root (0 files)"));
     }
