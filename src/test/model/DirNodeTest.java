@@ -37,13 +37,23 @@ class DirNodeTest {
     }
 
     @Test
-    public void testAddFile() {
+    public void testAddFileWithGivenFile() {
         assertTrue(dirRoot.addFile(files.get(0)));
         assertTrue(dirRoot.containsFile("DirNode.java"));
 
         assertTrue(dirRoot.addFile(files.get(1)));
         assertTrue(dirRoot.containsFile("File.java"));
         assertFalse(dirRoot.addFile(files.get(1)));
+    }
+
+    @Test
+    public void testAddFileWithFileName() {
+        assertTrue(dirRoot.addFile("DirNodeTest.java"));
+        assertTrue(dirRoot.containsFile("DirNodeTest.java"));
+
+        assertTrue(dirRoot.addFile("FileTest.java"));
+        assertTrue(dirRoot.containsFile("FileTest.java"));
+        assertFalse(dirRoot.addFile("FileTest.java"));
     }
 
     @Test

@@ -66,6 +66,22 @@ public class DirNode {
     }
 
     /*
+     * MODIFIES:  this
+     * EFFECTS:   add empty file if no file in this directory has the
+     *                given filename, do nothing if the filename exists;
+     *                return true if file is added successfully, false otherwise
+     */
+    public boolean addFile(String fileName) {
+        if (!containsFile(fileName)) {
+            files.add(new File(fileName));
+            fileNames.add(fileName);
+            numFiles++;
+            return true;
+        }
+        return false;
+    }
+
+    /*
      * EFFECTS:   return file that has the given name in this directory,
      *                return null if the file cannot be found
      */
