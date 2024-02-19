@@ -258,7 +258,7 @@ public class Terminal {
 
     // EFFECTS: print prompt symbol
     private void printPrompt() {
-        System.out.print("\n~ > ");
+        System.out.print("\n" + currentDir.getAbsPath() + " > ");
     }
 
     // EFFECTS: end the program

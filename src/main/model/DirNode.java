@@ -208,6 +208,17 @@ public class DirNode {
     }
 
     /*
+     * EFFECTS:   return the absolute path of directory
+     */
+    public String getAbsPath() {
+        if (isRootDir) {
+            return "~";
+        } else {
+            return parentDir.getAbsPath() + "/" + name;
+        }
+    }
+
+    /*
      * EFFECTS:   returns true if directory contains file with the given name
      *            returns false otherwise
      */
