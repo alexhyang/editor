@@ -206,10 +206,14 @@ public class Terminal {
     // EFFECTS:  create a subdirectory in current directory if it doesn't exist,
     //               do nothing otherwise
     private void createDirectory(String dirName) {
-        if (!currentDir.containsSubDir(dirName)) {
-            currentDir.addSubDir(dirName);
+        if (dirName.length() == 0) {
+            System.out.println("mkdir: missing operand");
         } else {
-            System.out.println("mkdir: cannot create directory '" + dirName + "': Directory exists");
+            if (!currentDir.containsSubDir(dirName)) {
+                currentDir.addSubDir(dirName);
+            } else {
+                System.out.println("mkdir: cannot create directory '" + dirName + "': Directory exists");
+            }
         }
     }
 
