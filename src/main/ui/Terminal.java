@@ -277,9 +277,9 @@ public class Terminal {
 
     // EFFECTS: return leading string for folders and files with the given depth
     private String getChildrenLineHead(int depth) {
-        // indent symbols: │, ├, ─
-        String childrenLineHead = "├── ";
-        String grandChildrenLineHead = "│   ";
+        String childrenLineHead;
+        childrenLineHead = "|-- ";
+        String grandChildrenLineHead = "|   ";
         String spaceFiller = "    ";
         if (depth == 0) {
             return childrenLineHead;
