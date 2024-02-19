@@ -16,6 +16,7 @@ public class Terminal {
     private static final String EDIT_FILE_COMMAND = "vim";
     private static final String REMOVE_FILE_COMMAND = "rm";
     private static final String LIST_ALL_COMMAND = "ls";
+    private static final String PRINT_WORKING_DIRECTORY_COMMAND = "pwd";
     private static final String CHANGE_DIRECTORY_COMMAND = "cd";
     private static final String CREATE_DIRECTORY_COMMAND = "mkdir";
     private static final String REMOVE_DIRECTORY_COMMAND = "rmdir";
@@ -81,6 +82,9 @@ public class Terminal {
                 case LIST_ALL_COMMAND:
                     listAll();
                     break;
+                case PRINT_WORKING_DIRECTORY_COMMAND:
+                    printWorkingDirectory();
+                    break;
                 case CHANGE_DIRECTORY_COMMAND:
                     changeDirectory(arg);
                     break;
@@ -110,8 +114,9 @@ public class Terminal {
         System.out.println("   " + CHANGE_DIRECTORY_COMMAND + " <dir name>        change directory");
         System.out.println("   " + CREATE_DIRECTORY_COMMAND + " <dir name>     create new directory");
         System.out.println("   " + REMOVE_DIRECTORY_COMMAND + " <dir name>     remove directory");
-        System.out.println("   " + LIST_ALL_COMMAND + "                   list all directories and files");
-        System.out.println("   " + QUIT_COMMAND + "                    quit terminal");
+        System.out.println("   " + PRINT_WORKING_DIRECTORY_COMMAND + "                print current working directory");
+        System.out.println("   " + LIST_ALL_COMMAND + "                 list all directories and files");
+        System.out.println("   " + QUIT_COMMAND + "                  quit terminal");
     }
 
     // MODIFIES: this
@@ -172,6 +177,11 @@ public class Terminal {
                 System.out.println("rm: cannot remove '" + fileName + "': No such file");
             }
         }
+    }
+
+    // EFFECTS:  print out current working directory
+    private void printWorkingDirectory() {
+        System.out.println(currentDir.getAbsPath());
     }
 
     // MODIFIES: this
