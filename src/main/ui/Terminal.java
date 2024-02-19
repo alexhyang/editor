@@ -124,7 +124,7 @@ public class Terminal {
             System.out.println("Please enter a valid file name");
         } else {
             File newFile = new File(fileName);
-            if (rootDir.addFile(newFile)) {
+            if (currentDir.addFile(newFile)) {
                 System.out.println("'" + fileName + "' was created successfully!");
             } else {
                 System.out.println("'" + fileName + "' already exists!");
@@ -138,7 +138,7 @@ public class Terminal {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
         } else {
-            File file = rootDir.getFile(fileName);
+            File file = currentDir.getFile(fileName);
             if (file != null) {
                 String content = file.getContent();
                 if (content.length() == 0) {
@@ -168,7 +168,7 @@ public class Terminal {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
         } else {
-            if (rootDir.deleteFile(fileName)) {
+            if (currentDir.deleteFile(fileName)) {
                 System.out.println("'" + fileName + "' has been removed!");
             } else {
                 System.out.println("rm: cannot remove '" + fileName + "': No such file");
