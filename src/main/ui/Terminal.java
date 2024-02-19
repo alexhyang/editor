@@ -192,18 +192,25 @@ public class Terminal {
     // MODIFIES: this
     // EFFECTS:  change directory to given directory if it exists, do nothing otherwise
     private void changeDirectory(String dirName) {
-        if (dirName.equals("..")) {
-            if (currentDir.isRootDir()) {
-                System.out.println("Already at root directory");
+        String[] dirs = dirName.split("/");
+        if (dirs.length == 1) {
+            if (dirName.equals("..")) {
+                if (currentDir.isRootDir()) {
+                    System.out.println("Already at root directory");
+                } else {
+                    currentDir = currentDir.getParentDir();
+                }
+            } else if (dirName.equals("~")) {
+                currentDir = rootDir;
+            } else if (currentDir.containsSubDir(dirName)) {
+                currentDir = currentDir.getSubDir(dirName);
             } else {
-                currentDir = currentDir.getParentDir();
+                System.out.println("cd: no such directory: " + dirName);
             }
-        } else if (dirName.equals("~")) {
-            currentDir = rootDir;
-        } else if (currentDir.containsSubDir(dirName)) {
-            currentDir = currentDir.getSubDir(dirName);
         } else {
-            System.out.println("cd: no such directory: " + dirName);
+            for (String dir: dirs) {
+                changeDirectory(dir);
+            }
         }
     }
 
