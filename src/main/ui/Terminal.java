@@ -45,10 +45,8 @@ public class Terminal {
 
         while (runProgram) {
             printPrompt();
-            if (input.hasNext()) {
-                str = input.nextLine();
-                handleUserInput(str);
-            }
+            str = input.nextLine();
+            handleUserInput(str);
         }
     }
 
