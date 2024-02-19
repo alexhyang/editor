@@ -231,16 +231,16 @@ public class Terminal {
 
     // EFFECTS: list all subdirectories and files in current directory
     private void listAll() {
-        list("Folders", currentDir.getOrderedSubDirNames());
-        list("Files", currentDir.getOrderedFileNames());
+        list("\033[0;34m", currentDir.getOrderedSubDirNames());
+        list("", currentDir.getOrderedFileNames());
     }
 
     // EFFECTS: print list head and names in given name list
-    private void list(String listHead, List<String> nameList) {
+    private void list(String textColorCode, List<String> nameList) {
         if (nameList.size() != 0) {
-            System.out.print(listHead + ": ");
+            System.out.print(textColorCode);
             nameList.forEach(name -> System.out.print(name + "  "));
-            System.out.println();
+            System.out.print("\033[0m");
         }
     }
 
