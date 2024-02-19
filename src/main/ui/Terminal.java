@@ -23,6 +23,11 @@ public class Terminal {
     private static final String REMOVE_DIRECTORY_COMMAND = "rmdir";
     private static final String QUIT_COMMAND = "q";
 
+    private static final String CONSOLE_TEXT_RESET = "\033[0m";
+    private static final String CONSOLE_TEXT_BLACK = "\033[0;30m";
+    private static final String CONSOLE_TEXT_CYAN = "\033[0;36m";
+    private static final String CONSOLE_TEXT_BRIGHT_BLUE_BOLD = "\033[1;94m";
+
     private final Scanner input;
     private final DirNode rootDir;
     private DirNode currentDir;
@@ -243,14 +248,14 @@ public class Terminal {
 
     // EFFECTS: list all subdirectories and files in current directory
     private void listAll() {
-        list("\033[0;36m", currentDir.getOrderedSubDirNames());
+        list(CONSOLE_TEXT_CYAN, currentDir.getOrderedSubDirNames());
         list("", currentDir.getOrderedFileNames());
     }
 
     // EFFECTS: print list head and names in given name list
-    private void list(String textColorCode, List<String> nameList) {
+    private void list(String consoleTextCode, List<String> nameList) {
         if (nameList.size() != 0) {
-            System.out.print(textColorCode);
+            System.out.print(consoleTextCode);
             nameList.forEach(name -> System.out.print(name + "  "));
             System.out.print("\033[0m");
         }
@@ -269,7 +274,7 @@ public class Terminal {
             System.out.println(".");
         } else {
             String selfIndent = getChildrenLineHead(depth - 1);
-            System.out.println(selfIndent + "\033[1;36m" + dirNode.getName() + "\033[0m");
+            System.out.println(selfIndent + CONSOLE_TEXT_CYAN + dirNode.getName() + "\033[0m");
         }
         dirNode.getOrderedSubDirNames().forEach(name -> tree(dirNode.getSubDir(name), depth + 1));
         dirNode.getOrderedFileNames().forEach(name -> System.out.println(fileIndent + name));
@@ -315,7 +320,8 @@ public class Terminal {
 
     // EFFECTS: print command line prompt
     private void printPrompt() {
-        System.out.print("\n" + "\033[1;94m" + currentDir.getAbsPath() + "\033[1;30m > " + "\033[0m");
+        System.out.print("\n" + CONSOLE_TEXT_BRIGHT_BLUE_BOLD + currentDir.getAbsPath() + CONSOLE_TEXT_BLACK + " > "
+                + CONSOLE_TEXT_RESET);
     }
 
     // EFFECTS: end the program
