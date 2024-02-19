@@ -22,7 +22,8 @@ public class DirNode {
     private int numSubDirs;
 
     /*
-     * EFFECTS: create an empty (no file, no subdirectory) root directory with name "root"
+     * EFFECTS:   create an empty (no file, no subdirectory) root directory
+     *                with name "root"
      */
     public DirNode() {
         files = new ArrayList<>();
@@ -35,7 +36,8 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS: create an empty (no file, no subdirectory) non-root directory with the given name
+     * EFFECTS:   create an empty (no file, no subdirectory) non-root directory
+     *                with the given name
      */
     public DirNode(String name) {
         files = new ArrayList<>();
@@ -49,8 +51,8 @@ public class DirNode {
 
     /*
      * MODIFIES:  this
-     * EFFECTS:   add given file if there is no file in the directory with
-     *                the same filename, do nothing if the filename exists;
+     * EFFECTS:   add given file if no file in this directory has the
+     *                same filename, do nothing if the filename exists;
      *                return true if file is added successfully, false otherwise
      */
     public boolean addFile(File file) {
@@ -64,8 +66,8 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   return file that has the given name, return null if the
-     *                file with the given name cannot be found
+     * EFFECTS:   return file that has the given name in this directory,
+     *                return null if the file cannot be found
      */
     public File getFile(String fileName) {
         for (File file: files) {
@@ -78,7 +80,8 @@ public class DirNode {
 
     /*
      * MODIFIES:  this
-     * EFFECTS:   delete file with the given filename, do nothing if file doesn't exist;
+     * EFFECTS:   delete file with the given filename in this directory, do
+     *                nothing if the file cannot be found;
      *                return true if delete process is successful, false otherwise
      */
     public boolean deleteFile(String fileName) {
@@ -93,9 +96,9 @@ public class DirNode {
     /*
      * REQUIRES:  must not add self as subdirectory
      * MODIFIES:  this
-     * EFFECTS:   add a subdirectory with the given name,
-     *            return true if the process is successful,
-     *            return false otherwise
+     * EFFECTS:   add a subdirectory with the given name if no subdirectories in
+     *                this directory have the same name, do nothing otherwise;
+     *                return true if the process is successful, false otherwise
      */
     public boolean addSubDir(String dirName) {
         if (!containsSubDir(dirName)) {
@@ -113,16 +116,15 @@ public class DirNode {
      * REQUIRES:  must not add self as parent directory
      * MODIFIES:  this
      * EFFECTS:   add a parent directory,
-     *            return true if the process is successful,
-     *            return false otherwise
+     *                return true if the process is successful, false otherwise
      */
     private void addParentDir(DirNode dirNode) {
         parentDir = dirNode;
     }
 
     /*
-     * EFFECTS:   return the subdirectory of the current directory with the given name,
-     *            return null if the current directory is root directory
+     * EFFECTS:   return the subdirectory in this directory with the given name,
+     *                return null if the subdirectory cannot be found
      */
     public DirNode getSubDir(String dirName) {
         for (DirNode dirNode: subDirs) {
@@ -134,17 +136,17 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   return the parent directory of the current directory,
-     *            return null if the current directory is root directory
+     * EFFECTS:   return the parent directory of this directory
      */
     public DirNode getParentDir() {
         return parentDir;
     }
 
     /*
-     * EFFECTS:   delete subdirectory with the given name if it exits, do
-     *            nothing if it doesn't exist
-     *            return true if the deletion is successful, false otherwise
+     * MODIFIES:  this
+     * EFFECTS:   delete subdirectory with the given name in this directory, do
+     *                nothing if the subdirectory cannot be found;
+     *                return true if the deletion is successful, false otherwise
      */
     public boolean deleteSubDir(String nodeName) {
         if (subDirs.removeIf(child -> child.getName().equals(nodeName))) {
@@ -163,7 +165,7 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   return file names in alphabetical order
+     * EFFECTS:   return subdirectory names in alphabetical order
      */
     public List<String> getOrderedSubDirNames() {
         return getOrderedNames(subDirNames);
@@ -180,35 +182,35 @@ public class DirNode {
     }
 
     /*
-     * EFFECTS:   return the name of directory
+     * EFFECTS:   return the name of this directory
      */
     public String getName() {
         return name;
     }
 
     /*
-     * EFFECTS:   return true if current directory is root directory, false otherwise
+     * EFFECTS:   return true if this directory is root directory, false otherwise
      */
     public boolean isRootDir() {
         return isRootDir;
     }
 
     /*
-     * EFFECTS:   return the number of files in directory
+     * EFFECTS:   return the number of files in this directory
      */
     public int getNumFiles() {
         return numFiles;
     }
 
     /*
-     * EFFECTS:   return the number of subdirectories in directory
+     * EFFECTS:   return the number of subdirectories in this directory
      */
     public int getNumSubDirs() {
         return numSubDirs;
     }
 
     /*
-     * EFFECTS:   return the absolute path of directory
+     * EFFECTS:   return the absolute path of this directory
      */
     public String getAbsPath() {
         if (isRootDir) {
