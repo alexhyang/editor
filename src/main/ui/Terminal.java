@@ -16,6 +16,7 @@ public class Terminal {
     private static final String EDIT_FILE_COMMAND = "vim";
     private static final String REMOVE_FILE_COMMAND = "rm";
     private static final String LIST_ALL_COMMAND = "ls";
+    private static final String TREE_COMMAND = "tree";
     private static final String PRINT_WORKING_DIRECTORY_COMMAND = "pwd";
     private static final String CHANGE_DIRECTORY_COMMAND = "cd";
     private static final String CREATE_DIRECTORY_COMMAND = "mkdir";
@@ -82,6 +83,9 @@ public class Terminal {
                 case LIST_ALL_COMMAND:
                     listAll();
                     break;
+                case TREE_COMMAND:
+                    tree();
+                    break;
                 case PRINT_WORKING_DIRECTORY_COMMAND:
                     printWorkingDirectory();
                     break;
@@ -116,6 +120,7 @@ public class Terminal {
         System.out.println("   " + REMOVE_DIRECTORY_COMMAND + " <dir name>     remove directory");
         System.out.println("   " + PRINT_WORKING_DIRECTORY_COMMAND + "                print current working directory");
         System.out.println("   " + LIST_ALL_COMMAND + "                 list all directories and files");
+        System.out.println("   " + TREE_COMMAND + "               print content of current directory as tree");
         System.out.println("   " + QUIT_COMMAND + "                  quit terminal");
     }
 
@@ -242,6 +247,39 @@ public class Terminal {
             nameList.forEach(name -> System.out.print(name + "  "));
             System.out.print("\033[0m");
         }
+    }
+
+    // EFFECTS: print contents of the current directory as a tree
+    private void tree() {
+        tree(currentDir, 0);
+    }
+
+    // EFFECTS: print contents of the given directory as a tree
+    private void tree(DirNode dirNode, int depth) {
+        String fileIndent = getChildrenLineHead(depth);
+
+        if (dirNode == currentDir) {
+            System.out.println(".");
+        } else {
+            String selfIndent = getChildrenLineHead(depth - 1);
+            System.out.println(selfIndent + "\033[1;36m" + dirNode.getName() + "\033[0m");
+        }
+        dirNode.getOrderedSubDirNames().forEach(name -> tree(dirNode.getSubDir(name), depth + 1));
+        dirNode.getOrderedFileNames().forEach(name -> System.out.println(fileIndent + name));
+    }
+
+    // EFFECTS: return leading string for folders and files with the given depth
+    private String getChildrenLineHead(int depth) {
+        // indent symbols: │, ├, ─
+        String childrenLineHead = "├── ";
+        String grandChildrenLineHead = "│   ";
+        String spaceFiller = "    ";
+        if (depth == 0) {
+            return childrenLineHead;
+        } else {
+            return grandChildrenLineHead + spaceFiller.repeat(depth - 1) + childrenLineHead;
+        }
+
     }
 
     // EFFECTS: add dummy files with some content
