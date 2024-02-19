@@ -7,8 +7,8 @@ import java.util.Set;
 
 /**
  * Represents a directory in file system.
- * Like a general file system, all files in the directory should have unique names,
- * and all subdirectories should have unique names.
+ * Like a general file system, all files in the directory should have unique
+ * names, and all subdirectories should have unique names.
  */
 public class DirNode {
     private final String name;
