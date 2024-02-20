@@ -170,7 +170,7 @@ class DirNodeTest {
     }
 
     @Test
-    public void getGetAbsPath() {
+    public void testGetGetAbsPath() {
         dirRoot.addSubDir("folder1");
         DirNode folder1 = dirRoot.getSubDir("folder1");
         folder1.addSubDir("folder2");
