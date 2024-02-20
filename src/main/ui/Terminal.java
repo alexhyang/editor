@@ -49,6 +49,7 @@ public class Terminal {
 
         String str;
         addDummyFiles();
+        addNestedDummyFoldersAndFiles();
 
         while (runProgram) {
             printPrompt();
@@ -310,6 +311,33 @@ public class Terminal {
         rootDir.addFile(new File("dummy1.txt", longStr1));
         rootDir.addFile(new File("dummy2.txt", longStr2));
         rootDir.addFile(new File("dummy3.txt", longStr1));
+    }
+
+    // EFFECTS: populate root directory with nested folders and files
+    private void addNestedDummyFoldersAndFiles() {
+        rootDir.addSubDir("src");
+        rootDir.addSubDir("data");
+
+        DirNode src = rootDir.getSubDir("src");
+        src.addSubDir("main");
+        src.addSubDir("test");
+
+        DirNode main = src.getSubDir("main");
+        main.addSubDir("model");
+        main.addSubDir("ui");
+
+        DirNode model = main.getSubDir("model");
+        model.addFile("DirNode.java");
+        model.addFile("File.java");
+
+        DirNode ui = main.getSubDir("ui");
+        ui.addFile("Main.java");
+        ui.addFile("Terminal.java");
+
+        src.getSubDir("test").addSubDir("model");
+        DirNode testModel = src.getSubDir("test").getSubDir("model");
+        testModel.addFile("DirNodeTest.java");
+        testModel.addFile("FileTest.java");
     }
 
     // EFFECTS: print terminal introduction
