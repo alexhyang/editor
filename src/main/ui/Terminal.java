@@ -265,6 +265,8 @@ public class Terminal {
     // EFFECTS: print contents of the current directory as a tree
     private void tree() {
         tree(currentDir, 0);
+        System.out.print("\n" + currentDir.getTotalNumSubDirs() + " directories, ");
+        System.out.println(currentDir.getTotalNumFiles() + " files");
     }
 
     // EFFECTS: print contents of the given directory as a tree
