@@ -170,6 +170,42 @@ class DirNodeTest {
     }
 
     @Test
+    public void testGetTotalNumFilesRootDirOnly() {
+        assertEquals(0, dirRoot.getTotalNumFiles());
+        dirRoot.addFile(files.get(0));
+        assertEquals(1, dirRoot.getTotalNumFiles());
+    }
+
+    @Test
+    public void testGetTotalNumFilesWithSubDirs() {
+        dirRoot.addSubDir("subdir");
+        DirNode subdir = dirRoot.getSubDir("subdir");
+        assertEquals(0, dirRoot.getTotalNumFiles());
+
+        subdir.addFile("file2");
+        assertEquals(1, dirRoot.getTotalNumFiles());
+
+        dirRoot.addFile("file1");
+        assertEquals(2, dirRoot.getTotalNumFiles());
+    }
+
+    @Test
+    public void testGetTotalNumSubDirsRootDirOnly() {
+        assertEquals(0, dirRoot.getTotalNumSubDirs());
+        dirRoot.addSubDir("subdir");
+        assertEquals(1, dirRoot.getTotalNumSubDirs());
+    }
+
+    @Test
+    public void testGetTotalNumSubDirsWithSubDirs() {
+        dirRoot.addSubDir("subdir");
+        DirNode subdir = dirRoot.getSubDir("subdir");
+        subdir.addSubDir("subsubdir");
+        assertEquals(2, dirRoot.getTotalNumSubDirs());
+    }
+
+
+    @Test
     public void testGetGetAbsPath() {
         dirRoot.addSubDir("folder1");
         DirNode folder1 = dirRoot.getSubDir("folder1");

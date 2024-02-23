@@ -225,6 +225,31 @@ public class DirNode {
         return numSubDirs;
     }
 
+
+    /*
+     * EFFECTS:   return the total number of files in this directory, including
+     *                files in all subdirectories
+     */
+    public int getTotalNumFiles() {
+        int totalNum = getNumFiles();
+        if (getNumSubDirs() != 0) {
+            totalNum += getOrderedSubDirNames().stream().mapToInt(name -> getSubDir(name).getTotalNumFiles()).sum();
+        }
+        return totalNum;
+    }
+
+    /*
+     * EFFECTS:   return the total number of subdirectories in this directory,
+     *                including all nested subdirectories in subdirectories
+     */
+    public int getTotalNumSubDirs() {
+        int totalNum = getNumSubDirs();
+        if (getNumSubDirs() != 0) {
+            totalNum += getOrderedSubDirNames().stream().mapToInt(name -> getSubDir(name).getTotalNumSubDirs()).sum();
+        }
+        return totalNum;
+    }
+
     /*
      * EFFECTS:   return the absolute path of this directory
      */
