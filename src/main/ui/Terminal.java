@@ -46,16 +46,21 @@ public class Terminal {
     // EFFECTS:  start the editor in terminal, add dummy files
     public void start() {
         printTermIntro();
+        loadTerminalState();
 
         String str;
-        addDummyFiles();
-        addNestedDummyFoldersAndFiles();
-
         while (runProgram) {
             printPrompt();
             str = input.nextLine();
             handleUserInput(str);
         }
+    }
+
+    // EFFECTS: load saved terminal state from ./data/terminal.json
+    public void loadTerminalState() {
+        // TODO: load state here, rather than add dummies
+        // addDummyFiles();
+        // addNestedDummyFoldersAndFiles();
     }
 
     // Citation: code of this method is based on FitLifeGymKiosk project
