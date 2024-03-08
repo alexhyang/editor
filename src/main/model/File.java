@@ -39,6 +39,18 @@ public class File {
     }
 
     /*
+     * REQUIRES:  filename must be a non-empty string
+     * EFFECTS:   create a file with the given name, given content, and given time stamp
+     */
+    public File(String name, String content, Date dateCreated, Date dateModified) {
+        this.name = name;
+        this.dateCreated = dateCreated;
+        this.dateModified = dateModified;
+        this.content = content;
+        this.size = content.length();
+    }
+
+    /*
      * EFFECTS:   return name of file
      */
     public String getName() {

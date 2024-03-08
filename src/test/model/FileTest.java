@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,7 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FileTest {
     private File emptyFile;
     private File nonEmptyFile;
+    private File datedNonEmptyFile;
     private ArrayList<String> testString;
+    private Date date = Calendar.getInstance().getTime();
 
     @BeforeEach
     public void setUp() {
@@ -22,6 +26,7 @@ public class FileTest {
 
         emptyFile = new File("file1");
         nonEmptyFile = new File("file2", testString.get(0));
+        datedNonEmptyFile = new File("file3", testString.get(1), date, date);
     }
 
     @Test
@@ -35,6 +40,12 @@ public class FileTest {
         assertEquals(testString.get(0), nonEmptyFile.getContent());
         assertEquals(0, nonEmptyFile.getDateCreated().compareTo(nonEmptyFile.getDateModified()));
         assertEquals(testString.get(0).length(), nonEmptyFile.getSize());
+
+        assertEquals("file3", datedNonEmptyFile.getName());
+        assertEquals(testString.get(1), datedNonEmptyFile.getContent());
+        assertEquals(date, datedNonEmptyFile.getDateCreated());
+        assertEquals(date, datedNonEmptyFile.getDateModified());
+        assertEquals(testString.get(1).length(), datedNonEmptyFile.getSize());
     }
 
     @Test
