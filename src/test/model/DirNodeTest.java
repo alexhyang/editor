@@ -137,6 +137,16 @@ class DirNodeTest {
     }
 
     @Test
+    public void testAddSubDirWithGivenDirNode() {
+        assertTrue(dirRoot.addSubDir(dirNonRoot));
+        assertTrue(dirRoot.containsSubDir(dirNonRoot.getName()));
+        assertEquals(1, dirRoot.getNumSubDirs());
+
+        assertFalse(dirRoot.addSubDir(dirNonRoot));
+        assertEquals(1, dirRoot.getNumSubDirs());
+    }
+
+    @Test
     public void testGetSubDir() {
         assertNull(dirRoot.getSubDir("no subdir"));
 

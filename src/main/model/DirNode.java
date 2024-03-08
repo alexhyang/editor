@@ -112,7 +112,25 @@ public class DirNode {
     /*
      * REQUIRES:  must not add self as subdirectory
      * MODIFIES:  this
-     * EFFECTS:   add a subdirectory with the given name if no subdirectories in
+     * EFFECTS:   add a given subdirectory if no subdirectories in
+     *                this directory have the same name, do nothing otherwise;
+     *                return true if the process is successful, false otherwise
+     */
+    public boolean addSubDir(DirNode dirNode) {
+        if (!containsSubDir(dirNode.getName())) {
+            subDirs.add(dirNode);
+            dirNode.addParentDir(this);
+            numSubDirs++;
+            subDirNames.add(dirNode.getName());
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * REQUIRES:  must not add self as subdirectory
+     * MODIFIES:  this
+     * EFFECTS:   add an empty subdirectory with the given name if no subdirectories in
      *                this directory have the same name, do nothing otherwise;
      *                return true if the process is successful, false otherwise
      */
