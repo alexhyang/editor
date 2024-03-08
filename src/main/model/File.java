@@ -89,10 +89,10 @@ public class File {
      * MODIFIES:  this
      * EFFECTS:   save given content to file
      */
-    public void save(String content) {
+    public void update(String content, Date now) {
         this.content = content;
         this.size = content.length();
-        this.dateModified = Calendar.getInstance().getTime();
+        this.dateModified = now;
     }
 
     /*

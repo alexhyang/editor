@@ -51,10 +51,16 @@ public class FileTest {
     @Test
     public void testSave() {
         assertEquals("", emptyFile.getContent());
-        emptyFile.save(testString.get(1));
+
+        Date now = Calendar.getInstance().getTime();
+        emptyFile.update(testString.get(1), now);
         assertEquals(testString.get(1), emptyFile.getContent());
-        emptyFile.save(testString.get(2));
+        assertEquals(now, emptyFile.getDateModified());
+
+        Date later = Calendar.getInstance().getTime();
+        emptyFile.update(testString.get(2), later);
         assertEquals(testString.get(2), emptyFile.getContent());
+        assertEquals(later, emptyFile.getDateModified());
     }
 
     @Test
