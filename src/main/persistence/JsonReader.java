@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Date;
 import java.util.stream.Stream;
 
+// Represents a reader that reads JSON representation to terminal
 // Cite: this class is based on CPCS210/JsonSerilizationDemo
 public class JsonReader {
     private String source;
