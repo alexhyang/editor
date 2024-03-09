@@ -1,0 +1,11 @@
+{
+    "isRootDir": true,
+    "name": "root",
+    "files": [],
+    "subDirs": [{
+        "isRootDir": false,
+        "name": "folder1",
+        "files": [],
+        "subDirs": []
+    }]
+}

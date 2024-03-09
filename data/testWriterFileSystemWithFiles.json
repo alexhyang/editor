@@ -1,0 +1,11 @@
+{
+    "isRootDir": true,
+    "name": "root",
+    "files": [{
+        "dateCreated": "Fri Mar 08 13:21:20 PST 2024",
+        "name": "file1.txt",
+        "dateModified": "Fri Mar 08 13:21:20 PST 2024",
+        "content": ""
+    }],
+    "subDirs": []
+}
