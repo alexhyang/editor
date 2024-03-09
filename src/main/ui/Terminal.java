@@ -2,7 +2,11 @@ package ui;
 
 import model.DirNode;
 import model.File;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,17 +32,30 @@ public class Terminal {
     private static final String CONSOLE_TEXT_CYAN = "\033[0;36m";
     private static final String CONSOLE_TEXT_BRIGHT_BLUE_BOLD = "\033[1;94m";
 
+    private static final String JSON_STORE = "./data/fileSystem.json";
     private final Scanner input;
     private final DirNode rootDir;
     private DirNode currentDir;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
     private boolean runProgram;
 
     // Citation: code of this method is based on FitLifeGymKiosk project
-    // EFFECTS:  create an editor with empty root directory in the file system
+    // EFFECTS:  create a terminal and load file system from ./data/fileSystem.json
     public Terminal() {
+        DirNode rootDirTmp;
         input = new Scanner(System.in);
         runProgram = true;
-        rootDir = new DirNode();
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+
+        try {
+            rootDirTmp = jsonReader.read();
+        } catch (IOException e) {
+            System.out.println("IOException caught...");
+            rootDirTmp = new DirNode();
+        }
+        rootDir = rootDirTmp;
         currentDir = rootDir;
     }
 
@@ -46,7 +63,8 @@ public class Terminal {
     // EFFECTS:  start the editor in terminal, add dummy files
     public void start() {
         printTermIntro();
-        loadTerminalState();
+        // addDummyFiles();
+        // addNestedDummyFoldersAndFiles();
 
         String str;
         while (runProgram) {
@@ -54,13 +72,6 @@ public class Terminal {
             str = input.nextLine();
             handleUserInput(str);
         }
-    }
-
-    // EFFECTS: load saved terminal state from ./data/terminal.json
-    public void loadTerminalState() {
-        // TODO: load state here, rather than add dummies
-        // addDummyFiles();
-        // addNestedDummyFoldersAndFiles();
     }
 
     // Citation: code of this method is based on FitLifeGymKiosk project
@@ -81,6 +92,7 @@ public class Terminal {
                     break;
                 case CREATE_FILE_COMMAND:
                     createFile(arg);
+                    saveFileSystem();
                     break;
                 case VIEW_FILE_COMMAND:
                     viewFile(arg);
@@ -90,6 +102,7 @@ public class Terminal {
                     break;
                 case REMOVE_FILE_COMMAND:
                     removeFile(arg);
+                    saveFileSystem();
                     break;
                 case LIST_ALL_COMMAND:
                     listAll();
@@ -105,11 +118,14 @@ public class Terminal {
                     break;
                 case CREATE_DIRECTORY_COMMAND:
                     createDirectory(arg);
+                    saveFileSystem();
                     break;
                 case REMOVE_DIRECTORY_COMMAND:
                     removeDirectory(arg);
+                    saveFileSystem();
                     break;
                 case QUIT_COMMAND:
+                    saveFileSystem();
                     runProgram = false;
                     break;
                 default:
@@ -345,6 +361,18 @@ public class Terminal {
         DirNode testModel = src.getSubDir("test").getSubDir("model");
         testModel.addFile("DirNodeTest.java");
         testModel.addFile("FileTest.java");
+    }
+
+    // EFFECTS:  save the current directory tree state
+    private void saveFileSystem() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(rootDir);
+            jsonWriter.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Destination file cannot be found");
+            e.printStackTrace();
+        }
     }
 
     // EFFECTS: print terminal introduction
