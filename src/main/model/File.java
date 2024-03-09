@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -7,9 +10,9 @@ import java.util.Date;
  * Represents a file in file system with a file name, file content, and meta
  * information of the file, such as date created, date modified, file size
  */
-public class File {
+public class File implements Writable {
     private String name;
-    private Date dateCreated;
+    private final Date dateCreated;
     private Date dateModified;
     private String content;
     private int size;
@@ -93,6 +96,16 @@ public class File {
         this.content = content;
         this.size = content.length();
         this.dateModified = now;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("dateCreated", dateCreated);
+        json.put("dateModified", dateModified);
+        json.put("content", content);
+        return json;
     }
 
     /*

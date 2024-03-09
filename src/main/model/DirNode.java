@@ -1,5 +1,9 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +14,7 @@ import java.util.Set;
  * Like a general file system, all files in the directory should have unique
  * names, and all subdirectories should have unique names.
  */
-public class DirNode {
+public class DirNode implements Writable {
     private final String name;
     private final boolean isRootDir;
     private DirNode parentDir;
@@ -294,6 +298,43 @@ public class DirNode {
     public boolean containsSubDir(String dirName) {
         return subDirNames.contains(dirName);
     }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("isRootDir", isRootDir);
+        json.put("subDirs", subDirsToJson());
+        json.put("files", filesToJson());
+        return json;
+    }
+
+    /*
+     * EFFECTS:   returns subdirectories as JSONArray
+     */
+    private JSONArray subDirsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (DirNode dirNode: subDirs) {
+            jsonArray.put(dirNode.toJson());
+        }
+
+        return jsonArray;
+    }
+
+    /*
+     * EFFECTS:   returns files as JSONArray
+     */
+    private JSONArray filesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (File file: files) {
+            jsonArray.put(file.toJson());
+        }
+
+        return jsonArray;
+    }
+
 
     /*
      * EFFECTS:   returns a string representation of a directory
