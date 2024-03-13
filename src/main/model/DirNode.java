@@ -186,10 +186,10 @@ public class DirNode implements Writable {
      *                nothing if the subdirectory cannot be found;
      *                return true if the deletion is successful, false otherwise
      */
-    public boolean deleteSubDir(String nodeName) {
-        if (subDirs.removeIf(child -> child.getName().equals(nodeName))) {
+    public boolean deleteSubDir(String dirName) {
+        if (subDirs.removeIf(child -> child.getName().equals(dirName))) {
             numSubDirs--;
-            subDirNames.remove(nodeName);
+            subDirNames.remove(dirName);
             return true;
         }
         return false;
