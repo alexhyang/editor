@@ -60,6 +60,20 @@ public class FileTest {
         } catch (IllegalNameException e) {
             assertEquals("File.File_String: File name must be nonempty string.", e.getMessage());
         }
+
+        try {
+            File file = new File(" ");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String: File name must be nonempty string.", e.getMessage());
+        }
+
+        try {
+            File file = new File("\t");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String: File name must be nonempty string.", e.getMessage());
+        }
     }
 
     @Test
@@ -70,12 +84,40 @@ public class FileTest {
         } catch (IllegalNameException e) {
             assertEquals("File.File_String_String: File name must be nonempty string.", e.getMessage());
         }
+
+        try {
+            File file = new File(" ", "");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String_String: File name must be nonempty string.", e.getMessage());
+        }
+
+        try {
+            File file = new File("\t", "");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String_String: File name must be nonempty string.", e.getMessage());
+        }
     }
 
     @Test
     public void testConstructorStringStringDateDateExpectIllegalNameException() {
         try {
             File file = new File("", "", date, date);
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String_String_Date_Date: File name must be nonempty string.", e.getMessage());
+        }
+
+        try {
+            File file = new File(" ", "", date, date);
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String_String_Date_Date: File name must be nonempty string.", e.getMessage());
+        }
+
+        try {
+            File file = new File("\t", "", date, date);
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("File.File_String_String_Date_Date: File name must be nonempty string.", e.getMessage());
