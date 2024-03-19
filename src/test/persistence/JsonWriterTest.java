@@ -2,6 +2,7 @@ package persistence;
 
 import model.DirNode;
 import model.File;
+import model.exceptions.IllegalNameException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -80,6 +81,8 @@ public class JsonWriterTest extends JsonTest {
             checkDir("folder1", false, 1, 0, rootDirNode.getSubDir("folder1"));
             File file1 = rootDirNode.getSubDir("folder1").getFile("file1.txt");
             checkFile("file1.txt", dateString, dateString, "", file1);
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
         } catch (IOException e) {
             fail("IOException shouldn't be thrown.");
         }
@@ -102,6 +105,8 @@ public class JsonWriterTest extends JsonTest {
             checkDir("root", true, 1, 0, rootDirNode);
             File file1 = rootDirNode.getFile("file1.txt");
             checkFile("file1.txt", dateString, dateString, "", file1);
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
         } catch (IOException e) {
             fail("IOException shouldn't be thrown.");
         }

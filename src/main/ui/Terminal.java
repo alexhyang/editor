@@ -2,6 +2,7 @@ package ui;
 
 import model.DirNode;
 import model.File;
+import model.exceptions.IllegalNameException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -158,11 +159,18 @@ public class Terminal {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
         } else {
-            File newFile = new File(fileName);
-            if (currentDir.addFile(newFile)) {
-                System.out.println("'" + fileName + "' was created successfully!");
-            } else {
-                System.out.println("'" + fileName + "' already exists!");
+            try {
+                File newFile = new File(fileName);
+                if (currentDir.addFile(newFile)) {
+                    System.out.println("'" + fileName + "' was created successfully!");
+                } else {
+                    System.out.println("'" + fileName + "' already exists!");
+                }
+            } catch (IllegalNameException e) {
+                // TODO: handle exception
+                // System.out.println(e);
+                // System.out.println(e.getMessage());
+                // e.printStackTrace();
             }
         }
     }
@@ -331,9 +339,14 @@ public class Terminal {
                 + "Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin "
                 + "words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in "
                 + "classical literature, discovered the undoubtable source.";
-        rootDir.addFile(new File("dummy1.txt", longStr1));
-        rootDir.addFile(new File("dummy2.txt", longStr2));
-        rootDir.addFile(new File("dummy3.txt", longStr1));
+        try {
+            rootDir.addFile(new File("dummy1.txt", longStr1));
+            rootDir.addFile(new File("dummy2.txt", longStr2));
+            rootDir.addFile(new File("dummy3.txt", longStr1));
+        } catch (IllegalNameException e) {
+            // TODO: handle exception
+            // System.out.println(e.getMessage());
+        }
     }
 
     // EFFECTS: populate root directory with nested folders and files

@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.IllegalNameException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,8 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileTest {
     private File emptyFile;
@@ -24,13 +24,17 @@ public class FileTest {
         testString.add("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s");
         testString.add("when an unknown printer took a galley of type and scrambled it to make a type specimen book");
 
-        emptyFile = new File("file1");
-        nonEmptyFile = new File("file2", testString.get(0));
-        datedNonEmptyFile = new File("file3", testString.get(1), date, date);
+        try {
+            emptyFile = new File("file1");
+            nonEmptyFile = new File("file2", testString.get(0));
+            datedNonEmptyFile = new File("file3", testString.get(1), date, date);
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
+        }
     }
 
     @Test
-    public void testConstructor() {
+    public void testConstructorNothingThrown() {
         assertEquals("file1", emptyFile.getName());
         assertEquals("", emptyFile.getContent());
         assertEquals(0, emptyFile.getDateCreated().compareTo(emptyFile.getDateModified()));
@@ -46,6 +50,36 @@ public class FileTest {
         assertEquals(date, datedNonEmptyFile.getDateCreated());
         assertEquals(date, datedNonEmptyFile.getDateModified());
         assertEquals(testString.get(1).length(), datedNonEmptyFile.getSize());
+    }
+
+    @Test
+    public void testConstructorStringExpectIllegalNameException() {
+        try {
+            File file = new File("");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String: File name must be nonempty string.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testConstructorStringStringExpectIllegalNameException() {
+        try {
+            File file = new File("", "");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String_String: File name must be nonempty string.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testConstructorStringStringDateDateExpectIllegalNameException() {
+        try {
+            File file = new File("", "", date, date);
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("File.File_String_String_Date_Date: File name must be nonempty string.", e.getMessage());
+        }
     }
 
     @Test

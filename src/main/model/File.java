@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.IllegalNameException;
 import org.json.JSONObject;
 import persistence.Writable;
 
@@ -16,12 +17,15 @@ public class File implements Writable {
     private Date dateModified;
     private String content;
     private int size;
+    private final String illegalFileNameMsg = "File name must be nonempty string.";
 
     /*
-     * REQUIRES:  file name must be a non-empty string
      * EFFECTS:   create an empty file with the given name and current time stamp
      */
-    public File(String name) {
+    public File(String name) throws IllegalNameException {
+        if (name.isBlank()) {
+            throw new IllegalNameException("File.File_String: " + illegalFileNameMsg);
+        }
         this.name = name;
         this.dateCreated = Calendar.getInstance().getTime();
         this.dateModified = this.dateCreated;
@@ -30,10 +34,12 @@ public class File implements Writable {
     }
 
     /*
-     * REQUIRES:  filename must be a non-empty string
      * EFFECTS:   create a file with the given name, given content, and current time stamp
      */
-    public File(String name, String content) {
+    public File(String name, String content) throws IllegalNameException {
+        if (name.isBlank()) {
+            throw new IllegalNameException("File.File_String_String: " + illegalFileNameMsg);
+        }
         this.name = name;
         this.dateCreated = Calendar.getInstance().getTime();
         this.dateModified = this.dateCreated;
@@ -42,10 +48,13 @@ public class File implements Writable {
     }
 
     /*
-     * REQUIRES:  filename must be a non-empty string
      * EFFECTS:   create a file with the given name, given content, and given time stamp
      */
-    public File(String name, String content, Date dateCreated, Date dateModified) {
+    public File(String name, String content, Date dateCreated, Date dateModified)
+            throws IllegalNameException {
+        if (name.isBlank()) {
+            throw new IllegalNameException("File.File_String_String_Date_Date: " + illegalFileNameMsg);
+        }
         this.name = name;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;

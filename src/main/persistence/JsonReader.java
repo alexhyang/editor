@@ -2,6 +2,7 @@ package persistence;
 
 import model.DirNode;
 import model.File;
+import model.exceptions.IllegalNameException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -83,6 +84,17 @@ public class JsonReader {
         String content = jsonObject.getString("content");
         Date dateCreated = new Date(jsonObject.getString("dateCreated"));
         Date dateModified = new Date(jsonObject.getString("dateModified"));
-        return new File(name, content, dateCreated, dateModified);
+
+        File returnFile = null;
+
+        try {
+            returnFile = new File(name, content, dateCreated, dateModified);
+        } catch (IllegalNameException e) {
+            // TODO: handle exception
+            // System.out.println(e.getMessage());
+            // e.printStackTrace();
+        }
+
+        return returnFile;
     }
 }

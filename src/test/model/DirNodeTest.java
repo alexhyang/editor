@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.IllegalNameException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,11 +19,15 @@ class DirNodeTest {
         dirRoot = new DirNode();
         dirNonRoot = new DirNode("sub_dir");
         files = new ArrayList<>();
-        files.add(new File("DirNode.java"));
-        files.add(new File("File.java"));
-        files.add(new File("README.md", "this is readme file"));
-        files.add(new File("data.json"));
-        files.add(new File("Editor.java"));
+        try {
+            files.add(new File("DirNode.java"));
+            files.add(new File("File.java"));
+            files.add(new File("README.md", "this is readme file"));
+            files.add(new File("data.json"));
+            files.add(new File("Editor.java"));
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
+        }
     }
 
     @Test
@@ -93,8 +98,12 @@ class DirNodeTest {
         nameList.add("notes.md");
 
         assertEquals(new ArrayList<String>(), dirRoot.getOrderedFileNames());
-        dirRoot.addFile(new File("notes.md"));
-        assertEquals(nameList, dirRoot.getOrderedFileNames());
+        try {
+            dirRoot.addFile(new File("notes.md"));
+            assertEquals(nameList, dirRoot.getOrderedFileNames());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
+        }
     }
 
     @Test

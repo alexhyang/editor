@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.IllegalNameException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -24,6 +25,8 @@ public class DirNode implements Writable {
     private final Set<String> fileNames;
     private int numFiles;
     private int numSubDirs;
+    private final String illegalFileNameMsg = "File name must be nonempty string.";
+    private final String illegalDirNameMsg = "Directory name must be nonempty string.";
 
     /*
      * EFFECTS:   create an empty (no file, no subdirectory) root directory
@@ -77,7 +80,12 @@ public class DirNode implements Writable {
      */
     public boolean addFile(String fileName) {
         if (!containsFile(fileName)) {
-            files.add(new File(fileName));
+            try {
+                files.add(new File(fileName));
+            } catch (IllegalNameException e) {
+                // TODO: throw new exception
+                // throw new IllegalNameException("DirNode.addFile" + illegalFileNameMsg);
+            }
             fileNames.add(fileName);
             numFiles++;
             return true;
