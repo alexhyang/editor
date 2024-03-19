@@ -20,7 +20,9 @@ public class File implements Writable {
     private final String illegalFileNameMsg = "File name must be nonempty string.";
 
     /*
-     * EFFECTS:   create an empty file with the given name and current time stamp
+     * EFFECTS:   create an empty file with the given name and current time stamp;
+     *     throws IllegalNameException if the given name is blank, i.e. name is empty
+     *     or contains only white space
      */
     public File(String name) throws IllegalNameException {
         if (name.isBlank()) {
@@ -34,7 +36,9 @@ public class File implements Writable {
     }
 
     /*
-     * EFFECTS:   create a file with the given name, given content, and current time stamp
+     * EFFECTS:   create a file with the given name, given content, and current time stamp;
+     *     throws IllegalNameException if the given name is blank, i.e. name is empty
+     *     or contains only white space
      */
     public File(String name, String content) throws IllegalNameException {
         if (name.isBlank()) {
@@ -48,7 +52,9 @@ public class File implements Writable {
     }
 
     /*
-     * EFFECTS:   create a file with the given name, given content, and given time stamp
+     * EFFECTS:   create a file with the given name, given content, and given time stamp;
+     *     throws IllegalNameException if the given name is blank, i.e. name is empty
+     *     or contains only white space
      */
     public File(String name, String content, Date dateCreated, Date dateModified)
             throws IllegalNameException {
