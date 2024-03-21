@@ -131,38 +131,40 @@ public class DirNode implements Writable {
     /*
      * REQUIRES:  must not add self as subdirectory
      * MODIFIES:  this
-     * EFFECTS:   add a given subdirectory if no subdirectories in
-     *                this directory have the same name, do nothing otherwise;
-     *                return true if the process is successful, false otherwise
+     * EFFECTS:   adds a given subdirectory if no subdirectories in
+     *                this directory have the same name;
+     *                throws DuplicateException if the dirname exists,
+     *                returns true if the process is successful
      */
-    public boolean addSubDir(DirNode dirNode) {
-        if (!containsSubDir(dirNode.getName())) {
-            subDirs.add(dirNode);
-            dirNode.addParentDir(this);
-            numSubDirs++;
-            subDirNames.add(dirNode.getName());
-            return true;
+    public boolean addSubDir(DirNode dirNode) throws DuplicateException {
+        if (containsSubDir(dirNode.getName())) {
+            throw new DuplicateException("DirNode.addSubDir: " + duplicateDirMsg);
         }
-        return false;
+        subDirs.add(dirNode);
+        dirNode.addParentDir(this);
+        numSubDirs++;
+        subDirNames.add(dirNode.getName());
+        return true;
     }
 
     /*
      * REQUIRES:  must not add self as subdirectory
      * MODIFIES:  this
      * EFFECTS:   add an empty subdirectory with the given name if no subdirectories in
-     *                this directory have the same name, do nothing otherwise;
-     *                return true if the process is successful, false otherwise
+     *                this directory have the same name;
+     *                throws DuplicateException if dirname exists,
+     *                return true if the process is successful
      */
-    public boolean addSubDir(String dirName) {
-        if (!containsSubDir(dirName)) {
-            DirNode child = new DirNode(dirName);
-            subDirs.add(child);
-            child.addParentDir(this);
-            numSubDirs++;
-            subDirNames.add(dirName);
-            return true;
+    public boolean addSubDir(String dirName) throws DuplicateException {
+        if (containsSubDir(dirName)) {
+            throw new DuplicateException("DirNode.addSubDir: " + duplicateDirMsg);
         }
-        return false;
+        DirNode child = new DirNode(dirName);
+        subDirs.add(child);
+        child.addParentDir(this);
+        numSubDirs++;
+        subDirNames.add(dirName);
+        return true;
     }
 
     /*
