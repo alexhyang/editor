@@ -47,9 +47,13 @@ public class DirNode implements Writable {
 
     /*
      * EFFECTS:   create an empty (no file, no subdirectory) non-root directory
-     *                with the given name
+     *                with the given name; throws IllegalNameException if the
+     *                given name is blank (i.e. empty or contains only white space
      */
-    public DirNode(String name) {
+    public DirNode(String name) throws IllegalNameException {
+        if (name.isBlank()) {
+            throw new IllegalNameException("DirNode.DirNode: " + illegalDirNameMsg);
+        }
         files = new ArrayList<>();
         subDirs = new ArrayList<>();
         this.name = name;
@@ -164,19 +168,24 @@ public class DirNode implements Writable {
      * MODIFIES:  this
      * EFFECTS:   add an empty subdirectory with the given name if no subdirectories in
      *                this directory have the same name;
+     *                throws IllegalNameException if dirname is blank,
      *                throws DuplicateException if dirname exists,
      *                return true if the process is successful
      */
-    public boolean addSubDir(String dirName) throws DuplicateException {
+    public boolean addSubDir(String dirName) throws IllegalNameException, DuplicateException {
         if (containsSubDir(dirName)) {
             throw new DuplicateException("DirNode.addSubDir: " + duplicateDirMsg);
         }
-        DirNode child = new DirNode(dirName);
-        subDirs.add(child);
-        child.addParentDir(this);
-        numSubDirs++;
-        subDirNames.add(dirName);
-        return true;
+        try {
+            DirNode child = new DirNode(dirName);
+            subDirs.add(child);
+            child.addParentDir(this);
+            numSubDirs++;
+            subDirNames.add(dirName);
+            return true;
+        } catch (IllegalNameException e) {
+            throw new IllegalNameException("DirNode.addSubDir: " + illegalDirNameMsg);
+        }
     }
 
     /*
@@ -192,8 +201,12 @@ public class DirNode implements Writable {
     /*
      * EFFECTS:   return the subdirectory in this directory with the given name,
      *                return null if the subdirectory cannot be found
+     *                throws IllegalNameException if dirName is blank
      */
-    public DirNode getSubDir(String dirName) {
+    public DirNode getSubDir(String dirName) throws IllegalNameException {
+        if (dirName.isBlank()) {
+            throw new IllegalNameException("DirNode.getSubDir: " + illegalDirNameMsg);
+        }
         for (DirNode dirNode: subDirs) {
             if (dirNode.getName().equals(dirName)) {
                 return dirNode;
@@ -214,8 +227,12 @@ public class DirNode implements Writable {
      * EFFECTS:   delete subdirectory with the given name in this directory, do
      *                nothing if the subdirectory cannot be found;
      *                return true if the deletion is successful, false otherwise
+     *                throws IllegalNameException if dirName is blank
      */
-    public boolean deleteSubDir(String dirName) {
+    public boolean deleteSubDir(String dirName) throws IllegalNameException {
+        if (dirName.isBlank()) {
+            throw new IllegalNameException("DirNode.deleteSubDir: " + illegalDirNameMsg);
+        }
         if (subDirs.removeIf(child -> child.getName().equals(dirName))) {
             numSubDirs--;
             subDirNames.remove(dirName);
@@ -284,7 +301,13 @@ public class DirNode implements Writable {
     public int getTotalNumFiles() {
         int totalNum = getNumFiles();
         if (getNumSubDirs() != 0) {
-            totalNum += getOrderedSubDirNames().stream().mapToInt(name -> getSubDir(name).getTotalNumFiles()).sum();
+            totalNum += getOrderedSubDirNames().stream().mapToInt(name -> {
+                try {
+                    return getSubDir(name).getTotalNumFiles();
+                } catch (IllegalNameException e) {
+                    throw new RuntimeException(e);
+                }
+            }).sum();
         }
         return totalNum;
     }
@@ -296,7 +319,13 @@ public class DirNode implements Writable {
     public int getTotalNumSubDirs() {
         int totalNum = getNumSubDirs();
         if (getNumSubDirs() != 0) {
-            totalNum += getOrderedSubDirNames().stream().mapToInt(name -> getSubDir(name).getTotalNumSubDirs()).sum();
+            totalNum += getOrderedSubDirNames().stream().mapToInt(name -> {
+                try {
+                    return getSubDir(name).getTotalNumSubDirs();
+                } catch (IllegalNameException e) {
+                    throw new RuntimeException(e);
+                }
+            }).sum();
         }
         return totalNum;
     }
