@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +28,8 @@ public class DirNode implements Writable {
     private int numSubDirs;
     private final String illegalFileNameMsg = "File name must be nonempty string.";
     private final String illegalDirNameMsg = "Directory name must be nonempty string.";
+    private final String duplicateFileMsg = "File already exists.";
+    private final String duplicateDirMsg = "Directory already exists.";
 
     /*
      * EFFECTS:   create an empty (no file, no subdirectory) root directory
@@ -59,37 +62,41 @@ public class DirNode implements Writable {
     /*
      * MODIFIES:  this
      * EFFECTS:   add given file if no file in this directory has the
-     *                same filename, do nothing if the filename exists;
-     *                return true if file is added successfully, false otherwise
+     *                same filename, throw DuplicateException if the filename exists;
+     *                return true if file is added successfully
      */
-    public boolean addFile(File file) {
-        if (!containsFile(file.getName())) {
-            files.add(file);
-            fileNames.add(file.getName());
-            numFiles++;
-            return true;
+    public boolean addFile(File file) throws DuplicateException {
+        if (containsFile(file.getName())) {
+            throw new DuplicateException("DirNode.addFile_File: " + duplicateFileMsg);
         }
-        return false;
+
+        files.add(file);
+        fileNames.add(file.getName());
+        numFiles++;
+        return true;
     }
 
     /*
      * MODIFIES:  this
-     * EFFECTS:   add empty file if no file in this directory has the
-     *                given filename, do nothing if the filename exists;
-     *                return true if file is added successfully, false otherwise
+     * EFFECTS:   add file with empty content if no file in this directory has the
+     *                given filename, throw DuplicateException if the filename exists;
+     *                return true if file is added successfully
      */
-    public boolean addFile(String fileName) {
-        if (!containsFile(fileName)) {
-            try {
-                files.add(new File(fileName));
-            } catch (IllegalNameException e) {
-                // TODO: throw new exception
-                // throw new IllegalNameException("DirNode.addFile" + illegalFileNameMsg);
-            }
+    public boolean addFile(String fileName) throws DuplicateException {
+        if (containsFile(fileName)) {
+            throw new DuplicateException("DirNode.addFile_String: " + duplicateFileMsg);
+        }
+
+        try {
+            files.add(new File(fileName));
             fileNames.add(fileName);
             numFiles++;
             return true;
+        } catch (IllegalNameException e) {
+            // TODO: throw new exception
+            // throw new IllegalNameException("DirNode.addFile_String: " + illegalFileNameMsg);
         }
+        // TODO: remove return statement after handling IllegalNameException
         return false;
     }
 
