@@ -78,11 +78,15 @@ public class DirNode implements Writable {
 
     /*
      * MODIFIES:  this
-     * EFFECTS:   add file with empty content if no file in this directory has the
-     *                given filename, throw DuplicateException if the filename exists;
-     *                return true if file is added successfully
+     * EFFECTS:   adds file with empty content if no file in this directory has the
+     *                given filename, return true if file is added successfully;
+     *            throws DuplicateException if the filename exists,
+     *            throws IllegalNameException if filename is blank
      */
-    public boolean addFile(String fileName) throws DuplicateException {
+    public boolean addFile(String fileName) throws IllegalNameException, DuplicateException {
+        if (fileName.isBlank()) {
+            throw new IllegalNameException("DirNode.addFile_String: " + illegalFileNameMsg);
+        }
         if (containsFile(fileName)) {
             throw new DuplicateException("DirNode.addFile_String: " + duplicateFileMsg);
         }
@@ -103,8 +107,12 @@ public class DirNode implements Writable {
     /*
      * EFFECTS:   return file that has the given name in this directory,
      *                return null if the file cannot be found
+     *            throws IllegalNameException if fileName is blank
      */
-    public File getFile(String fileName) {
+    public File getFile(String fileName) throws IllegalNameException {
+        if (fileName.isBlank()) {
+            throw new IllegalNameException("DirNode.getFile: " + illegalFileNameMsg);
+        }
         for (File file: files) {
             if (file.getName().equals(fileName)) {
                 return file;
@@ -118,8 +126,12 @@ public class DirNode implements Writable {
      * EFFECTS:   delete file with the given filename in this directory, do
      *                nothing if the file cannot be found;
      *                return true if delete process is successful, false otherwise
+     *            throws IllegalNameException if fileName is blank
      */
-    public boolean deleteFile(String fileName) {
+    public boolean deleteFile(String fileName) throws IllegalNameException {
+        if (fileName.isBlank()) {
+            throw new IllegalNameException("DirNode.deleteFile: " + illegalFileNameMsg);
+        }
         if (files.removeIf(file -> file.getName().equals(fileName))) {
             numFiles--;
             fileNames.remove(fileName);
