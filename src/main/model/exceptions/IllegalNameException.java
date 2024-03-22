@@ -1,6 +1,6 @@
 package model.exceptions;
 
-public class IllegalNameException extends NameException {
+public class IllegalNameException extends Exception {
     public IllegalNameException() {
         super();
     }
