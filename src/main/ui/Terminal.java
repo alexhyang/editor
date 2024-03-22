@@ -2,12 +2,15 @@ package ui;
 
 import model.DirNode;
 import model.File;
+import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
+import model.exceptions.NotFoundException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -154,7 +157,7 @@ public class Terminal {
 
     // MODIFIES: this
     // EFFECTS:  create a file with the given file name in the current directory
-    //               if file already exists, print error message
+    //               print error message if filename is blank or file exists
     private void createFile(String fileName) {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
@@ -167,10 +170,9 @@ public class Terminal {
                     System.out.println("'" + fileName + "' already exists!");
                 }
             } catch (IllegalNameException e) {
-                // TODO: handle exception
-                // System.out.println(e);
-                // System.out.println(e.getMessage());
-                // e.printStackTrace();
+                System.err.println(e.getMessage());
+            } catch (DuplicateException e) {
+                System.err.println(e.getMessage());
             }
         }
     }
@@ -181,16 +183,20 @@ public class Terminal {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
         } else {
-            File file = currentDir.getFile(fileName);
-            if (file != null) {
-                String content = file.getContent();
-                if (content.length() == 0) {
-                    System.out.println("'" + fileName + "' is empty!");
+            try {
+                File file = currentDir.getFile(fileName);
+                if (file != null) {
+                    String content = file.getContent();
+                    if (content.length() == 0) {
+                        System.out.println("'" + fileName + "' is empty!");
+                    } else {
+                        System.out.println(file.getContent());
+                    }
                 } else {
-                    System.out.println(file.getContent());
+                    System.out.println("cat: '" + fileName + "' No such file");
                 }
-            } else {
-                System.out.println("cat: '" + fileName + "' No such file");
+            } catch (IllegalNameException e) {
+                System.err.println(e.getMessage());
             }
         }
     }
@@ -211,10 +217,14 @@ public class Terminal {
         if (fileName.length() == 0) {
             System.out.println("Please enter a valid file name");
         } else {
-            if (currentDir.deleteFile(fileName)) {
-                System.out.println("'" + fileName + "' has been removed!");
-            } else {
-                System.out.println("rm: cannot remove '" + fileName + "': No such file");
+            try {
+                if (currentDir.deleteFile(fileName)) {
+                    System.out.println("'" + fileName + "' has been removed!");
+                } else {
+                    System.out.println("rm: cannot remove '" + fileName + "': No such file");
+                }
+            } catch (IllegalNameException e) {
+                System.err.println(e.getMessage());
             }
         }
     }
@@ -225,27 +235,56 @@ public class Terminal {
     }
 
     // MODIFIES: this
-    // EFFECTS:  change directory to given directory if it exists, do nothing otherwise
-    private void changeDirectory(String dirName) {
-        String[] dirs = dirName.split("/");
-        if (dirs.length == 1) {
-            if (dirName.equals("..")) {
-                if (currentDir.isRootDir()) {
-                    System.out.println("Already at root directory");
-                } else {
-                    currentDir = currentDir.getParentDir();
-                }
-            } else if (dirName.equals("~")) {
-                currentDir = rootDir;
-            } else if (currentDir.containsSubDir(dirName)) {
-                currentDir = currentDir.getSubDir(dirName);
-            } else {
-                System.out.println("cd: no such directory: " + dirName);
+    // EFFECTS:  change directory to given directory if it exists, print error message if the process fails
+    private void changeDirectory(String dirStr) {
+        if (validateDirStr(dirStr)) {
+            try {
+                currentDir = findDirectory(currentDir, dirStr.split("/"));
+            } catch (NotFoundException e) {
+                System.out.println("cd: no such directory: " + dirStr);
             }
         } else {
-            for (String dir: dirs) {
-                changeDirectory(dir);
+            System.out.println("cd: no such file or directory: " + dirStr);
+        }
+    }
+
+    // EFFECTS:  checks if a dir string is valid, returns true if it's valid, false otherwise
+    private boolean validateDirStr(String dirStr) {
+        // TODO: implement method later
+        return true;
+    }
+
+    // EFFECTS:  find directory based on the given array of relative path, if target dir exists,
+    //               returns its dirNode, otherwise throws NotFoundException
+    private DirNode findDirectory(DirNode currentDirNode, String[] dirStrs) throws NotFoundException {
+        if (dirStrs.length == 1) {
+            return findNextDirectory(currentDirNode, dirStrs[0]);
+        } else {
+            return findDirectory(findNextDirectory(currentDirNode, dirStrs[0]),
+                    Arrays.copyOfRange(dirStrs, 1, dirStrs.length));
+        }
+    }
+
+    // EFFECTS:  return the next directory based on the given dirNode and nextDirName
+    //               throws NotFoundException if the directory can't be found
+    private DirNode findNextDirectory(DirNode dirNode, String nextDirName) throws NotFoundException {
+        if (nextDirName.equals("..")) {
+            if (dirNode.isRootDir()) {
+                return rootDir;
+            } else {
+                return dirNode.getParentDir();
             }
+        } else if (nextDirName.equals("~")) {
+            return rootDir;
+        } else if (dirNode.containsSubDir(nextDirName)) {
+            try {
+                return dirNode.getSubDir(nextDirName);
+            } catch (IllegalNameException e) {
+                System.err.println(e.getMessage());
+                throw new NotFoundException("Terminal.findNextDirectory: Can't find directory with illegal name.");
+            }
+        } else {
+            throw new NotFoundException("Terminal.findNextDirectory: no such directory.");
         }
     }
 
@@ -257,7 +296,13 @@ public class Terminal {
             System.out.println("mkdir: missing operand");
         } else {
             if (!currentDir.containsSubDir(dirName)) {
-                currentDir.addSubDir(dirName);
+                try {
+                    currentDir.addSubDir(dirName);
+                } catch (IllegalNameException e) {
+                    System.err.println(e.getMessage());
+                } catch (DuplicateException e) {
+                    System.err.println(e.getMessage());
+                }
             } else {
                 System.out.println("mkdir: cannot create directory '" + dirName + "': Directory exists");
             }
@@ -269,7 +314,11 @@ public class Terminal {
     //               do nothing otherwise
     private void removeDirectory(String dirName) {
         if (currentDir.containsSubDir(dirName)) {
-            currentDir.deleteSubDir(dirName);
+            try {
+                currentDir.deleteSubDir(dirName);
+            } catch (IllegalNameException e) {
+                System.err.println(e.getMessage());
+            }
         } else {
             System.out.println("rmdir: failed to remove '" + dirName + "': No such directory");
         }
@@ -308,7 +357,13 @@ public class Terminal {
             String selfIndent = getChildrenLineHead(depth - 1);
             System.out.println(selfIndent + CONSOLE_TEXT_CYAN + dirNode.getName() + "\033[0m");
         }
-        dirNode.getOrderedSubDirNames().forEach(name -> tree(dirNode.getSubDir(name), depth + 1));
+        dirNode.getOrderedSubDirNames().forEach(name -> {
+            try {
+                tree(dirNode.getSubDir(name), depth + 1);
+            } catch (IllegalNameException e) {
+                System.err.println(e.getMessage());
+            }
+        });
         dirNode.getOrderedFileNames().forEach(name -> System.out.println(fileIndent + name));
     }
 
@@ -344,37 +399,51 @@ public class Terminal {
             rootDir.addFile(new File("dummy2.txt", longStr2));
             rootDir.addFile(new File("dummy3.txt", longStr1));
         } catch (IllegalNameException e) {
-            // TODO: handle exception
-            // System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
+        } catch (DuplicateException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     // EFFECTS: populate root directory with nested folders and files
-    private void addNestedDummyFoldersAndFiles() {
-        rootDir.addSubDir("src");
-        rootDir.addSubDir("data");
-
-        DirNode src = rootDir.getSubDir("src");
-        src.addSubDir("main");
-        src.addSubDir("test");
-
-        DirNode main = src.getSubDir("main");
-        main.addSubDir("model");
-        main.addSubDir("ui");
-
-        DirNode model = main.getSubDir("model");
-        model.addFile("DirNode.java");
-        model.addFile("File.java");
-
-        DirNode ui = main.getSubDir("ui");
-        ui.addFile("Main.java");
-        ui.addFile("Terminal.java");
-
-        src.getSubDir("test").addSubDir("model");
-        DirNode testModel = src.getSubDir("test").getSubDir("model");
-        testModel.addFile("DirNodeTest.java");
-        testModel.addFile("FileTest.java");
-    }
+//    @SuppressWarnings("methodlength")
+//    private void addNestedDummyFoldersAndFiles() {
+//        rootDir.addSubDir("src");
+//        rootDir.addSubDir("data");
+//
+//        DirNode src = rootDir.getSubDir("src");
+//        src.addSubDir("main");
+//        src.addSubDir("test");
+//
+//        DirNode main = src.getSubDir("main");
+//        main.addSubDir("model");
+//        main.addSubDir("ui");
+//
+//        DirNode model = main.getSubDir("model");
+//        try {
+//            model.addFile("DirNode.java");
+//            model.addFile("File.java");
+//        } catch (DuplicateException e) {
+//            // TODO: handle exception
+//        }
+//
+//        DirNode ui = main.getSubDir("ui");
+//        try {
+//            ui.addFile("Main.java");
+//            ui.addFile("Terminal.java");
+//        } catch (DuplicateException e) {
+//            // TODO: handle exception
+//        }
+//
+//        src.getSubDir("test").addSubDir("model");
+//        DirNode testModel = src.getSubDir("test").getSubDir("model");
+//        try {
+//            testModel.addFile("DirNodeTest.java");
+//            testModel.addFile("FileTest.java");
+//        } catch (DuplicateException e) {
+//            // TODO: handle exception
+//        }
+//    }
 
     // EFFECTS:  save the current directory tree state
     private void saveFileSystem() {

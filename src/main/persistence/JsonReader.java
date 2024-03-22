@@ -2,6 +2,7 @@ package persistence;
 
 import model.DirNode;
 import model.File;
+import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,7 +15,7 @@ import java.util.Date;
 import java.util.stream.Stream;
 
 // Represents a reader that reads JSON representation to terminal
-// Cite: this class is based on CPCS210/JsonSerilizationDemo
+// Cite: this class is based on CPSC210/JsonSerializationDemo
 public class JsonReader {
     private String source;
 
@@ -52,10 +53,15 @@ public class JsonReader {
 
     // EFFECTS:  parse a nonroot directory from JSON object and returns it
     private DirNode parseDirNode(JSONObject jsonObject) {
-        DirNode dirNode = new DirNode(jsonObject.getString("name"));
-        addSubdirs(dirNode, jsonObject);
-        addFiles(dirNode, jsonObject);
-        return dirNode;
+        try {
+            DirNode dirNode = new DirNode(jsonObject.getString("name"));
+            addSubdirs(dirNode, jsonObject);
+            addFiles(dirNode, jsonObject);
+            return dirNode;
+        } catch (IllegalNameException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
     }
 
     // MODIFIES: dirNode
@@ -64,7 +70,11 @@ public class JsonReader {
         JSONArray jsonArray = jsonObject.getJSONArray("subDirs");
 
         for (Object dirJsonObject: jsonArray) {
-            dirNode.addSubDir(parseDirNode((JSONObject) dirJsonObject));
+            try {
+                dirNode.addSubDir(parseDirNode((JSONObject) dirJsonObject));
+            } catch (DuplicateException e) {
+                System.err.println(e.getMessage());
+            }
         }
     }
 
@@ -73,8 +83,12 @@ public class JsonReader {
     private void addFiles(DirNode dirNode, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("files");
 
-        for (Object fileJsonObject: jsonArray) {
-            dirNode.addFile(parseFile((JSONObject) fileJsonObject));
+        for (Object fileJsonObject : jsonArray) {
+            try {
+                dirNode.addFile(parseFile((JSONObject) fileJsonObject));
+            } catch (DuplicateException e) {
+                System.err.println(e.getMessage());
+            }
         }
     }
 
@@ -90,9 +104,7 @@ public class JsonReader {
         try {
             returnFile = new File(name, content, dateCreated, dateModified);
         } catch (IllegalNameException e) {
-            // TODO: handle exception
-            // System.out.println(e.getMessage());
-            // e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         return returnFile;
