@@ -283,64 +283,191 @@ class DirNodeTest {
     }
 
     @Test
-    public void testAddAndDeleteSubDir() {
-        assertTrue(dirRoot.addSubDir("subdir1"));
-        assertTrue(dirRoot.containsSubDir("subdir1"));
-        assertEquals(1, dirRoot.getNumSubDirs());
+    public void testAddSubDirWithDirNameNothingThrown() {
+        try {
+            assertTrue(dirRoot.addSubDir("subdir1"));
+            assertTrue(dirRoot.containsSubDir("subdir1"));
+            assertEquals(1, dirRoot.getNumSubDirs());
 
-        assertTrue(dirRoot.addSubDir("subdir2"));
-        assertTrue(dirRoot.containsSubDir("subdir2"));
-        assertEquals(2, dirRoot.getNumSubDirs());
-
-        assertFalse(dirRoot.addSubDir("subdir1"));
-        assertFalse(dirRoot.addSubDir("subdir2"));
-
-        dirRoot.deleteSubDir("subdir1");
-        assertFalse(dirRoot.containsSubDir("subdir1"));
-        assertEquals(1, dirRoot.getNumSubDirs());
-
-        dirRoot.deleteSubDir("subdir2");
-        assertFalse(dirRoot.containsSubDir("subdir2"));
-        assertEquals(0, dirRoot.getNumSubDirs());
-
-        assertFalse(dirRoot.deleteSubDir("subdir1"));
-        assertFalse(dirRoot.deleteSubDir("subdir2"));
+            assertTrue(dirRoot.addSubDir("subdir2"));
+            assertTrue(dirRoot.containsSubDir("subdir2"));
+            assertEquals(2, dirRoot.getNumSubDirs());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
     }
 
     @Test
-    public void testAddSubDirWithGivenDirNode() {
-        assertTrue(dirRoot.addSubDir(dirNonRoot));
-        assertTrue(dirRoot.containsSubDir(dirNonRoot.getName()));
-        assertEquals(1, dirRoot.getNumSubDirs());
+    public void testAddSubDirWithDirNameExpectIllegalNameException() {
+        try {
+            assertTrue(dirRoot.addSubDir(""));
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
 
-        assertFalse(dirRoot.addSubDir(dirNonRoot));
-        assertEquals(1, dirRoot.getNumSubDirs());
+        try {
+            assertTrue(dirRoot.addSubDir(" "));
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
+
+        try {
+            assertTrue(dirRoot.addSubDir("\t"));
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
     }
 
     @Test
-    public void testGetSubDir() {
-        assertNull(dirRoot.getSubDir("no subdir"));
-
-        dirRoot.addSubDir("subdir1");
-        dirRoot.addSubDir("subdir2");
-        DirNode subdir1 = dirRoot.getSubDir("subdir1");
-        DirNode subdir2 = dirRoot.getSubDir("subdir2");
-
-        assertEquals("subdir1", subdir1.getName());
-        assertEquals(0, subdir1.getNumFiles());
-        assertEquals(dirRoot, subdir1.getParentDir());
-
-        assertEquals("subdir2", subdir2.getName());
-        assertEquals(0, subdir2.getNumFiles());
-        assertEquals(dirRoot, subdir2.getParentDir());
+    public void testAddSubDirWithDirNameExpectDuplicateException() {
+        try {
+            assertTrue(dirRoot.addSubDir("folder1"));
+            assertTrue(dirRoot.addSubDir("folder1"));
+            fail("DuplicateException  expected");
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
+        } catch (DuplicateException e) {
+            assertEquals("DirNode.addSubDir_String: Directory already exists.", e.getMessage());
+        }
     }
+
+    @Test
+    public void testAddSubDirWithGivenDirNodeNothingThrown() {
+        try {
+            assertTrue(dirRoot.addSubDir(dirNonRoot));
+            assertTrue(dirRoot.containsSubDir(dirNonRoot.getName()));
+            assertEquals(1, dirRoot.getNumSubDirs());
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
+    }
+
+    @Test
+    public void testAddSubDirWithGivenDirNodeExpectDuplicateException() {
+        try {
+            assertTrue(dirRoot.addSubDir(dirNonRoot));
+            assertTrue(dirRoot.addSubDir(dirNonRoot));
+            fail("DuplicateException expected");
+        } catch (DuplicateException e) {
+            assertEquals("DirNode.addSubDir_DirNode: Directory already exists.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetSubDirNothingThrown() {
+        try {
+            assertNull(dirRoot.getSubDir("no subdir"));
+
+            dirRoot.addSubDir("subdir1");
+            dirRoot.addSubDir("subdir2");
+            DirNode subdir1 = dirRoot.getSubDir("subdir1");
+            DirNode subdir2 = dirRoot.getSubDir("subdir2");
+
+            assertEquals("subdir1", subdir1.getName());
+            assertEquals(0, subdir1.getNumFiles());
+            assertEquals(dirRoot, subdir1.getParentDir());
+
+            assertEquals("subdir2", subdir2.getName());
+            assertEquals(0, subdir2.getNumFiles());
+            assertEquals(dirRoot, subdir2.getParentDir());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown here.");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown here.");
+        }
+    }
+
+    @Test
+    public void testGetSubDirExpectIllegalNameException() {
+        try {
+            DirNode subdir1 = dirRoot.getSubDir("");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.getSubDir: Directory name must be nonblank string.", e.getMessage());
+        }
+
+        try {
+            DirNode subdir1 = dirRoot.getSubDir(" ");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.getSubDir: Directory name must be nonblank string.", e.getMessage());
+        }
+
+        try {
+            DirNode subdir1 = dirRoot.getSubDir("\t");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.getSubDir: Directory name must be nonblank string.", e.getMessage());
+        }
+    }
+
+    // TODO: add testDeleteSubDirExpectNotFoundException
+
+    @Test
+    public void testDeleteSubDirNothingThrown() {
+        try {
+            dirRoot.addSubDir("subdir1");
+            dirRoot.addSubDir("subdir2");
+
+            assertEquals(2, dirRoot.getNumSubDirs());
+            dirRoot.deleteSubDir("subdir1");
+            assertEquals(1, dirRoot.getNumSubDirs());
+            dirRoot.deleteSubDir("subdir2");
+            assertEquals(0, dirRoot.getNumSubDirs());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
+    }
+
+    @Test
+    public void testDeleteSubDirExpectIllegalNameException() {
+        try {
+            dirRoot.deleteSubDir("");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
+        }
+
+        try {
+            dirRoot.deleteSubDir(" ");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
+        }
+
+        try {
+            dirRoot.deleteSubDir("\t");
+            fail("IllegalNameException expected");
+        } catch (IllegalNameException e) {
+            assertEquals("DirNode.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
+        }
+
+    }
+
+    // TODO: add testDeleteSubDirExpectNotFoundException
 
     @Test
     public void testGetOrderedSubDirNames() {
-        dirRoot.addSubDir("model");
-        dirRoot.addSubDir("ui");
-        dirRoot.addSubDir("data");
-        dirRoot.addSubDir("Settings");
+        try {
+            dirRoot.addSubDir("model");
+            dirRoot.addSubDir("ui");
+            dirRoot.addSubDir("data");
+            dirRoot.addSubDir("Settings");
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown here.");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown here.");
+        }
 
         List<String> nameList = new ArrayList<>();
         nameList.add("data");
@@ -352,50 +479,78 @@ class DirNodeTest {
 
     @Test
     public void testGetTotalNumFilesRootDirOnly() {
-        assertEquals(0, dirRoot.getTotalNumFiles());
-        dirRoot.addFile(files.get(0));
-        assertEquals(1, dirRoot.getTotalNumFiles());
+        try {
+            assertEquals(0, dirRoot.getTotalNumFiles());
+            dirRoot.addFile(files.get(0));
+            assertEquals(1, dirRoot.getTotalNumFiles());
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
     }
 
     @Test
     public void testGetTotalNumFilesWithSubDirs() {
-        dirRoot.addSubDir("subdir");
-        DirNode subdir = dirRoot.getSubDir("subdir");
-        assertEquals(0, dirRoot.getTotalNumFiles());
+        try {
+            dirRoot.addSubDir("subdir");
+            DirNode subdir = dirRoot.getSubDir("subdir");
+            assertEquals(0, dirRoot.getTotalNumFiles());
 
-        subdir.addFile("file2");
-        assertEquals(1, dirRoot.getTotalNumFiles());
+            subdir.addFile("file2");
+            assertEquals(1, dirRoot.getTotalNumFiles());
 
-        dirRoot.addFile("file1");
-        assertEquals(2, dirRoot.getTotalNumFiles());
+            dirRoot.addFile("file1");
+            assertEquals(2, dirRoot.getTotalNumFiles());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
+        }
     }
 
     @Test
     public void testGetTotalNumSubDirsRootDirOnly() {
         assertEquals(0, dirRoot.getTotalNumSubDirs());
-        dirRoot.addSubDir("subdir");
-        assertEquals(1, dirRoot.getTotalNumSubDirs());
+        try {
+            dirRoot.addSubDir("subdir");
+            assertEquals(1, dirRoot.getTotalNumSubDirs());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown here.");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown here.");
+        }
     }
 
     @Test
     public void testGetTotalNumSubDirsWithSubDirs() {
-        dirRoot.addSubDir("subdir");
-        DirNode subdir = dirRoot.getSubDir("subdir");
-        subdir.addSubDir("subsubdir");
-        assertEquals(2, dirRoot.getTotalNumSubDirs());
+        try {
+            dirRoot.addSubDir("subdir");
+            DirNode subdir = dirRoot.getSubDir("subdir");
+            subdir.addSubDir("subsubdir");
+            assertEquals(2, dirRoot.getTotalNumSubDirs());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown here.");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown here.");
+        }
     }
 
 
     @Test
     public void testGetGetAbsPath() {
-        dirRoot.addSubDir("folder1");
-        DirNode folder1 = dirRoot.getSubDir("folder1");
-        folder1.addSubDir("folder2");
-        DirNode folder2 = folder1.getSubDir("folder2");
+        try {
+            dirRoot.addSubDir("folder1");
+            DirNode folder1 = dirRoot.getSubDir("folder1");
+            folder1.addSubDir("folder2");
+            DirNode folder2 = folder1.getSubDir("folder2");
 
-        assertEquals("~", dirRoot.getAbsPath());
-        assertEquals("~/folder1", folder1.getAbsPath());
-        assertEquals("~/folder1/folder2", folder2.getAbsPath());
+            assertEquals("~", dirRoot.getAbsPath());
+            assertEquals("~/folder1", folder1.getAbsPath());
+            assertEquals("~/folder1/folder2", folder2.getAbsPath());
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown here.");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown here.");
+        }
     }
 
     @Test

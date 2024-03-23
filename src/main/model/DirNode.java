@@ -26,8 +26,8 @@ public class DirNode implements Writable {
     private final Set<String> fileNames;
     private int numFiles;
     private int numSubDirs;
-    private final String illegalFileNameMsg = "File name must be nonempty string.";
-    private final String illegalDirNameMsg = "Directory name must be nonempty string.";
+    private final String illegalFileNameMsg = "File name must be nonblank string.";
+    private final String illegalDirNameMsg = "Directory name must be nonblank string.";
     private final String duplicateFileMsg = "File already exists.";
     private final String duplicateDirMsg = "Directory already exists.";
 
@@ -148,7 +148,7 @@ public class DirNode implements Writable {
      */
     public boolean addSubDir(DirNode dirNode) throws DuplicateException {
         if (containsSubDir(dirNode.getName())) {
-            throw new DuplicateException("DirNode.addSubDir: " + duplicateDirMsg);
+            throw new DuplicateException("DirNode.addSubDir_DirNode: " + duplicateDirMsg);
         }
         subDirs.add(dirNode);
         dirNode.addParentDir(this);
@@ -168,7 +168,7 @@ public class DirNode implements Writable {
      */
     public boolean addSubDir(String dirName) throws IllegalNameException, DuplicateException {
         if (containsSubDir(dirName)) {
-            throw new DuplicateException("DirNode.addSubDir: " + duplicateDirMsg);
+            throw new DuplicateException("DirNode.addSubDir_String: " + duplicateDirMsg);
         }
         try {
             DirNode child = new DirNode(dirName);
@@ -178,7 +178,7 @@ public class DirNode implements Writable {
             subDirNames.add(dirName);
             return true;
         } catch (IllegalNameException e) {
-            throw new IllegalNameException("DirNode.addSubDir: " + illegalDirNameMsg);
+            throw new IllegalNameException("DirNode.addSubDir_String: " + illegalDirNameMsg);
         }
     }
 
