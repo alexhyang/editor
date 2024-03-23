@@ -88,9 +88,6 @@ public class DirNode implements Writable {
      *            throws IllegalNameException if filename is blank
      */
     public boolean addFile(String fileName) throws IllegalNameException, DuplicateException {
-        if (fileName.isBlank()) {
-            throw new IllegalNameException("DirNode.addFile_String: " + illegalFileNameMsg);
-        }
         if (containsFile(fileName)) {
             throw new DuplicateException("DirNode.addFile_String: " + duplicateFileMsg);
         }
@@ -101,11 +98,8 @@ public class DirNode implements Writable {
             numFiles++;
             return true;
         } catch (IllegalNameException e) {
-            // TODO: throw new exception
-            // throw new IllegalNameException("DirNode.addFile_String: " + illegalFileNameMsg);
+            throw new IllegalNameException("DirNode.addFile_String: " + illegalFileNameMsg);
         }
-        // TODO: remove return statement after handling IllegalNameException
-        return false;
     }
 
     /*
