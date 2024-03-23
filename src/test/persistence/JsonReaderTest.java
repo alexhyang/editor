@@ -2,13 +2,14 @@ package persistence;
 
 import model.DirNode;
 import model.File;
+import model.exceptions.IllegalNameException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Cite: this class is based on CPCS210/JsonSerilizationDemo
+// Cite: this class is based on CPCS210/JsonSerializationDemo
 public class JsonReaderTest extends JsonTest {
 
     @Test
@@ -46,6 +47,8 @@ public class JsonReaderTest extends JsonTest {
 
         } catch (IOException e) {
             fail("IOException shouldn't be thrown");
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown here");
         }
     }
 
@@ -66,6 +69,8 @@ public class JsonReaderTest extends JsonTest {
             checkFile("file1.txt", date, date, "", file1);
         } catch (IOException e) {
             fail("IOException shouldn't be thrown");
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
         }
 
     }
@@ -83,6 +88,8 @@ public class JsonReaderTest extends JsonTest {
             checkFile("file1.txt", date, date, "", file1);
         } catch (IOException e) {
             fail("IOException shouldn't be thrown");
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown");
         }
     }
 }

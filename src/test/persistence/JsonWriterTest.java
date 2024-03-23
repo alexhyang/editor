@@ -2,6 +2,7 @@ package persistence;
 
 import model.DirNode;
 import model.File;
+import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +59,10 @@ public class JsonWriterTest extends JsonTest {
             checkDir("folder1", false, 0, 0, rootDirNode.getSubDir("folder1"));
         } catch (IOException e) {
             fail("IOException shouldn't be thrown.");
+        } catch (IllegalNameException e) {
+            fail("IllegalNameException shouldn't be thrown here.");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown.");
         }
     }
 
@@ -83,6 +88,8 @@ public class JsonWriterTest extends JsonTest {
             checkFile("file1.txt", dateString, dateString, "", file1);
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
         } catch (IOException e) {
             fail("IOException shouldn't be thrown.");
         }
@@ -107,6 +114,8 @@ public class JsonWriterTest extends JsonTest {
             checkFile("file1.txt", dateString, dateString, "", file1);
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
+        } catch (DuplicateException e) {
+            fail("DuplicateException shouldn't be thrown");
         } catch (IOException e) {
             fail("IOException shouldn't be thrown.");
         }
