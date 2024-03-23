@@ -3,6 +3,7 @@ package persistence;
 import model.DirNode;
 import model.File;
 import model.exceptions.IllegalNameException;
+import model.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -49,6 +50,8 @@ public class JsonReaderTest extends JsonTest {
             fail("IOException shouldn't be thrown");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown here");
+        } catch (NotFoundException e) {
+            fail("NotFoundException shouldn't be thrown");
         }
     }
 
@@ -71,6 +74,8 @@ public class JsonReaderTest extends JsonTest {
             fail("IOException shouldn't be thrown");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
+        } catch (NotFoundException e) {
+            fail("NotFoundException shouldn't be thrown");
         }
 
     }
@@ -90,6 +95,8 @@ public class JsonReaderTest extends JsonTest {
             fail("IOException shouldn't be thrown");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
+        } catch (NotFoundException e) {
+            fail("NotFoundException shouldn't be thrown");
         }
     }
 }

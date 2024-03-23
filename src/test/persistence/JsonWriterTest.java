@@ -4,6 +4,7 @@ import model.DirNode;
 import model.File;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
+import model.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -61,6 +62,8 @@ public class JsonWriterTest extends JsonTest {
             fail("IOException shouldn't be thrown.");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown here.");
+        } catch (NotFoundException e) {
+            fail("NotFoundException shouldn't be thrown");
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown.");
         }
@@ -88,6 +91,8 @@ public class JsonWriterTest extends JsonTest {
             checkFile("file1.txt", dateString, dateString, "", file1);
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
+        } catch (NotFoundException e) {
+            fail("NotFoundException shouldn't be thrown");
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         } catch (IOException e) {
@@ -114,6 +119,8 @@ public class JsonWriterTest extends JsonTest {
             checkFile("file1.txt", dateString, dateString, "", file1);
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
+        } catch (NotFoundException e) {
+            fail("NotFoundException shouldn't be thrown");
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         } catch (IOException e) {

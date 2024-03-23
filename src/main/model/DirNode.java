@@ -2,6 +2,7 @@ package model;
 
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
+import model.exceptions.NotFoundException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
@@ -93,10 +94,12 @@ public class DirNode implements Writable {
     /*
      * EFFECTS:   return file that has the given name in this directory,
      *                return null if the file cannot be found
-     *            throws IllegalNameException if fileName is blank
+     *            throws IllegalNameException if fileName is blank,
+     *            throws NotFoundException if file with given name can't be found
      */
-    public File getFile(String fileName) throws IllegalNameException {
+    public File getFile(String fileName) throws IllegalNameException, NotFoundException {
         checkFileNameLegality(fileName, "DirNode.getFile");
+        checkFileExistence(fileName, "DirNode.getFile");
 
         for (File file: files) {
             if (file.getName().equals(fileName)) {
@@ -111,10 +114,12 @@ public class DirNode implements Writable {
      * EFFECTS:   delete file with the given filename in this directory, do
      *                nothing if the file cannot be found;
      *                return true if delete process is successful, false otherwise
-     *            throws IllegalNameException if fileName is blank
+     *            throws IllegalNameException if fileName is blank,
+     *            throws NotFoundException if file with given name can't be found
      */
-    public boolean deleteFile(String fileName) throws IllegalNameException {
+    public boolean deleteFile(String fileName) throws IllegalNameException, NotFoundException {
         checkFileNameLegality(fileName, "DirNode.deleteFile");
+        checkFileExistence(fileName, "DirNode.deleteFile");
 
         if (files.removeIf(file -> file.getName().equals(fileName))) {
             numFiles--;
@@ -177,9 +182,11 @@ public class DirNode implements Writable {
      * EFFECTS:   return the subdirectory in this directory with the given name,
      *                return null if the subdirectory cannot be found
      *                throws IllegalNameException if dirName is blank
+     *                throws NotFoundException if subdir doesn't exist
      */
-    public DirNode getSubDir(String dirName) throws IllegalNameException {
+    public DirNode getSubDir(String dirName) throws IllegalNameException, NotFoundException {
         checkDirNameLegality(dirName, "DirNode.getSubDir");
+        checkSubDirExistence(dirName, "DirNode.getSubDir");
 
         for (DirNode dirNode: subDirs) {
             if (dirNode.getName().equals(dirName)) {
@@ -202,9 +209,12 @@ public class DirNode implements Writable {
      *                nothing if the subdirectory cannot be found;
      *                return true if the deletion is successful, false otherwise
      *                throws IllegalNameException if dirName is blank
+     *                throws NotFoundException if subdir doesn't exist
      */
-    public boolean deleteSubDir(String dirName) throws IllegalNameException {
+    public boolean deleteSubDir(String dirName) throws IllegalNameException, NotFoundException {
         checkDirNameLegality(dirName, "DirNode.deleteSubDir");
+        checkSubDirExistence(dirName, "DirNode.deleteSubDir");
+
         if (subDirs.removeIf(child -> child.getName().equals(dirName))) {
             numSubDirs--;
             subDirNames.remove(dirName);
@@ -276,7 +286,7 @@ public class DirNode implements Writable {
             totalNum += getOrderedSubDirNames().stream().mapToInt(name -> {
                 try {
                     return getSubDir(name).getTotalNumFiles();
-                } catch (IllegalNameException e) {
+                } catch (IllegalNameException | NotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }).sum();
@@ -294,7 +304,7 @@ public class DirNode implements Writable {
             totalNum += getOrderedSubDirNames().stream().mapToInt(name -> {
                 try {
                     return getSubDir(name).getTotalNumSubDirs();
-                } catch (IllegalNameException e) {
+                } catch (IllegalNameException | NotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }).sum();
@@ -381,6 +391,26 @@ public class DirNode implements Writable {
         if (containsSubDir(name)) {
             String duplicateDirMsg = "Directory already exists.";
             throw new DuplicateException(methodIdentifier + ": " + duplicateDirMsg);
+        }
+    }
+
+    /*
+     * EFFECTS:   check the given filename, throws NotFoundException if the file can't be found in directory
+     */
+    private void checkFileExistence(String name, String methodIdentifier) throws NotFoundException {
+        if (!containsFile(name)) {
+            String noFileMsg = "File can't be found.";
+            throw new NotFoundException(methodIdentifier + ": " + noFileMsg);
+        }
+    }
+
+    /*
+     * EFFECTS:   check the given subdir name, throws NotFoundException if the subdir can't be found in directory
+     */
+    private void checkSubDirExistence(String name, String methodIdentifier) throws NotFoundException {
+        if (!containsSubDir(name)) {
+            String noDirMsg = "Directory can't be found.";
+            throw new NotFoundException(methodIdentifier + ": " + noDirMsg);
         }
     }
 

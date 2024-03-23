@@ -195,7 +195,7 @@ public class Terminal {
                 } else {
                     System.out.println("cat: '" + fileName + "' No such file");
                 }
-            } catch (IllegalNameException e) {
+            } catch (IllegalNameException | NotFoundException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -223,7 +223,7 @@ public class Terminal {
                 } else {
                     System.out.println("rm: cannot remove '" + fileName + "': No such file");
                 }
-            } catch (IllegalNameException e) {
+            } catch (IllegalNameException | NotFoundException e) {
                 System.err.println(e.getMessage());
             }
         }
@@ -316,7 +316,7 @@ public class Terminal {
         if (currentDir.containsSubDir(dirName)) {
             try {
                 currentDir.deleteSubDir(dirName);
-            } catch (IllegalNameException e) {
+            } catch (IllegalNameException | NotFoundException e) {
                 System.err.println(e.getMessage());
             }
         } else {
@@ -360,7 +360,7 @@ public class Terminal {
         dirNode.getOrderedSubDirNames().forEach(name -> {
             try {
                 tree(dirNode.getSubDir(name), depth + 1);
-            } catch (IllegalNameException e) {
+            } catch (IllegalNameException | NotFoundException e) {
                 System.err.println(e.getMessage());
             }
         });
