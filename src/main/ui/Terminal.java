@@ -160,64 +160,52 @@ public class Terminal {
     //               print error message if filename is blank or file exists
     private void createFile(String fileName) {
         try {
-            File newFile = new File(fileName);
-            currentDir.addFile(newFile);
+            currentDir.addFile(fileName);
             System.out.println("'" + fileName + "' was created successfully!");
         } catch (IllegalNameException e) {
             System.out.println("touch: file name must be nonblank string.");
         } catch (DuplicateException e) {
-            System.out.println("'" + fileName + "' already exists!");
+            System.out.println("touch: failed to create '" + fileName + "': file already exists!");
         }
     }
 
     // EFFECTS: print content of file with the given file name in the current directory
     //              if the file doesn't exist, print error message
     private void viewFile(String fileName) {
-        if (fileName.length() == 0) {
-            System.out.println("Please enter a valid file name");
-        } else {
-            try {
-                File file = currentDir.getFile(fileName);
-                if (file != null) {
-                    String content = file.getContent();
-                    if (content.length() == 0) {
-                        System.out.println("'" + fileName + "' is empty!");
-                    } else {
-                        System.out.println(file.getContent());
-                    }
-                } else {
-                    System.out.println("cat: '" + fileName + "' No such file");
-                }
-            } catch (IllegalNameException | NotFoundException e) {
-                System.err.println(e.getMessage());
-            }
+        try {
+            File file = currentDir.getFile(fileName);
+            System.out.println(file.getContent());
+        } catch (IllegalNameException e) {
+            System.out.println("cat: file name must be nonblank string.");
+        } catch (NotFoundException e) {
+            System.out.println("cat: failed to open '" + fileName + "': No such file");
         }
     }
 
     // MODIFIES:  this
     // EFFECTS:   edit and save file, if file doesn't exist, print error message
     private void editFile(String fileName) {
-        if (fileName.length() == 0) {
-            System.out.println("Please enter a valid file name");
-        } else {
+        try {
+            File file = currentDir.getFile(fileName);
             System.out.println(fileName + " cannot be edited right now. Please finish implementation first");
+            // TODO: implement editing file
+        } catch (IllegalNameException e) {
+            System.out.println("vim: file name must be nonblank string.");
+        } catch (NotFoundException e) {
+            System.out.println("vim: failed to open '" + fileName + "': No such file");
         }
     }
 
     // MODIFIES:  this
     // EFFECTS:   remove file from current directory, if file doesn't exist, print error message
     private void removeFile(String fileName) {
-        if (fileName.length() == 0) {
-            System.out.println("Please enter a valid file name");
-        } else {
-            try {
-                currentDir.deleteFile(fileName);
-                System.out.println("'" + fileName + "' has been removed!");
-            } catch (IllegalNameException e) {
-                System.out.println("rm: filename must be nonblank string.");
-            } catch (NotFoundException e) {
-                System.out.println("rm: cannot remove '" + fileName + "': No such file");
-            }
+        try {
+            currentDir.deleteFile(fileName);
+            System.out.println("'" + fileName + "' has been removed!");
+        } catch (IllegalNameException e) {
+            System.out.println("rm: file name must be nonblank string.");
+        } catch (NotFoundException e) {
+            System.out.println("rm: failed to remove '" + fileName + "': No such file");
         }
     }
 
@@ -249,11 +237,15 @@ public class Terminal {
     // EFFECTS:  find directory based on the given array of relative path, if target dir exists,
     //               returns its dirNode, otherwise throws NotFoundException
     private DirNode findDirectory(DirNode currentDirNode, String[] dirStrs) throws NotFoundException {
+        if (dirStrs.length == 0) {
+            return currentDirNode;
+        }
+        DirNode nextDir = findNextDirectory(currentDirNode, dirStrs[0]);
         if (dirStrs.length == 1) {
-            return findNextDirectory(currentDirNode, dirStrs[0]);
+            return nextDir;
         } else {
-            return findDirectory(findNextDirectory(currentDirNode, dirStrs[0]),
-                    Arrays.copyOfRange(dirStrs, 1, dirStrs.length));
+            String[] remainingDirStrs = Arrays.copyOfRange(dirStrs, 1, dirStrs.length);
+            return findDirectory(nextDir, remainingDirStrs);
         }
     }
 
@@ -284,20 +276,12 @@ public class Terminal {
     // EFFECTS:  create a subdirectory in current directory if it doesn't exist,
     //               do nothing otherwise
     private void createDirectory(String dirName) {
-        if (dirName.length() == 0) {
-            System.out.println("mkdir: missing operand");
-        } else {
-            if (!currentDir.containsSubDir(dirName)) {
-                try {
-                    currentDir.addSubDir(dirName);
-                } catch (IllegalNameException e) {
-                    System.err.println(e.getMessage());
-                } catch (DuplicateException e) {
-                    System.err.println(e.getMessage());
-                }
-            } else {
-                System.out.println("mkdir: cannot create directory '" + dirName + "': Directory exists");
-            }
+        try {
+            currentDir.addSubDir(dirName);
+        } catch (IllegalNameException e) {
+            System.out.println("mkdir: dir name must be nonblank string.");
+        } catch (DuplicateException e) {
+            System.out.println("mkdir: failed to create '" + dirName + "': directory already exists!");
         }
     }
 
@@ -305,13 +289,11 @@ public class Terminal {
     // EFFECTS:  remove a subdirectory in current directory if it exists,
     //               do nothing otherwise
     private void removeDirectory(String dirName) {
-        if (currentDir.containsSubDir(dirName)) {
-            try {
-                currentDir.deleteSubDir(dirName);
-            } catch (IllegalNameException | NotFoundException e) {
-                System.err.println(e.getMessage());
-            }
-        } else {
+        try {
+            currentDir.deleteSubDir(dirName);
+        } catch (IllegalNameException e) {
+            System.out.println("rmdir: dir name must be nonblank string.");
+        } catch (NotFoundException e) {
             System.out.println("rmdir: failed to remove '" + dirName + "': No such directory");
         }
     }
