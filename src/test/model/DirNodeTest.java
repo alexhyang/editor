@@ -340,11 +340,11 @@ class DirNodeTest {
     @Test
     public void testAddSubDirWithDirNameNothingThrown() {
         try {
-            assertTrue(dirRoot.addSubDir("subdir1"));
+            dirRoot.addSubDir("subdir1");
             assertTrue(dirRoot.containsSubDir("subdir1"));
             assertEquals(1, dirRoot.getNumSubDirs());
 
-            assertTrue(dirRoot.addSubDir("subdir2"));
+            dirRoot.addSubDir("subdir2");
             assertTrue(dirRoot.containsSubDir("subdir2"));
             assertEquals(2, dirRoot.getNumSubDirs());
         } catch (IllegalNameException e) {
@@ -357,7 +357,7 @@ class DirNodeTest {
     @Test
     public void testAddSubDirWithDirNameExpectIllegalNameException() {
         try {
-            assertTrue(dirRoot.addSubDir(""));
+            dirRoot.addSubDir("");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
@@ -366,7 +366,7 @@ class DirNodeTest {
         }
 
         try {
-            assertTrue(dirRoot.addSubDir(" "));
+            dirRoot.addSubDir(" ");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
@@ -375,7 +375,7 @@ class DirNodeTest {
         }
 
         try {
-            assertTrue(dirRoot.addSubDir("\t"));
+            dirRoot.addSubDir("\t");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
@@ -387,8 +387,8 @@ class DirNodeTest {
     @Test
     public void testAddSubDirWithDirNameExpectDuplicateException() {
         try {
-            assertTrue(dirRoot.addSubDir("folder1"));
-            assertTrue(dirRoot.addSubDir("folder1"));
+            dirRoot.addSubDir("folder1");
+            dirRoot.addSubDir("folder1");
             fail("DuplicateException  expected");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
@@ -400,7 +400,7 @@ class DirNodeTest {
     @Test
     public void testAddSubDirWithGivenDirNodeNothingThrown() {
         try {
-            assertTrue(dirRoot.addSubDir(dirNonRoot));
+            dirRoot.addSubDir(dirNonRoot);
             assertTrue(dirRoot.containsSubDir(dirNonRoot.getName()));
             assertEquals(1, dirRoot.getNumSubDirs());
         } catch (DuplicateException e) {
@@ -411,8 +411,8 @@ class DirNodeTest {
     @Test
     public void testAddSubDirWithGivenDirNodeExpectDuplicateException() {
         try {
-            assertTrue(dirRoot.addSubDir(dirNonRoot));
-            assertTrue(dirRoot.addSubDir(dirNonRoot));
+            dirRoot.addSubDir(dirNonRoot);
+            dirRoot.addSubDir(dirNonRoot);
             fail("DuplicateException expected");
         } catch (DuplicateException e) {
             assertEquals("DirNode.addSubDir_DirNode: Directory already exists.", e.getMessage());

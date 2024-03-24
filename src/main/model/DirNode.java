@@ -129,16 +129,14 @@ public class DirNode implements Writable {
      * EFFECTS:   adds a given subdirectory if no subdirectories in
      *                this directory have the same name;
      *                throws DuplicateException if the dirname exists,
-     *                returns true if the process is successful
      */
-    public boolean addSubDir(DirNode dirNode) throws DuplicateException {
+    public void addSubDir(DirNode dirNode) throws DuplicateException {
         checkDuplicateSubDir(dirNode.getName(), "DirNode.addSubDir_DirNode");
 
         subDirs.add(dirNode);
         dirNode.addParentDir(this);
         numSubDirs++;
         subDirNames.add(dirNode.getName());
-        return true;
     }
 
     /*
@@ -150,7 +148,7 @@ public class DirNode implements Writable {
      *                throws DuplicateException if dirname exists,
      *                return true if the process is successful
      */
-    public boolean addSubDir(String dirName) throws IllegalNameException, DuplicateException {
+    public void addSubDir(String dirName) throws IllegalNameException, DuplicateException {
         checkDirNameLegality(dirName, "DirNode.addSubDir_String");
         checkDuplicateSubDir(dirName, "DirNode.addSubDir_String");
 
@@ -159,7 +157,6 @@ public class DirNode implements Writable {
         child.addParentDir(this);
         numSubDirs++;
         subDirNames.add(dirName);
-        return true;
     }
 
     /*
