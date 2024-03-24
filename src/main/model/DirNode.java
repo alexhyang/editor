@@ -62,16 +62,14 @@ public class DirNode implements Writable {
     /*
      * MODIFIES:  this
      * EFFECTS:   add given file if no file in this directory has the
-     *                same filename, throw DuplicateException if the filename exists;
-     *                return true if file is added successfully
+     *                same filename, throw DuplicateException if the filename exists
      */
-    public boolean addFile(File file) throws DuplicateException {
+    public void addFile(File file) throws DuplicateException {
         checkDuplicateFile(file.getName(), "DirNode.addFile_File");
 
         files.add(file);
         fileNames.add(file.getName());
         numFiles++;
-        return true;
     }
 
     /*
@@ -81,14 +79,13 @@ public class DirNode implements Writable {
      *            throws DuplicateException if the filename exists,
      *            throws IllegalNameException if filename is blank
      */
-    public boolean addFile(String fileName) throws IllegalNameException, DuplicateException {
+    public void addFile(String fileName) throws IllegalNameException, DuplicateException {
         checkFileNameLegality(fileName, "DirNode.addFile_String");
         checkDuplicateFile(fileName, "DirNode.addFile_String");
 
         files.add(new File(fileName));
         fileNames.add(fileName);
         numFiles++;
-        return true;
     }
 
     /*

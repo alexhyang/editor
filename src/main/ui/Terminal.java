@@ -159,21 +159,14 @@ public class Terminal {
     // EFFECTS:  create a file with the given file name in the current directory
     //               print error message if filename is blank or file exists
     private void createFile(String fileName) {
-        if (fileName.length() == 0) {
-            System.out.println("Please enter a valid file name");
-        } else {
-            try {
-                File newFile = new File(fileName);
-                if (currentDir.addFile(newFile)) {
-                    System.out.println("'" + fileName + "' was created successfully!");
-                } else {
-                    System.out.println("'" + fileName + "' already exists!");
-                }
-            } catch (IllegalNameException e) {
-                System.err.println(e.getMessage());
-            } catch (DuplicateException e) {
-                System.err.println(e.getMessage());
-            }
+        try {
+            File newFile = new File(fileName);
+            currentDir.addFile(newFile);
+            System.out.println("'" + fileName + "' was created successfully!");
+        } catch (IllegalNameException e) {
+            System.out.println("touch: file name must be nonblank string.");
+        } catch (DuplicateException e) {
+            System.out.println("'" + fileName + "' already exists!");
         }
     }
 
