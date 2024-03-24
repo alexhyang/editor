@@ -239,11 +239,11 @@ class DirNodeTest {
             dirRoot.addFile(files.get(1));
 
             assertTrue(dirRoot.containsFile("DirNode.java"));
-            assertTrue(dirRoot.deleteFile("DirNode.java"));
+            dirRoot.deleteFile("DirNode.java");
             assertFalse(dirRoot.containsFile("DirNode.java"));
 
             assertTrue(dirRoot.containsFile("File.java"));
-            assertTrue(dirRoot.deleteFile("File.java"));
+            dirRoot.deleteFile("File.java");
             assertFalse(dirRoot.containsFile("File.java"));
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
@@ -288,7 +288,7 @@ class DirNodeTest {
     public void testDeleteFileExpectNotFoundException() {
         try {
             assertEquals(0, dirRoot.getNumFiles());
-            assertTrue(dirRoot.deleteFile("nonexistentFile"));
+            dirRoot.deleteFile("nonexistentFile");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
         } catch (NotFoundException e) {
@@ -539,7 +539,7 @@ class DirNodeTest {
     public void testDeleteSubDirExpectNotFoundException() {
         try {
             assertEquals(0, dirRoot.getNumSubDirs());
-            assertTrue(dirRoot.deleteSubDir("nonexistentSubDir"));
+            dirRoot.deleteSubDir("nonexistentSubDir");
             fail("NotFoundException expected");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");

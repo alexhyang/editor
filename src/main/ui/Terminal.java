@@ -218,13 +218,12 @@ public class Terminal {
             System.out.println("Please enter a valid file name");
         } else {
             try {
-                if (currentDir.deleteFile(fileName)) {
-                    System.out.println("'" + fileName + "' has been removed!");
-                } else {
-                    System.out.println("rm: cannot remove '" + fileName + "': No such file");
-                }
-            } catch (IllegalNameException | NotFoundException e) {
-                System.err.println(e.getMessage());
+                currentDir.deleteFile(fileName);
+                System.out.println("'" + fileName + "' has been removed!");
+            } catch (IllegalNameException e) {
+                System.out.println("rm: filename must be nonblank string.");
+            } catch (NotFoundException e) {
+                System.out.println("rm: cannot remove '" + fileName + "': No such file");
             }
         }
     }

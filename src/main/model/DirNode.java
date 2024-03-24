@@ -113,20 +113,17 @@ public class DirNode implements Writable {
      * MODIFIES:  this
      * EFFECTS:   delete file with the given filename in this directory, do
      *                nothing if the file cannot be found;
-     *                return true if delete process is successful, false otherwise
      *            throws IllegalNameException if fileName is blank,
      *            throws NotFoundException if file with given name can't be found
      */
-    public boolean deleteFile(String fileName) throws IllegalNameException, NotFoundException {
+    public void deleteFile(String fileName) throws IllegalNameException, NotFoundException {
         checkFileNameLegality(fileName, "DirNode.deleteFile");
         checkFileExistence(fileName, "DirNode.deleteFile");
 
         if (files.removeIf(file -> file.getName().equals(fileName))) {
             numFiles--;
             fileNames.remove(fileName);
-            return true;
         }
-        return false;
     }
 
     /*
