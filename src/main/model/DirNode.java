@@ -204,20 +204,17 @@ public class DirNode implements Writable {
      * MODIFIES:  this
      * EFFECTS:   delete subdirectory with the given name in this directory, do
      *                nothing if the subdirectory cannot be found;
-     *                return true if the deletion is successful, false otherwise
      *                throws IllegalNameException if dirName is blank
      *                throws NotFoundException if subdir doesn't exist
      */
-    public boolean deleteSubDir(String dirName) throws IllegalNameException, NotFoundException {
+    public void deleteSubDir(String dirName) throws IllegalNameException, NotFoundException {
         checkDirNameLegality(dirName, "DirNode.deleteSubDir");
         checkSubDirExistence(dirName, "DirNode.deleteSubDir");
 
         if (subDirs.removeIf(child -> child.getName().equals(dirName))) {
             numSubDirs--;
             subDirNames.remove(dirName);
-            return true;
         }
-        return false;
     }
 
     /*
