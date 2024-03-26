@@ -165,7 +165,7 @@ public class Terminal {
         } catch (IllegalNameException e) {
             System.out.println("touch: file name must be nonblank string.");
         } catch (DuplicateException e) {
-            System.out.println("touch: cannot create '" + fileName + "': file already exists!");
+            System.out.println("touch: failed to create '" + fileName + "': file already exists!");
         }
     }
 
@@ -178,7 +178,7 @@ public class Terminal {
         } catch (IllegalNameException e) {
             System.out.println("cat: file name must be nonblank string.");
         } catch (NotFoundException e) {
-            System.out.println("cat: cannot open '" + fileName + "': No such file");
+            System.out.println("cat: failed to open '" + fileName + "': No such file");
         }
     }
 
@@ -192,7 +192,7 @@ public class Terminal {
         } catch (IllegalNameException e) {
             System.out.println("vim: file name must be nonblank string.");
         } catch (NotFoundException e) {
-            System.out.println("vim: cannot open '" + fileName + "': No such file");
+            System.out.println("vim: failed to open '" + fileName + "': No such file");
         }
     }
 
@@ -205,7 +205,7 @@ public class Terminal {
         } catch (IllegalNameException e) {
             System.out.println("rm: file name must be nonblank string.");
         } catch (NotFoundException e) {
-            System.out.println("rm: cannot remove '" + fileName + "': No such file");
+            System.out.println("rm: failed to remove '" + fileName + "': No such file");
         }
     }
 
@@ -281,7 +281,7 @@ public class Terminal {
         } catch (IllegalNameException e) {
             System.out.println("mkdir: dir name must be nonblank string.");
         } catch (DuplicateException e) {
-            System.out.println("mkdir: cannot create '" + dirName + "': directory already exists!");
+            System.out.println("mkdir: failed to create '" + dirName + "': directory already exists!");
         }
     }
 
