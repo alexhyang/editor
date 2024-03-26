@@ -1,6 +1,6 @@
 package persistence;
 
-import model.DirNode;
+import model.Dir;
 import model.File;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
@@ -17,7 +17,7 @@ public class JsonReaderTest extends JsonTest {
     void testReaderNonExistentFile() {
         JsonReader reader = new JsonReader("./data/noSuchFile.json");
         try {
-            DirNode dirNode = reader.read();
+            Dir dir = reader.read();
             fail("IOException expected");
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,8 +28,8 @@ public class JsonReaderTest extends JsonTest {
     void testReaderEmptyFileSystem() {
         JsonReader reader = new JsonReader("./data/testReaderEmptyFileSystem.json");
         try {
-            DirNode rootDirNode = reader.read();
-            checkDir("root", true, 0, 0, rootDirNode);
+            Dir rootDir = reader.read();
+            checkDir("root", true, 0, 0, rootDir);
         } catch (IOException e) {
             fail("IOException shouldn't be thrown");
         }
@@ -39,11 +39,11 @@ public class JsonReaderTest extends JsonTest {
     void testReaderFileSystemWithEmptySubdirectories() {
         JsonReader reader = new JsonReader("./data/testReaderFileSystemWithEmptySubdirectories.json");
         try {
-            DirNode rootDirNode = reader.read();
-            checkDir("root", true, 0, 1, rootDirNode);
+            Dir rootDir = reader.read();
+            checkDir("root", true, 0, 1, rootDir);
 
-            assertTrue(rootDirNode.containsSubDir("folder1"));
-            DirNode folder1 = rootDirNode.getSubDir("folder1");
+            assertTrue(rootDir.containsSubDir("folder1"));
+            Dir folder1 = rootDir.getSubDir("folder1");
             checkDir("folder1", false, 0, 0, folder1);
 
         } catch (IOException e) {
@@ -59,11 +59,11 @@ public class JsonReaderTest extends JsonTest {
     void testReaderFileSystemWithNonEmptySubDirectories() {
         JsonReader reader = new JsonReader("./data/testReaderFileSystemWithNonEmptySubdirectories.json");
         try {
-            DirNode rootDirNode = reader.read();
-            checkDir("root", true, 0, 1, rootDirNode);
+            Dir rootDir = reader.read();
+            checkDir("root", true, 0, 1, rootDir);
 
-            assertTrue(rootDirNode.containsSubDir("folder1"));
-            DirNode folder1 = rootDirNode.getSubDir("folder1");
+            assertTrue(rootDir.containsSubDir("folder1"));
+            Dir folder1 = rootDir.getSubDir("folder1");
             checkDir("folder1", false, 1, 0, folder1);
 
             assertTrue(folder1.containsFile("file1.txt"));
@@ -84,11 +84,11 @@ public class JsonReaderTest extends JsonTest {
     void testReaderFileSystemWithFiles() {
         JsonReader reader = new JsonReader("./data/testReaderFileSystemWithFiles.json");
         try {
-            DirNode rootDirNode = reader.read();
-            checkDir("root", true, 1, 0, rootDirNode);
+            Dir rootDir = reader.read();
+            checkDir("root", true, 1, 0, rootDir);
 
-            assertTrue(rootDirNode.containsFile("file1.txt"));
-            File file1 = rootDirNode.getFile("file1.txt");
+            assertTrue(rootDir.containsFile("file1.txt"));
+            File file1 = rootDir.getFile("file1.txt");
             String date = "Fri Mar 08 13:19:37 PST 2024";
             checkFile("file1.txt", date, date, "", file1);
         } catch (IOException e) {

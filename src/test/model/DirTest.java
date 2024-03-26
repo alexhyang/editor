@@ -8,7 +8,7 @@ Exceptions to test:
 | addFile(String)      | IllegalNameException, DuplicateException  |
 | getFile(String)      | IllegalNameException, NotFoundException   |
 | deleteFile(String)   | IllegalNameException, NotFoundException   |
-| addSubDir(DirNode)   | DuplicateException                        |
+| addSubDir(Dir)   | DuplicateException                        |
 | addSubDir(String)    | IllegalNameException, DuplicateException  |
 | getSubDir(String)    | IllegalNameException, NotFoundException   |
 | deleteSubDir(String) | IllegalNameException, NotFoundException   |
@@ -28,22 +28,22 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DirNodeTest {
-    private DirNode dirRoot;
-    private DirNode dirNonRoot;
+class DirTest {
+    private Dir dirRoot;
+    private Dir dirNonRoot;
     private List<File> files;
 
     @BeforeEach
     public void setUp() {
-        dirRoot = new DirNode();
+        dirRoot = new Dir();
         try {
-            dirNonRoot = new DirNode("sub_dir");
+            dirNonRoot = new Dir("sub_dir");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown.");
         }
         files = new ArrayList<>();
         try {
-            files.add(new File("DirNode.java"));
+            files.add(new File("Dir.java"));
             files.add(new File("File.java"));
             files.add(new File("README.md", "this is readme file"));
             files.add(new File("data.json"));
@@ -67,24 +67,24 @@ class DirNodeTest {
     @Test
     public void testConstructorExpectIllegalNameException() {
         try {
-            DirNode dirNode = new DirNode("");
+            Dir dir = new Dir("");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.DirNode: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.Dir: Directory name must be nonblank string.", e.getMessage());
         }
 
         try {
-            DirNode dirNode = new DirNode(" ");
+            Dir dir = new Dir(" ");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.DirNode: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.Dir: Directory name must be nonblank string.", e.getMessage());
         }
 
         try {
-            DirNode dirNode = new DirNode("\t");
+            Dir dir = new Dir("\t");
             fail("IllegalNameException shouldn't be thrown");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.DirNode: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.Dir: Directory name must be nonblank string.", e.getMessage());
         }
     }
 
@@ -92,7 +92,7 @@ class DirNodeTest {
     public void testAddFileWithGivenFileNothingThrown() {
         try {
             dirRoot.addFile(files.get(0));
-            assertTrue(dirRoot.containsFile("DirNode.java"));
+            assertTrue(dirRoot.containsFile("Dir.java"));
 
             dirRoot.addFile(files.get(1));
             assertTrue(dirRoot.containsFile("File.java"));
@@ -108,15 +108,15 @@ class DirNodeTest {
             dirRoot.addFile(files.get(0));
             fail("DuplicateException expected");
         } catch (DuplicateException e) {
-            assertEquals("DirNode.addFile_File: File already exists.", e.getMessage());
+            assertEquals("Dir.addFile_File: File already exists.", e.getMessage());
         }
     }
 
     @Test
     public void testAddFileWithFileNameNothingThrown() {
         try {
-            dirRoot.addFile("DirNodeTest.java");
-            assertTrue(dirRoot.containsFile("DirNodeTest.java"));
+            dirRoot.addFile("DirTest.java");
+            assertTrue(dirRoot.containsFile("DirTest.java"));
 
             dirRoot.addFile("FileTest.java");
             assertTrue(dirRoot.containsFile("FileTest.java"));
@@ -133,7 +133,7 @@ class DirNodeTest {
             dirRoot.addFile("");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.addFile_String: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.addFile_String: File name must be nonblank string.", e.getMessage());
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         }
@@ -142,7 +142,7 @@ class DirNodeTest {
             dirRoot.addFile(" ");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.addFile_String: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.addFile_String: File name must be nonblank string.", e.getMessage());
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         }
@@ -151,7 +151,7 @@ class DirNodeTest {
             dirRoot.addFile("\t");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.addFile_String: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.addFile_String: File name must be nonblank string.", e.getMessage());
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         }
@@ -160,15 +160,15 @@ class DirNodeTest {
     @Test
     public void testAddFileWithFileNameExpectDuplicateException() {
         try {
-            dirRoot.addFile("DirNodeTest.java");
-            assertTrue(dirRoot.containsFile("DirNodeTest.java"));
+            dirRoot.addFile("DirTest.java");
+            assertTrue(dirRoot.containsFile("DirTest.java"));
 
-            dirRoot.addFile("DirNodeTest.java");
+            dirRoot.addFile("DirTest.java");
             fail("DuplicateException expected");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
         } catch (DuplicateException e) {
-            assertEquals("DirNode.addFile_String: File already exists.", e.getMessage());
+            assertEquals("Dir.addFile_String: File already exists.", e.getMessage());
         }
     }
 
@@ -178,7 +178,7 @@ class DirNodeTest {
         try {
             dirRoot.addFile(files.get(0));
             dirRoot.addFile(files.get(1));
-            assertEquals(files.get(0), dirRoot.getFile("DirNode.java"));
+            assertEquals(files.get(0), dirRoot.getFile("Dir.java"));
             assertEquals(files.get(1), dirRoot.getFile("File.java"));
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
@@ -195,7 +195,7 @@ class DirNodeTest {
             dirRoot.getFile("");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.getFile: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.getFile: File name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -204,7 +204,7 @@ class DirNodeTest {
             dirRoot.getFile(" ");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.getFile: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.getFile: File name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -213,7 +213,7 @@ class DirNodeTest {
             dirRoot.getFile("\t");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.getFile: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.getFile: File name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -228,7 +228,7 @@ class DirNodeTest {
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
         } catch (NotFoundException e) {
-            assertEquals("DirNode.getFile: File can't be found.", e.getMessage());
+            assertEquals("Dir.getFile: File can't be found.", e.getMessage());
         }
     }
 
@@ -238,9 +238,9 @@ class DirNodeTest {
             dirRoot.addFile(files.get(0));
             dirRoot.addFile(files.get(1));
 
-            assertTrue(dirRoot.containsFile("DirNode.java"));
-            dirRoot.deleteFile("DirNode.java");
-            assertFalse(dirRoot.containsFile("DirNode.java"));
+            assertTrue(dirRoot.containsFile("Dir.java"));
+            dirRoot.deleteFile("Dir.java");
+            assertFalse(dirRoot.containsFile("Dir.java"));
 
             assertTrue(dirRoot.containsFile("File.java"));
             dirRoot.deleteFile("File.java");
@@ -260,7 +260,7 @@ class DirNodeTest {
             dirRoot.deleteFile("");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.deleteFile: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.deleteFile: File name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -269,7 +269,7 @@ class DirNodeTest {
             dirRoot.deleteFile(" ");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.deleteFile: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.deleteFile: File name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -278,7 +278,7 @@ class DirNodeTest {
             dirRoot.deleteFile("\t");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.deleteFile: File name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.deleteFile: File name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -292,7 +292,7 @@ class DirNodeTest {
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
         } catch (NotFoundException e) {
-            assertEquals("DirNode.deleteFile: File can't be found.", e.getMessage());
+            assertEquals("Dir.deleteFile: File can't be found.", e.getMessage());
         }
     }
 
@@ -322,7 +322,7 @@ class DirNodeTest {
         ArrayList<String> nameList = new ArrayList<>();
 
         nameList.add("data.json");
-        nameList.add("DirNode.java");
+        nameList.add("Dir.java");
         nameList.add("Editor.java");
         nameList.add("File.java");
         nameList.add("README.md");
@@ -360,7 +360,7 @@ class DirNodeTest {
             dirRoot.addSubDir("");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         }
@@ -369,7 +369,7 @@ class DirNodeTest {
             dirRoot.addSubDir(" ");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         }
@@ -378,7 +378,7 @@ class DirNodeTest {
             dirRoot.addSubDir("\t");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
         } catch (DuplicateException e) {
             fail("DuplicateException shouldn't be thrown");
         }
@@ -393,7 +393,7 @@ class DirNodeTest {
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
         } catch (DuplicateException e) {
-            assertEquals("DirNode.addSubDir_String: Directory already exists.", e.getMessage());
+            assertEquals("Dir.addSubDir_String: Directory already exists.", e.getMessage());
         }
     }
 
@@ -415,7 +415,7 @@ class DirNodeTest {
             dirRoot.addSubDir(dirNonRoot);
             fail("DuplicateException expected");
         } catch (DuplicateException e) {
-            assertEquals("DirNode.addSubDir_DirNode: Directory already exists.", e.getMessage());
+            assertEquals("Dir.addSubDir_DirNode: Directory already exists.", e.getMessage());
         }
     }
 
@@ -424,8 +424,8 @@ class DirNodeTest {
         try {
             dirRoot.addSubDir("subdir1");
             dirRoot.addSubDir("subdir2");
-            DirNode subdir1 = dirRoot.getSubDir("subdir1");
-            DirNode subdir2 = dirRoot.getSubDir("subdir2");
+            Dir subdir1 = dirRoot.getSubDir("subdir1");
+            Dir subdir2 = dirRoot.getSubDir("subdir2");
 
             assertEquals("subdir1", subdir1.getName());
             assertEquals(0, subdir1.getNumFiles());
@@ -446,25 +446,25 @@ class DirNodeTest {
     @Test
     public void testGetSubDirExpectIllegalNameException() {
         try {
-            DirNode subdir1 = dirRoot.getSubDir("");
+            Dir subdir1 = dirRoot.getSubDir("");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.getSubDir: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.getSubDir: Directory name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
 
         try {
-            DirNode subdir1 = dirRoot.getSubDir(" ");
+            Dir subdir1 = dirRoot.getSubDir(" ");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.getSubDir: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.getSubDir: Directory name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
 
         try {
-            DirNode subdir1 = dirRoot.getSubDir("\t");
+            Dir subdir1 = dirRoot.getSubDir("\t");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.getSubDir: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.getSubDir: Directory name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -474,12 +474,12 @@ class DirNodeTest {
     public void testGetSubDirExpectNotFoundException() {
         try {
             assertEquals(0, dirRoot.getNumSubDirs());
-            DirNode nonexistentSubDir = dirRoot.getSubDir("nonexistentSubDir");
+            Dir nonexistentSubDir = dirRoot.getSubDir("nonexistentSubDir");
             fail("NotFoundException expected");
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
         } catch (NotFoundException e) {
-            assertEquals("DirNode.getSubDir: Directory can't be found.", e.getMessage());
+            assertEquals("Dir.getSubDir: Directory can't be found.", e.getMessage());
         }
     }
 
@@ -510,7 +510,7 @@ class DirNodeTest {
             dirRoot.deleteSubDir("");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -519,7 +519,7 @@ class DirNodeTest {
             dirRoot.deleteSubDir(" ");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -528,7 +528,7 @@ class DirNodeTest {
             dirRoot.deleteSubDir("\t");
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
-            assertEquals("DirNode.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
+            assertEquals("Dir.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
             fail("NotFoundException shouldn't be thrown");
         }
@@ -544,7 +544,7 @@ class DirNodeTest {
         } catch (IllegalNameException e) {
             fail("IllegalNameException shouldn't be thrown");
         } catch (NotFoundException e) {
-            assertEquals("DirNode.deleteSubDir: Directory can't be found.", e.getMessage());
+            assertEquals("Dir.deleteSubDir: Directory can't be found.", e.getMessage());
         }
 
     }
@@ -585,7 +585,7 @@ class DirNodeTest {
     public void testGetTotalNumFilesWithSubDirs() {
         try {
             dirRoot.addSubDir("subdir");
-            DirNode subdir = dirRoot.getSubDir("subdir");
+            Dir subdir = dirRoot.getSubDir("subdir");
             assertEquals(0, dirRoot.getTotalNumFiles());
 
             subdir.addFile("file2");
@@ -619,7 +619,7 @@ class DirNodeTest {
     public void testGetTotalNumSubDirsWithSubDirs() {
         try {
             dirRoot.addSubDir("subdir");
-            DirNode subdir = dirRoot.getSubDir("subdir");
+            Dir subdir = dirRoot.getSubDir("subdir");
             subdir.addSubDir("subsubdir");
             assertEquals(2, dirRoot.getTotalNumSubDirs());
         } catch (IllegalNameException e) {
@@ -636,9 +636,9 @@ class DirNodeTest {
     public void testGetGetAbsPath() {
         try {
             dirRoot.addSubDir("folder1");
-            DirNode folder1 = dirRoot.getSubDir("folder1");
+            Dir folder1 = dirRoot.getSubDir("folder1");
             folder1.addSubDir("folder2");
-            DirNode folder2 = folder1.getSubDir("folder2");
+            Dir folder2 = folder1.getSubDir("folder2");
 
             assertEquals("~", dirRoot.getAbsPath());
             assertEquals("~/folder1", folder1.getAbsPath());

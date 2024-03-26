@@ -1,16 +1,16 @@
 package persistence;
 
-import model.DirNode;
+import model.Dir;
 import model.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JsonTest {
-    protected void checkDir(String name, Boolean isRootDir, int numFiles, int numSubDirs, DirNode dirNode) {
-        assertEquals(name, dirNode.getName());
-        assertEquals(isRootDir, dirNode.isRootDir());
-        assertEquals(numFiles, dirNode.getNumFiles());
-        assertEquals(numSubDirs, dirNode.getNumSubDirs());
+    protected void checkDir(String name, Boolean isRootDir, int numFiles, int numSubDirs, Dir dir) {
+        assertEquals(name, dir.getName());
+        assertEquals(isRootDir, dir.isRootDir());
+        assertEquals(numFiles, dir.getNumFiles());
+        assertEquals(numSubDirs, dir.getNumSubDirs());
     }
 
     protected void checkFile(String name, String dateCreated, String dateModified, String content, File file) {

@@ -17,11 +17,11 @@ import java.util.Set;
  * Like a general file system, all files in the directory should have unique
  * names, and all subdirectories should have unique names.
  */
-public class DirNode implements Writable {
+public class Dir implements Writable {
     private final String name;
     private final boolean isRootDir;
-    private DirNode parentDir;
-    private final List<DirNode> subDirs;
+    private Dir parentDir;
+    private final List<Dir> subDirs;
     private final List<File> files;
     private final Set<String> subDirNames;
     private final Set<String> fileNames;
@@ -32,7 +32,7 @@ public class DirNode implements Writable {
      * EFFECTS:   create an empty (no file, no subdirectory) root directory
      *                with name "root"
      */
-    public DirNode() {
+    public Dir() {
         files = new ArrayList<>();
         subDirs = new ArrayList<>();
         name = "root";
@@ -47,8 +47,8 @@ public class DirNode implements Writable {
      *                with the given name; throws IllegalNameException if the
      *                given name is blank (i.e. empty or contains only white space
      */
-    public DirNode(String name) throws IllegalNameException {
-        checkDirNameLegality(name, "DirNode.DirNode");
+    public Dir(String name) throws IllegalNameException {
+        checkDirNameLegality(name, "Dir.Dir");
 
         files = new ArrayList<>();
         subDirs = new ArrayList<>();
@@ -65,7 +65,7 @@ public class DirNode implements Writable {
      *                same filename, throw DuplicateException if the filename exists
      */
     public void addFile(File file) throws DuplicateException {
-        checkDuplicateFile(file.getName(), "DirNode.addFile_File");
+        checkDuplicateFile(file.getName(), "Dir.addFile_File");
 
         files.add(file);
         fileNames.add(file.getName());
@@ -80,8 +80,8 @@ public class DirNode implements Writable {
      *            throws IllegalNameException if filename is blank
      */
     public void addFile(String fileName) throws IllegalNameException, DuplicateException {
-        checkFileNameLegality(fileName, "DirNode.addFile_String");
-        checkDuplicateFile(fileName, "DirNode.addFile_String");
+        checkFileNameLegality(fileName, "Dir.addFile_String");
+        checkDuplicateFile(fileName, "Dir.addFile_String");
 
         files.add(new File(fileName));
         fileNames.add(fileName);
@@ -95,8 +95,8 @@ public class DirNode implements Writable {
      *            throws NotFoundException if file with given name can't be found
      */
     public File getFile(String fileName) throws IllegalNameException, NotFoundException {
-        checkFileNameLegality(fileName, "DirNode.getFile");
-        checkFileExistence(fileName, "DirNode.getFile");
+        checkFileNameLegality(fileName, "Dir.getFile");
+        checkFileExistence(fileName, "Dir.getFile");
 
         for (File file: files) {
             if (file.getName().equals(fileName)) {
@@ -114,8 +114,8 @@ public class DirNode implements Writable {
      *            throws NotFoundException if file with given name can't be found
      */
     public void deleteFile(String fileName) throws IllegalNameException, NotFoundException {
-        checkFileNameLegality(fileName, "DirNode.deleteFile");
-        checkFileExistence(fileName, "DirNode.deleteFile");
+        checkFileNameLegality(fileName, "Dir.deleteFile");
+        checkFileExistence(fileName, "Dir.deleteFile");
 
         if (files.removeIf(file -> file.getName().equals(fileName))) {
             numFiles--;
@@ -130,13 +130,13 @@ public class DirNode implements Writable {
      *                this directory have the same name;
      *                throws DuplicateException if the dirname exists,
      */
-    public void addSubDir(DirNode dirNode) throws DuplicateException {
-        checkDuplicateSubDir(dirNode.getName(), "DirNode.addSubDir_DirNode");
+    public void addSubDir(Dir dir) throws DuplicateException {
+        checkDuplicateSubDir(dir.getName(), "Dir.addSubDir_DirNode");
 
-        subDirs.add(dirNode);
-        dirNode.addParentDir(this);
+        subDirs.add(dir);
+        dir.addParentDir(this);
         numSubDirs++;
-        subDirNames.add(dirNode.getName());
+        subDirNames.add(dir.getName());
     }
 
     /*
@@ -149,10 +149,10 @@ public class DirNode implements Writable {
      *                return true if the process is successful
      */
     public void addSubDir(String dirName) throws IllegalNameException, DuplicateException {
-        checkDirNameLegality(dirName, "DirNode.addSubDir_String");
-        checkDuplicateSubDir(dirName, "DirNode.addSubDir_String");
+        checkDirNameLegality(dirName, "Dir.addSubDir_String");
+        checkDuplicateSubDir(dirName, "Dir.addSubDir_String");
 
-        DirNode child = new DirNode(dirName);
+        Dir child = new Dir(dirName);
         subDirs.add(child);
         child.addParentDir(this);
         numSubDirs++;
@@ -165,8 +165,8 @@ public class DirNode implements Writable {
      * EFFECTS:   add a parent directory,
      *                return true if the process is successful, false otherwise
      */
-    private void addParentDir(DirNode dirNode) {
-        parentDir = dirNode;
+    private void addParentDir(Dir dir) {
+        parentDir = dir;
     }
 
     /*
@@ -175,13 +175,13 @@ public class DirNode implements Writable {
      *                throws IllegalNameException if dirName is blank
      *                throws NotFoundException if subdir doesn't exist
      */
-    public DirNode getSubDir(String dirName) throws IllegalNameException, NotFoundException {
-        checkDirNameLegality(dirName, "DirNode.getSubDir");
-        checkSubDirExistence(dirName, "DirNode.getSubDir");
+    public Dir getSubDir(String dirName) throws IllegalNameException, NotFoundException {
+        checkDirNameLegality(dirName, "Dir.getSubDir");
+        checkSubDirExistence(dirName, "Dir.getSubDir");
 
-        for (DirNode dirNode: subDirs) {
-            if (dirNode.getName().equals(dirName)) {
-                return dirNode;
+        for (Dir dir : subDirs) {
+            if (dir.getName().equals(dirName)) {
+                return dir;
             }
         }
         return null;
@@ -190,7 +190,7 @@ public class DirNode implements Writable {
     /*
      * EFFECTS:   return the parent directory of this directory
      */
-    public DirNode getParentDir() {
+    public Dir getParentDir() {
         return parentDir;
     }
 
@@ -202,8 +202,8 @@ public class DirNode implements Writable {
      *                throws NotFoundException if subdir doesn't exist
      */
     public void deleteSubDir(String dirName) throws IllegalNameException, NotFoundException {
-        checkDirNameLegality(dirName, "DirNode.deleteSubDir");
-        checkSubDirExistence(dirName, "DirNode.deleteSubDir");
+        checkDirNameLegality(dirName, "Dir.deleteSubDir");
+        checkSubDirExistence(dirName, "Dir.deleteSubDir");
 
         if (subDirs.removeIf(child -> child.getName().equals(dirName))) {
             numSubDirs--;
@@ -418,8 +418,8 @@ public class DirNode implements Writable {
     private JSONArray subDirsToJson() {
         JSONArray jsonArray = new JSONArray();
 
-        for (DirNode dirNode: subDirs) {
-            jsonArray.put(dirNode.toJson());
+        for (Dir dir : subDirs) {
+            jsonArray.put(dir.toJson());
         }
 
         return jsonArray;

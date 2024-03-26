@@ -1,6 +1,6 @@
 package persistence;
 
-import model.DirNode;
+import model.Dir;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -26,8 +26,8 @@ public class JsonWriter {
 
     // MODIFIES: this
     // EFFECTS:  writes JSON representation of given directory to file
-    public void write(DirNode dirNode) {
-        JSONObject json = dirNode.toJson();
+    public void write(Dir dir) {
+        JSONObject json = dir.toJson();
         writer.print(json.toString(TAB));
     }
 

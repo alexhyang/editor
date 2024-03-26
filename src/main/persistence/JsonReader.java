@@ -1,6 +1,6 @@
 package persistence;
 
-import model.DirNode;
+import model.Dir;
 import model.File;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
@@ -26,7 +26,7 @@ public class JsonReader {
 
     // EFFECTS:  reads file system from file and returns its root directory
     //     throws IOException if an error occurs reading data from file
-    public DirNode read() throws IOException {
+    public Dir read() throws IOException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseRootDirNode(jsonObject);
@@ -44,48 +44,48 @@ public class JsonReader {
     }
 
     // EFFECTS:  parse root directory from JSON object and returns it
-    private DirNode parseRootDirNode(JSONObject jsonObject) {
-        DirNode rootDir = new DirNode();
+    private Dir parseRootDirNode(JSONObject jsonObject) {
+        Dir rootDir = new Dir();
         addSubdirs(rootDir, jsonObject);
         addFiles(rootDir, jsonObject);
         return rootDir;
     }
 
     // EFFECTS:  parse a nonroot directory from JSON object and returns it
-    private DirNode parseDirNode(JSONObject jsonObject) {
+    private Dir parseDirNode(JSONObject jsonObject) {
         try {
-            DirNode dirNode = new DirNode(jsonObject.getString("name"));
-            addSubdirs(dirNode, jsonObject);
-            addFiles(dirNode, jsonObject);
-            return dirNode;
+            Dir dir = new Dir(jsonObject.getString("name"));
+            addSubdirs(dir, jsonObject);
+            addFiles(dir, jsonObject);
+            return dir;
         } catch (IllegalNameException e) {
             System.err.println(e.getMessage());
             return null;
         }
     }
 
-    // MODIFIES: dirNode
-    // EFFECTS:  add subdirectories to the given dirNode
-    private void addSubdirs(DirNode dirNode, JSONObject jsonObject) {
+    // MODIFIES: dir
+    // EFFECTS:  add subdirectories to the given dir
+    private void addSubdirs(Dir dir, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("subDirs");
 
         for (Object dirJsonObject: jsonArray) {
             try {
-                dirNode.addSubDir(parseDirNode((JSONObject) dirJsonObject));
+                dir.addSubDir(parseDirNode((JSONObject) dirJsonObject));
             } catch (DuplicateException e) {
                 System.err.println(e.getMessage());
             }
         }
     }
 
-    // MODIFIES: dirNode
-    // EFFECTS:  add files to the given dirNode
-    private void addFiles(DirNode dirNode, JSONObject jsonObject) {
+    // MODIFIES: dir
+    // EFFECTS:  add files to the given dir
+    private void addFiles(Dir dir, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("files");
 
         for (Object fileJsonObject : jsonArray) {
             try {
-                dirNode.addFile(parseFile((JSONObject) fileJsonObject));
+                dir.addFile(parseFile((JSONObject) fileJsonObject));
             } catch (DuplicateException e) {
                 System.err.println(e.getMessage());
             }

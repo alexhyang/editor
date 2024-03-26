@@ -1,6 +1,6 @@
 package ui;
 
-import model.DirNode;
+import model.Dir;
 import model.File;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
@@ -38,8 +38,8 @@ public class Terminal {
 
     private static final String JSON_STORE = "./data/fileSystem.json";
     private final Scanner input;
-    private final DirNode rootDir;
-    private DirNode currentDir;
+    private final Dir rootDir;
+    private Dir currentDir;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private boolean runProgram;
@@ -47,7 +47,7 @@ public class Terminal {
     // Citation: code of this method is based on FitLifeGymKiosk project
     // EFFECTS:  create a terminal and load file system from ./data/fileSystem.json
     public Terminal() {
-        DirNode rootDirTmp;
+        Dir rootDirTmp;
         input = new Scanner(System.in);
         runProgram = true;
         jsonWriter = new JsonWriter(JSON_STORE);
@@ -57,7 +57,7 @@ public class Terminal {
             rootDirTmp = jsonReader.read();
         } catch (IOException e) {
             System.out.println("IOException caught...");
-            rootDirTmp = new DirNode();
+            rootDirTmp = new Dir();
         }
         rootDir = rootDirTmp;
         currentDir = rootDir;
@@ -236,11 +236,11 @@ public class Terminal {
 
     // EFFECTS:  find directory based on the given array of relative path, if target dir exists,
     //               returns its dirNode, otherwise throws NotFoundException
-    private DirNode findDirectory(DirNode currentDirNode, String[] dirStrs) throws NotFoundException {
+    private Dir findDirectory(Dir currentDir, String[] dirStrs) throws NotFoundException {
         if (dirStrs.length == 0) {
-            return currentDirNode;
+            return currentDir;
         }
-        DirNode nextDir = findNextDirectory(currentDirNode, dirStrs[0]);
+        Dir nextDir = findNextDirectory(currentDir, dirStrs[0]);
         if (dirStrs.length == 1) {
             return nextDir;
         } else {
@@ -249,20 +249,20 @@ public class Terminal {
         }
     }
 
-    // EFFECTS:  return the next directory based on the given dirNode and nextDirName
+    // EFFECTS:  return the next directory based on the given dir and nextDirName
     //               throws NotFoundException if the directory can't be found
-    private DirNode findNextDirectory(DirNode dirNode, String nextDirName) throws NotFoundException {
+    private Dir findNextDirectory(Dir dir, String nextDirName) throws NotFoundException {
         if (nextDirName.equals("..")) {
-            if (dirNode.isRootDir()) {
+            if (dir.isRootDir()) {
                 return rootDir;
             } else {
-                return dirNode.getParentDir();
+                return dir.getParentDir();
             }
         } else if (nextDirName.equals("~")) {
             return rootDir;
-        } else if (dirNode.containsSubDir(nextDirName)) {
+        } else if (dir.containsSubDir(nextDirName)) {
             try {
-                return dirNode.getSubDir(nextDirName);
+                return dir.getSubDir(nextDirName);
             } catch (IllegalNameException e) {
                 System.err.println(e.getMessage());
                 throw new NotFoundException("Terminal.findNextDirectory: Can't find directory with illegal name.");
@@ -322,23 +322,23 @@ public class Terminal {
     }
 
     // EFFECTS: print contents of the given directory as a tree
-    private void tree(DirNode dirNode, int depth) {
+    private void tree(Dir dir, int depth) {
         String fileIndent = getChildrenLineHead(depth);
 
-        if (dirNode == currentDir) {
+        if (dir == currentDir) {
             System.out.println(".");
         } else {
             String selfIndent = getChildrenLineHead(depth - 1);
-            System.out.println(selfIndent + CONSOLE_TEXT_CYAN + dirNode.getName() + "\033[0m");
+            System.out.println(selfIndent + CONSOLE_TEXT_CYAN + dir.getName() + "\033[0m");
         }
-        dirNode.getOrderedSubDirNames().forEach(name -> {
+        dir.getOrderedSubDirNames().forEach(name -> {
             try {
-                tree(dirNode.getSubDir(name), depth + 1);
+                tree(dir.getSubDir(name), depth + 1);
             } catch (IllegalNameException | NotFoundException e) {
                 System.err.println(e.getMessage());
             }
         });
-        dirNode.getOrderedFileNames().forEach(name -> System.out.println(fileIndent + name));
+        dir.getOrderedFileNames().forEach(name -> System.out.println(fileIndent + name));
     }
 
     // EFFECTS: return leading string for folders and files with the given depth
@@ -385,23 +385,23 @@ public class Terminal {
 //        rootDir.addSubDir("src");
 //        rootDir.addSubDir("data");
 //
-//        DirNode src = rootDir.getSubDir("src");
+//        Dir src = rootDir.getSubDir("src");
 //        src.addSubDir("main");
 //        src.addSubDir("test");
 //
-//        DirNode main = src.getSubDir("main");
+//        Dir main = src.getSubDir("main");
 //        main.addSubDir("model");
 //        main.addSubDir("ui");
 //
-//        DirNode model = main.getSubDir("model");
+//        Dir model = main.getSubDir("model");
 //        try {
-//            model.addFile("DirNode.java");
+//            model.addFile("Dir.java");
 //            model.addFile("File.java");
 //        } catch (DuplicateException e) {
 //            // TODO: handle exception
 //        }
 //
-//        DirNode ui = main.getSubDir("ui");
+//        Dir ui = main.getSubDir("ui");
 //        try {
 //            ui.addFile("Main.java");
 //            ui.addFile("Terminal.java");
@@ -410,7 +410,7 @@ public class Terminal {
 //        }
 //
 //        src.getSubDir("test").addSubDir("model");
-//        DirNode testModel = src.getSubDir("test").getSubDir("model");
+//        Dir testModel = src.getSubDir("test").getSubDir("model");
 //        try {
 //            testModel.addFile("DirNodeTest.java");
 //            testModel.addFile("FileTest.java");
