@@ -66,22 +66,14 @@ class DirTest {
 
     @Test
     public void testConstructorExpectIllegalNameException() {
-        try {
-            Dir dir = new Dir("");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.Dir: Directory name must be nonblank string.", e.getMessage());
-        }
+        checkConstructorIllegalName("");
+        checkConstructorIllegalName(" ");
+        checkConstructorIllegalName("\t");
+    }
 
+    private void checkConstructorIllegalName(String dirName) {
         try {
-            Dir dir = new Dir(" ");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.Dir: Directory name must be nonblank string.", e.getMessage());
-        }
-
-        try {
-            Dir dir = new Dir("\t");
+            Dir dir = new Dir(dirName);
             fail("IllegalNameException shouldn't be thrown");
         } catch (IllegalNameException e) {
             assertEquals("Dir.Dir: Directory name must be nonblank string.", e.getMessage());
@@ -129,26 +121,14 @@ class DirTest {
 
     @Test
     public void testAddFileWithFileNameExpectIllegalNameException() {
-        try {
-            dirRoot.addFile("");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.addFile_String: File name must be nonblank string.", e.getMessage());
-        } catch (DuplicateException e) {
-            fail("DuplicateException shouldn't be thrown");
-        }
+        checkAddFileIllegalName("");
+        checkAddFileIllegalName(" ");
+        checkAddFileIllegalName("\t");
+    }
 
+    private void checkAddFileIllegalName(String fileName) {
         try {
-            dirRoot.addFile(" ");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.addFile_String: File name must be nonblank string.", e.getMessage());
-        } catch (DuplicateException e) {
-            fail("DuplicateException shouldn't be thrown");
-        }
-
-        try {
-            dirRoot.addFile("\t");
+            dirRoot.addFile(fileName);
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("Dir.addFile_String: File name must be nonblank string.", e.getMessage());
@@ -191,26 +171,14 @@ class DirTest {
 
     @Test
     public void testGetFileExpectIllegalNameException() {
-        try {
-            dirRoot.getFile("");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.getFile: File name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
+        checkGetFileIllegalName("");
+        checkGetFileIllegalName(" ");
+        checkGetFileIllegalName("\t");
+    }
 
+    private void checkGetFileIllegalName(String fileName) {
         try {
-            dirRoot.getFile(" ");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.getFile: File name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
-
-        try {
-            dirRoot.getFile("\t");
+            dirRoot.getFile(fileName);
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("Dir.getFile: File name must be nonblank string.", e.getMessage());
@@ -256,26 +224,14 @@ class DirTest {
 
     @Test
     public void testDeleteFileExpectIllegalNameException() {
-        try {
-            dirRoot.deleteFile("");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.deleteFile: File name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
+        checkDeleteFileIllegalName("");
+        checkDeleteFileIllegalName(" ");
+        checkDeleteFileIllegalName("\t");
+    }
 
+    private void checkDeleteFileIllegalName(String fileName) {
         try {
-            dirRoot.deleteFile(" ");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.deleteFile: File name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
-
-        try {
-            dirRoot.deleteFile("\t");
+            dirRoot.deleteFile(fileName);
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("Dir.deleteFile: File name must be nonblank string.", e.getMessage());
@@ -356,26 +312,14 @@ class DirTest {
 
     @Test
     public void testAddSubDirWithDirNameExpectIllegalNameException() {
-        try {
-            dirRoot.addSubDir("");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
-        } catch (DuplicateException e) {
-            fail("DuplicateException shouldn't be thrown");
-        }
+        checkAddSubDirIllegalName("");
+        checkAddSubDirIllegalName(" ");
+        checkAddSubDirIllegalName(" \t");
+    }
 
+    private void checkAddSubDirIllegalName(String dirName) {
         try {
-            dirRoot.addSubDir(" ");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
-        } catch (DuplicateException e) {
-            fail("DuplicateException shouldn't be thrown");
-        }
-
-        try {
-            dirRoot.addSubDir("\t");
+            dirRoot.addSubDir(dirName);
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("Dir.addSubDir_String: Directory name must be nonblank string.", e.getMessage());
@@ -445,24 +389,15 @@ class DirTest {
 
     @Test
     public void testGetSubDirExpectIllegalNameException() {
-        try {
-            Dir subdir1 = dirRoot.getSubDir("");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.getSubDir: Directory name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
+        checkGetSubDirIllegalName("");
+        checkGetSubDirIllegalName(" ");
+        checkGetSubDirIllegalName("\t");
+    }
 
+    private void checkGetSubDirIllegalName(String dirName) {
         try {
-            Dir subdir1 = dirRoot.getSubDir(" ");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.getSubDir: Directory name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
-
-        try {
-            Dir subdir1 = dirRoot.getSubDir("\t");
+            dirRoot.getSubDir(dirName);
+            fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("Dir.getSubDir: Directory name must be nonblank string.", e.getMessage());
         } catch (NotFoundException e) {
@@ -506,26 +441,14 @@ class DirTest {
 
     @Test
     public void testDeleteSubDirExpectIllegalNameException() {
-        try {
-            dirRoot.deleteSubDir("");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
+        checkDeleteSubDirIllegalName("");
+        checkDeleteSubDirIllegalName(" ");
+        checkDeleteSubDirIllegalName("\t");
+    }
 
+    private void checkDeleteSubDirIllegalName(String dirName) {
         try {
-            dirRoot.deleteSubDir(" ");
-            fail("IllegalNameException expected");
-        } catch (IllegalNameException e) {
-            assertEquals("Dir.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
-        } catch (NotFoundException e) {
-            fail("NotFoundException shouldn't be thrown");
-        }
-
-        try {
-            dirRoot.deleteSubDir("\t");
+            dirRoot.deleteSubDir(dirName);
             fail("IllegalNameException expected");
         } catch (IllegalNameException e) {
             assertEquals("Dir.deleteSubDir: Directory name must be nonblank string.", e.getMessage());
