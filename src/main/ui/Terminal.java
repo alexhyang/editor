@@ -5,11 +5,8 @@ import model.File;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
-import persistence.JsonReader;
-import persistence.JsonWriter;
+import persistence.FileSystemManager;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -36,30 +33,17 @@ public class Terminal {
     private static final String CONSOLE_TEXT_CYAN = "\033[0;36m";
     private static final String CONSOLE_TEXT_BRIGHT_BLUE_BOLD = "\033[1;94m";
 
-    private static final String JSON_STORE = "./data/fileSystem.json";
     private final Scanner input;
     private final Dir rootDir;
     private Dir currentDir;
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
     private boolean runProgram;
 
     // Citation: code of this method is based on FitLifeGymKiosk project
-    // EFFECTS:  create a terminal and load file system from ./data/fileSystem.json
+    // EFFECTS:  create a terminal and load file system using FileSystemManager
     public Terminal() {
-        Dir rootDirTmp;
         input = new Scanner(System.in);
         runProgram = true;
-        jsonWriter = new JsonWriter(JSON_STORE);
-        jsonReader = new JsonReader(JSON_STORE);
-
-        try {
-            rootDirTmp = jsonReader.read();
-        } catch (IOException e) {
-            System.out.println("IOException caught...");
-            rootDirTmp = new Dir();
-        }
-        rootDir = rootDirTmp;
+        rootDir = FileSystemManager.getFileSystemState();
         currentDir = rootDir;
     }
 
@@ -421,14 +405,7 @@ public class Terminal {
 
     // EFFECTS:  save the current directory tree state
     private void saveFileSystem() {
-        try {
-            jsonWriter.open();
-            jsonWriter.write(rootDir);
-            jsonWriter.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Destination file cannot be found");
-            e.printStackTrace();
-        }
+        FileSystemManager.saveFileSystemState(rootDir);
     }
 
     // EFFECTS: print terminal introduction
