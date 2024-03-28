@@ -9,25 +9,30 @@ public class FileSystemManager {
     private static final String JSON_STORE = "./data/fileSystem.json";
     private static JsonWriter jsonWriter;
     private static JsonReader jsonReader;
+    private static Dir rootDir;
 
-    // EFFECTS: fetch the saved file system from ./data/fileSystem.json
-    //   and return the root dir
-    public static Dir getFileSystemState() {
-        Dir rootDir;
+    public FileSystemManager() {
+        Dir rootDirTmp;
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         try {
-            rootDir = jsonReader.read();
+            rootDirTmp = jsonReader.read();
         } catch (IOException e) {
             System.out.println("IOException caught...");
-            rootDir = new Dir();
+            rootDirTmp = new Dir();
         }
+        rootDir = rootDirTmp;
+    }
+
+    // EFFECTS: fetch the saved file system from ./data/fileSystem.json
+    //   and return the root dir
+    public Dir getFileSystemState() {
         return rootDir;
     }
 
     // EFFECTS: save the current state of file system to ./data/fileSystem.json
     //   with the given root dir
-    public static void saveFileSystemState(Dir rootDir) {
+    public void saveFileSystemState(Dir rootDir) {
         try {
             jsonWriter.open();
             jsonWriter.write(rootDir);
