@@ -28,11 +28,12 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         this.WIDTH = width;
 
         // create the nodes
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(".");
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(
+                new NodeInfo(rootDir.getName(), rootDir.getAbsPath()));
         createNodes(root, rootDir);
 
         // create a tree that allows one selection at a time
-        tree = new JTree(root);
+        tree = new JTree(root, true);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 
@@ -68,7 +69,8 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         for (String subDirName : dir.getOrderedSubDirNames()) {
             try {
                 Dir subDir = dir.getSubDir(subDirName);
-                DefaultMutableTreeNode subDirTreeNode = new DefaultMutableTreeNode(subDirName);
+                DefaultMutableTreeNode subDirTreeNode = new DefaultMutableTreeNode(
+                        new NodeInfo(subDirName, subDir.getAbsPath()));
                 createNodes(subDirTreeNode, subDir);
                 treeNode.add(subDirTreeNode);
             } catch (IllegalNameException | NotFoundException e) {
@@ -80,7 +82,9 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
 
     private void addFileNodes(DefaultMutableTreeNode treeNode, Dir dir) {
         for (String fileName : dir.getOrderedFileNames()) {
-            DefaultMutableTreeNode fileTreeNode = new DefaultMutableTreeNode(fileName);
+            DefaultMutableTreeNode fileTreeNode = new DefaultMutableTreeNode(
+                    new NodeInfo(fileName, dir.getAbsPath() + "/" + fileName),
+                    false);
             treeNode.add(fileTreeNode);
         }
     }
@@ -88,5 +92,28 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     @Override
     public void valueChanged(TreeSelectionEvent e) {
         // TODO: implement method
+    }
+
+    // represents information of a tree node
+    private class NodeInfo {
+        private String name;
+        private String absPath;
+
+        public NodeInfo(String name, String absPath) {
+            this.name = name;
+            this.absPath = absPath;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAbsPath() {
+            return absPath;
+        }
+
+        public String toString() {
+            return name;
+        }
     }
 }
