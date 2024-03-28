@@ -26,7 +26,7 @@ public class FileSystemManager {
 
     // EFFECTS: fetch the saved file system from ./data/fileSystem.json
     //   and return the root dir
-    public Dir getFileSystemState() {
+    public Dir getRootDir() {
         return rootDir;
     }
 
