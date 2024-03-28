@@ -36,6 +36,8 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         tree = new JTree(root, true);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
+        // listen for when the selection changes
+        tree.addTreeSelectionListener(this);
 
         // create the scroll pane and add the tree to it
         JScrollPane treeView = new JScrollPane(tree);
@@ -70,7 +72,8 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
             try {
                 Dir subDir = dir.getSubDir(subDirName);
                 DefaultMutableTreeNode subDirTreeNode = new DefaultMutableTreeNode(
-                        new NodeInfo(subDirName, subDir.getAbsPath()));
+                        new NodeInfo(subDirName, subDir.getAbsPath()),
+                        true);
                 createNodes(subDirTreeNode, subDir);
                 treeNode.add(subDirTreeNode);
             } catch (IllegalNameException | NotFoundException e) {
@@ -91,7 +94,23 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {
-        // TODO: implement method
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+
+        if (node == null) {
+            return;
+        }
+
+        Object nodeInfo = node.getUserObject();
+        if (node.isLeaf() && !node.getAllowsChildren()) {
+            NodeInfo fileNode = (NodeInfo) nodeInfo;
+            displayFileContent(fileNode.absPath);
+        } else {
+            displayFileContent("");
+        }
+    }
+
+    private void displayFileContent(String content) {
+        editorPane.setText(content);
     }
 
     // represents information of a tree node
@@ -102,14 +121,6 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         public NodeInfo(String name, String absPath) {
             this.name = name;
             this.absPath = absPath;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getAbsPath() {
-            return absPath;
         }
 
         public String toString() {
