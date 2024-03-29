@@ -51,8 +51,6 @@ public class Terminal {
     // EFFECTS:  start the editor in terminal, add dummy files
     public void start() {
         printTermIntro();
-        // addDummyFiles();
-        // addNestedDummyFoldersAndFiles();
 
         String str;
         while (runProgram) {
@@ -338,70 +336,6 @@ public class Terminal {
         }
 
     }
-
-    // EFFECTS: add dummy files with some content
-    private void addDummyFiles() {
-        String longStr1 = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has "
-                + "been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley "
-                + "of type and scrambled it to make a type specimen book. It has survived not only five centuries, but "
-                + "also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in "
-                + "the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently "
-                + "with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-        String longStr2 = "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece "
-                + "of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a "
-                + "Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin "
-                + "words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in "
-                + "classical literature, discovered the undoubtable source.";
-        try {
-            rootDir.addFile(new File("dummy1.txt", longStr1));
-            rootDir.addFile(new File("dummy2.txt", longStr2));
-            rootDir.addFile(new File("dummy3.txt", longStr1));
-        } catch (IllegalNameException e) {
-            System.out.println(e.getMessage());
-        } catch (DuplicateException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    // EFFECTS: populate root directory with nested folders and files
-//    @SuppressWarnings("methodlength")
-//    private void addNestedDummyFoldersAndFiles() {
-//        rootDir.addSubDir("src");
-//        rootDir.addSubDir("data");
-//
-//        Dir src = rootDir.getSubDir("src");
-//        src.addSubDir("main");
-//        src.addSubDir("test");
-//
-//        Dir main = src.getSubDir("main");
-//        main.addSubDir("model");
-//        main.addSubDir("ui");
-//
-//        Dir model = main.getSubDir("model");
-//        try {
-//            model.addFile("Dir.java");
-//            model.addFile("File.java");
-//        } catch (DuplicateException e) {
-//            // TODO: handle exception
-//        }
-//
-//        Dir ui = main.getSubDir("ui");
-//        try {
-//            ui.addFile("Main.java");
-//            ui.addFile("Terminal.java");
-//        } catch (DuplicateException e) {
-//            // TODO: handle exception
-//        }
-//
-//        src.getSubDir("test").addSubDir("model");
-//        Dir testModel = src.getSubDir("test").getSubDir("model");
-//        try {
-//            testModel.addFile("DirNodeTest.java");
-//            testModel.addFile("FileTest.java");
-//        } catch (DuplicateException e) {
-//            // TODO: handle exception
-//        }
-//    }
 
     // EFFECTS:  save the current directory tree state
     private void saveFileSystem() {
