@@ -1,0 +1,36 @@
+{
+    "isRootDir": true,
+    "name": "root",
+    "files": [
+        {
+            "dateCreated": "Fri Mar 29 14:23:20 PDT 2024",
+            "name": "file1",
+            "dateModified": "Fri Mar 29 15:05:15 PDT 2024",
+            "content": "this is the content of file1"
+        },
+        {
+            "dateCreated": "Fri Mar 29 14:23:32 PDT 2024",
+            "name": "file2",
+            "dateModified": "Fri Mar 29 16:17:39 PDT 2024",
+            "content": "<html>\n  <head>\n    \n  <\/head>\n  <body>\n    this is the content of file2\n  <\/body>\n<\/html>\n"
+        }
+    ],
+    "subDirs": [
+        {
+            "isRootDir": false,
+            "name": "folder1",
+            "files": [{
+                "dateCreated": "Fri Mar 29 14:42:52 PDT 2024",
+                "name": "file1",
+                "dateModified": "Fri Mar 29 15:05:37 PDT 2024",
+                "content": "this is the content of \nanother file1"
+            }],
+            "subDirs": [{
+                "isRootDir": false,
+                "name": "folder2",
+                "files": [],
+                "subDirs": []
+            }]
+        }
+    ]
+}
