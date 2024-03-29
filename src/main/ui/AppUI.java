@@ -61,6 +61,11 @@ public class AppUI extends JFrame {
         addMenuItem(terminalMenu, new CloseTerminalAction(), null, false);
         menuBar.add(terminalMenu);
 
+        JMenu helpMenu = new JMenu("Help");
+        helpMenu.setMnemonic('H');
+        addMenuItem(helpMenu, new ShowHelpAction(), KeyStroke.getKeyStroke("control H"), true);
+        menuBar.add(helpMenu);
+
         setJMenuBar(menuBar);
     }
 
@@ -190,6 +195,20 @@ public class AppUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent evt) {
             // TODO: add save file action
+        }
+    }
+
+    // Represents the action to be taken when the user wants to close the terminal of the file system
+    private class ShowHelpAction extends AbstractAction {
+        ShowHelpAction() {
+            super("Show Help");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            String helpMessage = "ctrl + s:  save file";
+            JOptionPane.showMessageDialog(null, helpMessage, "Help",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }
