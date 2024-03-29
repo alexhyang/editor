@@ -165,6 +165,8 @@ public class AppUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent evt) {
             editorUI.saveFileContent();
+            JOptionPane.showMessageDialog(null, "File saved!", "File saved!",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
