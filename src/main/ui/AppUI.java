@@ -26,7 +26,7 @@ public class AppUI extends JFrame {
         fsManager = new FileSystemManager();
 
         // create and set up the window
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setContentPane(panel);
@@ -37,6 +37,7 @@ public class AppUI extends JFrame {
         addPanes();
 
         // Display the window
+        pack();
         setVisible(true);
     }
 
