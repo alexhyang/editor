@@ -12,18 +12,14 @@ import java.awt.event.ActionEvent;
 public class AppUI extends JFrame {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
-    private JTree fileTree;
-    private Terminal terminal;
+    private EditorUI editorUI;
+    private TerminalUI terminalUI;
 
-    private final Dir rootDir;
-    private Dir currentDir;
-    private File editingFile;
-    private boolean isEditingFileSaved;
+    private final FileSystemManager fsManager;
 
     public AppUI() {
         // load file system
-        rootDir = loadFileSystem();
-        currentDir = rootDir;
+        fsManager = new FileSystemManager();
 
         // create and set up the window
         JPanel panel = new JPanel();
@@ -41,7 +37,7 @@ public class AppUI extends JFrame {
     }
 
     private Dir loadFileSystem() {
-        return FileSystemManager.getFileSystemState();
+        return fsManager.getRootDir();
     }
 
     // Adds menu bar
@@ -72,8 +68,8 @@ public class AppUI extends JFrame {
 
     // Adds panes
     private void addPanes() {
-        JPanel editorPane = new EditorUI(rootDir, WIDTH - 20);
-        add(editorPane);
+        editorUI = new EditorUI(fsManager, WIDTH - 20);
+        add(editorUI);
 
         // JPanel terminalPane = new TerminalUI();
         // JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -102,7 +98,7 @@ public class AppUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-            // TODO: add save file action
+            editorUI.saveFileContent();
         }
     }
 

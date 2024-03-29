@@ -3,6 +3,7 @@ package ui;
 import model.Dir;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
+import persistence.FileSystemManager;
 
 import javax.swing.*;
 
@@ -20,23 +21,20 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     private static int HEIGHT = 500;
     private static final int DIVIDER_SIZE = 4;
 
-    private JEditorPane editorPane;
-    private JTree tree;
+    private final JEditorPane editorPane;
+    private final JTree tree;
 
-    public EditorUI(Dir rootDir, int width) {
+    private final FileSystemManager fsManager;
+    private String currentAbsPath;
+
+    public EditorUI(FileSystemManager fsManager, int width) {
         super(new GridLayout(0, 1));
-        this.WIDTH = width;
+        WIDTH = width;
+        this.fsManager = fsManager;
 
-        // create the nodes
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(
-                new NodeInfo(rootDir.getName(), rootDir.getAbsPath()));
-        createNodes(root, rootDir);
-
-        // create a tree that allows one selection at a time
-        tree = new JTree(root, true);
+        // create and setup tree
+        tree = generateTree();
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
-        // listen for when the selection changes
         tree.addTreeSelectionListener(this);
 
         // create the scroll pane and add the tree to it
@@ -62,11 +60,24 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         add(splitPane);
     }
 
+    // EFFECTS: generate tree based on file system and return it as JTree
+    private JTree generateTree() {
+        Dir rootDir = fsManager.getRootDir();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(
+                new NodeInfo(rootDir.getName(), rootDir.getAbsPath()));
+        createNodes(root, rootDir);
+        return new JTree(root, true);
+    }
+
+    // MODIFIES: treeNode
+    // EFFECTS:  create treeNode based on its corresponding directory
     private void createNodes(DefaultMutableTreeNode treeNode, Dir dir) {
         addDirectoryNodes(treeNode, dir);
         addFileNodes(treeNode, dir);
     }
 
+    // MODIFIES: treeNode
+    // EFFECTS:  add subdirectories in the given dir as children treeNode that allows children
     private void addDirectoryNodes(DefaultMutableTreeNode treeNode, Dir dir) {
         for (String subDirName : dir.getOrderedSubDirNames()) {
             try {
@@ -83,6 +94,8 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         }
     }
 
+    // MODIFIES: treeNode
+    // EFFECTS:  add files in the given dir as children treeNode that doesn't allow children
     private void addFileNodes(DefaultMutableTreeNode treeNode, Dir dir) {
         for (String fileName : dir.getOrderedFileNames()) {
             DefaultMutableTreeNode fileTreeNode = new DefaultMutableTreeNode(
@@ -103,20 +116,27 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         Object nodeInfo = node.getUserObject();
         if (node.isLeaf() && !node.getAllowsChildren()) {
             NodeInfo fileNode = (NodeInfo) nodeInfo;
-            displayFileContent(fileNode.absPath);
+            currentAbsPath = fileNode.absPath;
+            editorPane.setEditable(true);
+            editorPane.setText(fsManager.getFileContent(currentAbsPath));
         } else {
-            displayFileContent("");
+            NodeInfo dirNode = (NodeInfo) nodeInfo;
+            currentAbsPath = dirNode.absPath;
+            editorPane.setEditable(false);
+            editorPane.setText(fsManager.getDirInfo(currentAbsPath));
         }
     }
 
-    private void displayFileContent(String content) {
-        editorPane.setText(content);
+    // EFFECTS: save content inside editor to file
+    public void saveFileContent() {
+        fsManager.updateFileContent(currentAbsPath, editorPane.getText());
+        fsManager.save();
     }
 
     // represents information of a tree node
-    private class NodeInfo {
-        private String name;
-        private String absPath;
+    private static class NodeInfo {
+        private final String name;
+        private final String absPath;
 
         public NodeInfo(String name, String absPath) {
             this.name = name;
