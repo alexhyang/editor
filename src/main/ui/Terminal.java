@@ -7,7 +7,6 @@ import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
 import persistence.FileSystemManager;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -34,7 +33,7 @@ public class Terminal {
     private static final String CONSOLE_TEXT_BRIGHT_BLUE_BOLD = "\033[1;94m";
 
     private final Scanner input;
-    private final Dir rootDir;
+    private final FileSystemManager fsManager;
     private Dir currentDir;
     private boolean runProgram;
 
@@ -43,8 +42,8 @@ public class Terminal {
     public Terminal() {
         input = new Scanner(System.in);
         runProgram = true;
-        rootDir = FileSystemManager.getFileSystemState();
-        currentDir = rootDir;
+        fsManager = new FileSystemManager();
+        currentDir = fsManager.getRootDir();
     }
 
     // Citation: code of this method is based on FitLifeGymKiosk project
@@ -201,7 +200,7 @@ public class Terminal {
     private void changeDirectory(String dirStr) {
         if (validateDirStr(dirStr)) {
             try {
-                currentDir = findDirectory(currentDir, dirStr.split("/"));
+                currentDir = fsManager.findDirectory(currentDir, dirStr.split("/"));
             } catch (NotFoundException e) {
                 System.out.println("cd: no such directory: " + dirStr);
             }
@@ -216,43 +215,6 @@ public class Terminal {
         return true;
     }
 
-    // EFFECTS:  find directory based on the given array of relative path, if target dir exists,
-    //               returns its dirNode, otherwise throws NotFoundException
-    private Dir findDirectory(Dir currentDir, String[] dirStrs) throws NotFoundException {
-        if (dirStrs.length == 0) {
-            return currentDir;
-        }
-        Dir nextDir = findNextDirectory(currentDir, dirStrs[0]);
-        if (dirStrs.length == 1) {
-            return nextDir;
-        } else {
-            String[] remainingDirStrs = Arrays.copyOfRange(dirStrs, 1, dirStrs.length);
-            return findDirectory(nextDir, remainingDirStrs);
-        }
-    }
-
-    // EFFECTS:  return the next directory based on the given dir and nextDirName
-    //               throws NotFoundException if the directory can't be found
-    private Dir findNextDirectory(Dir dir, String nextDirName) throws NotFoundException {
-        if (nextDirName.equals("..")) {
-            if (dir.isRootDir()) {
-                return rootDir;
-            } else {
-                return dir.getParentDir();
-            }
-        } else if (nextDirName.equals("~")) {
-            return rootDir;
-        } else if (dir.containsSubDir(nextDirName)) {
-            try {
-                return dir.getSubDir(nextDirName);
-            } catch (IllegalNameException e) {
-                System.err.println(e.getMessage());
-                throw new NotFoundException("Terminal.findNextDirectory: Can't find directory with illegal name.");
-            }
-        } else {
-            throw new NotFoundException("Terminal.findNextDirectory: no such directory.");
-        }
-    }
 
     // MODIFIES: this
     // EFFECTS:  create a subdirectory in current directory if it doesn't exist,
@@ -339,7 +301,7 @@ public class Terminal {
 
     // EFFECTS:  save the current directory tree state
     private void saveFileSystem() {
-        FileSystemManager.saveFileSystemState(rootDir);
+        fsManager.save();
     }
 
     // EFFECTS: print terminal introduction
