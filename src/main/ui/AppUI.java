@@ -1,7 +1,6 @@
 package ui;
 
 import model.Dir;
-import model.File;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
