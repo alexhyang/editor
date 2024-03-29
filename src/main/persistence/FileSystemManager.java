@@ -2,6 +2,7 @@ package persistence;
 
 import model.Dir;
 import model.File;
+import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
 
@@ -64,6 +65,24 @@ public class FileSystemManager {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS:  create a new file with the given absolute path
+    public void createFile(String absPath) throws NotFoundException, IllegalNameException, DuplicateException {
+        String dirPath = getLocationFromPath(absPath);
+        String fileName = getNameFromPath(absPath);
+        try {
+            Dir targetDir = findTargetDir(dirPath);
+            targetDir.addFile(fileName);
+            save();
+        } catch (NotFoundException e) {
+            throw new NotFoundException("FileSystemManager.createFile: target dir location doesn't exist.");
+        } catch (IllegalNameException e) {
+            throw new IllegalNameException("FileSystemManager.createFile: file name must be nonblank string.");
+        } catch (DuplicateException e) {
+            throw new DuplicateException("FileSystemManager.createFile: file already exists.");
+        }
+    }
+
     // EFFECTS: break the absolute path of a file or directory and return the absolute path of the directory
     //     where the file or the directory is, i.e., the absolute path of the parent node
     private String getLocationFromPath(String absPath) {
@@ -85,6 +104,24 @@ public class FileSystemManager {
             return targetDir.toString();
         } catch (NotFoundException e) {
             return "No such directory";
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS:  create a new directory with the given absolute path
+    public void createDir(String absPath) throws NotFoundException, IllegalNameException, DuplicateException {
+        String parentDirPath = getLocationFromPath(absPath);
+        String newDirName = getNameFromPath(absPath);
+        try {
+            Dir parentDir = findTargetDir(parentDirPath);
+            parentDir.addSubDir(newDirName);
+            save();
+        } catch (NotFoundException e) {
+            throw new NotFoundException("FileSystemManager.createDir: target dir location doesn't exist.");
+        } catch (IllegalNameException e) {
+            throw new IllegalNameException("FileSystemManager.createDir: directory name must be nonblank string.");
+        } catch (DuplicateException e) {
+            throw new DuplicateException("FileSystemManager.createDir: directory already exists.");
         }
     }
 
