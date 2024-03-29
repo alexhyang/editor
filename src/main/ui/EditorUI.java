@@ -11,13 +11,15 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.io.File;
+import java.util.Random;
 
 // Represents an editor ui with file tree and editor pane
 // Citation: Java Tutorial
 //     https://docs.oracle.com/javase/tutorial/uiswing/components/tree.html
 public class EditorUI extends JPanel implements TreeSelectionListener {
     private static int WIDTH;
-    private static int HEIGHT = 500;
+    private static int HEIGHT = 700;
     private static final int DIVIDER_SIZE = 4;
 
     private final JSplitPane splitPane;
@@ -34,14 +36,11 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         WIDTH = width;
         this.fsManager = fsManager;
 
-        // create and setup tree
         tree = generateTree();
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(this);
 
-        // create the scroll pane and add the tree to it
-        editorPane = new JEditorPane();
-        editorPane.setEditable(false);
+        editorPane = generateEditorPane();
         editorView = new JScrollPane(editorPane);
         treeView = new JScrollPane(tree);
         splitPane = generateSplitPane(treeView, editorView);
@@ -55,6 +54,23 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
                 new NodeInfo(rootDir.getName(), rootDir.getAbsPath()));
         createNodes(root, rootDir);
         return new JTree(root, true);
+    }
+
+    // EFFECTS: generate, set up, and return a new editor pane
+    private JEditorPane generateEditorPane() {
+        JEditorPane editorPane = new JEditorPane();
+        editorPane.setContentType("text/html");
+
+        Random random = new Random();
+        int randomNum = random.nextInt(2) + 1;
+        String filePath = "./data/startScreen" + randomNum + ".jpg";
+        File background = new File(filePath);
+        String imagePath = background.toURI().toString();
+        String htmlContent = "<html><body><img src='" + imagePath + "'</body></html>";
+        editorPane.setText(htmlContent);
+        editorPane.setEditable(false);
+
+        return editorPane;
     }
 
     // EFFECTS: generate and set up split pane and return it

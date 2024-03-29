@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 // Citation: class is based on CPSC210/AlarmSystem
 public class AppUI extends JFrame {
     private static final int WIDTH = 800;
-    private static final int HEIGHT = 800;
+    private static final int HEIGHT = 1000;
     private EditorUI editorUI;
     private TerminalUI terminalUI;
 
