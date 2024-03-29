@@ -54,15 +54,28 @@ public class FileSystemManager {
 
     // EFFECTS: get file with absolution path
     private File getFile(String absPath) {
-        int indexOfDirFileDivider = absPath.lastIndexOf("/");
-        String dirPath = absPath.substring(0, indexOfDirFileDivider);
-        String fileName = absPath.substring(indexOfDirFileDivider + 1);
+        String dirPath = getLocationFromPath(absPath);
+        String fileName = getNameFromPath(absPath);
         try {
             Dir targetDir = findTargetDir(dirPath);
             return targetDir.getFile(fileName);
         } catch (NotFoundException | IllegalNameException e) {
             return null;
         }
+    }
+
+    // EFFECTS: break the absolute path of a file or directory and return the absolute path of the directory
+    //     where the file or the directory is, i.e., the absolute path of the parent node
+    private String getLocationFromPath(String absPath) {
+        int indexOfDirFileDivider = absPath.lastIndexOf("/");
+        return absPath.substring(0, indexOfDirFileDivider);
+    }
+
+    // EFFECTS: break the absolute path of a file or directory and return the name of the file or directory,
+    //     i.e., the name of the child node
+    private String getNameFromPath(String absPath) {
+        int indexOfDirFileDivider = absPath.lastIndexOf("/");
+        return absPath.substring(indexOfDirFileDivider + 1);
     }
 
     // EFFECTS: get metadata of directory with the given absolute path
