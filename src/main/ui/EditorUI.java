@@ -3,7 +3,6 @@ package ui;
 import model.Dir;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
-import persistence.FileSystemManager;
 
 import javax.swing.*;
 

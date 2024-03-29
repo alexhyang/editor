@@ -1,10 +1,12 @@
-package persistence;
+package ui;
 
 import model.Dir;
 import model.File;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -5,7 +5,6 @@ import model.File;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
-import persistence.FileSystemManager;
 
 import java.util.List;
 import java.util.Scanner;
