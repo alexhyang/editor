@@ -2,9 +2,13 @@ package ui;
 
 import model.Dir;
 import model.File;
+import model.exceptions.DuplicateException;
+import model.exceptions.IllegalNameException;
+import model.exceptions.NotFoundException;
 import persistence.FileSystemManager;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 // Represents an AppUI
@@ -45,7 +49,9 @@ public class AppUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic('F');
-        addMenuItem(fileMenu, new OpenFileAction(), KeyStroke.getKeyStroke("control O"), true);
+        addMenuItem(fileMenu, new NewFileAction(), KeyStroke.getKeyStroke("control N"), true);
+        addMenuItem(fileMenu, new NewFolderAction(), KeyStroke.getKeyStroke("control F"), true, 'F');
+        // addMenuItem(fileMenu, new OpenFileAction(), KeyStroke.getKeyStroke("control O"), true);
         addMenuItem(fileMenu, new SaveFileAction(), KeyStroke.getKeyStroke("control S"), true);
         menuBar.add(fileMenu);
 
@@ -62,6 +68,16 @@ public class AppUI extends JFrame {
     private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator, boolean enabled) {
         JMenuItem menuItem = new JMenuItem(action);
         menuItem.setMnemonic(menuItem.getText().charAt(0));
+        menuItem.setAccelerator(accelerator);
+        menuItem.setEnabled(enabled);
+        theMenu.add(menuItem);
+    }
+
+    // Adds an item with given handler to the given menu and set the mnenomic to the given mnemonic
+    private void addMenuItem(JMenu theMenu, AbstractAction action,
+                             KeyStroke accelerator, boolean enabled, char mnemonic) {
+        JMenuItem menuItem = new JMenuItem(action);
+        menuItem.setMnemonic(mnemonic);
         menuItem.setAccelerator(accelerator);
         menuItem.setEnabled(enabled);
         theMenu.add(menuItem);
@@ -88,6 +104,54 @@ public class AppUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent evt) {
             // TODO: add open file action
+        }
+    }
+
+    // Represents the action to be taken when the user wants to open a file in the file system
+    private class NewFileAction extends AbstractAction {
+        NewFileAction() {
+            super("New File");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            String absPath = JOptionPane.showInputDialog(null,
+                    "File absolute path? (e.g. ~/fileName)",
+                    "Enter file absolution path",
+                    JOptionPane.QUESTION_MESSAGE);
+            try {
+                fsManager.createFile(absPath);
+                editorUI.updateTree();
+                getContentPane().revalidate();
+                getContentPane().repaint();
+            } catch (NotFoundException | IllegalNameException | DuplicateException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    // Represents the action to be taken when the user wants to open a file in the file system
+    private class NewFolderAction extends AbstractAction {
+        NewFolderAction() {
+            super("New Folder");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            String absPath = JOptionPane.showInputDialog(null,
+                    "Folder absolute path? (e.g. ~/folderName)",
+                    "Enter Folder absolution path",
+                    JOptionPane.QUESTION_MESSAGE);
+            try {
+                fsManager.createDir(absPath);
+                editorUI.updateTree();
+                getContentPane().revalidate();
+                getContentPane().repaint();
+            } catch (NotFoundException | IllegalNameException | DuplicateException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
