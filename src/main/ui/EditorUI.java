@@ -38,12 +38,25 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         tree.addTreeSelectionListener(this);
 
         // create the scroll pane and add the tree to it
-        JScrollPane treeView = new JScrollPane(tree);
         editorPane = new JEditorPane();
         editorPane.setEditable(false);
         JScrollPane editorView = new JScrollPane(editorPane);
+        JScrollPane treeView = new JScrollPane(tree);
+        JSplitPane splitPane = generateSplitPane(treeView, editorView);
+        add(splitPane);
+    }
 
-        // add the scroll panes to a split pane
+    // EFFECTS: generate tree based on file system and return it as JTree
+    private JTree generateTree() {
+        Dir rootDir = fsManager.getRootDir();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(
+                new NodeInfo(rootDir.getName(), rootDir.getAbsPath()));
+        createNodes(root, rootDir);
+        return new JTree(root, true);
+    }
+
+    // EFFECTS: generate and set up split pane and return it
+    private JSplitPane generateSplitPane(JScrollPane treeView, JScrollPane editorView) {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setLeftComponent(treeView);
         splitPane.setRightComponent(editorView);
@@ -56,17 +69,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         splitPane.setDividerLocation(150);
         splitPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-        // add the split pane to this panel
-        add(splitPane);
-    }
-
-    // EFFECTS: generate tree based on file system and return it as JTree
-    private JTree generateTree() {
-        Dir rootDir = fsManager.getRootDir();
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(
-                new NodeInfo(rootDir.getName(), rootDir.getAbsPath()));
-        createNodes(root, rootDir);
-        return new JTree(root, true);
+        return splitPane;
     }
 
     // MODIFIES: treeNode
