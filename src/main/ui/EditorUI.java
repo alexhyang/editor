@@ -21,8 +21,11 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     private static int HEIGHT = 500;
     private static final int DIVIDER_SIZE = 4;
 
+    private final JSplitPane splitPane;
     private final JEditorPane editorPane;
-    private final JTree tree;
+    private final JScrollPane editorView;
+    private JScrollPane treeView;
+    private JTree tree;
 
     private final FileSystemManager fsManager;
     private String currentAbsPath;
@@ -40,9 +43,9 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         // create the scroll pane and add the tree to it
         editorPane = new JEditorPane();
         editorPane.setEditable(false);
-        JScrollPane editorView = new JScrollPane(editorPane);
-        JScrollPane treeView = new JScrollPane(tree);
-        JSplitPane splitPane = generateSplitPane(treeView, editorView);
+        editorView = new JScrollPane(editorPane);
+        treeView = new JScrollPane(tree);
+        splitPane = generateSplitPane(treeView, editorView);
         add(splitPane);
     }
 
@@ -134,6 +137,18 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     public void saveFileContent() {
         fsManager.updateFileContent(currentAbsPath, editorPane.getText());
         fsManager.save();
+    }
+
+    // EFFECTS: update the tree after creating new file or directory
+    public void updateTree() {
+        tree = generateTree();
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.addTreeSelectionListener(this);
+        treeView = new JScrollPane(tree);
+        splitPane.setLeftComponent(treeView);
+        splitPane.setDividerSize(DIVIDER_SIZE);
+        splitPane.setDividerLocation(150);
+        splitPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
     // represents information of a tree node
