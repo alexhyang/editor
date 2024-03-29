@@ -19,6 +19,7 @@ public class AppUI extends JFrame {
 
     private final FileSystemManager fsManager;
 
+    // EFFECTS: create a GUI
     public AppUI() {
         // load file system
         fsManager = new FileSystemManager();
@@ -39,11 +40,8 @@ public class AppUI extends JFrame {
         setVisible(true);
     }
 
-    private Dir loadFileSystem() {
-        return fsManager.getRootDir();
-    }
-
-    // Adds menu bar
+    // MODIFIES: this
+    // EFFECTS: Adds menu bar
     private void addMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
@@ -68,7 +66,8 @@ public class AppUI extends JFrame {
         setJMenuBar(menuBar);
     }
 
-    // Adds an item with given handler to the given menu
+    // MODIFIES: theMenu
+    // EFFECTS: Adds an item with given handler to the given menu
     private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator, boolean enabled) {
         JMenuItem menuItem = new JMenuItem(action);
         menuItem.setMnemonic(menuItem.getText().charAt(0));
@@ -77,7 +76,8 @@ public class AppUI extends JFrame {
         theMenu.add(menuItem);
     }
 
-    // Adds an item with given handler to the given menu and set the mnenomic to the given mnemonic
+    // MODIFIES: theMenu
+    // EFFECTS: Adds an item with given handler to the given menu and set the mnenomic to the given mnemonic
     private void addMenuItem(JMenu theMenu, AbstractAction action,
                              KeyStroke accelerator, boolean enabled, char mnemonic) {
         JMenuItem menuItem = new JMenuItem(action);
@@ -87,7 +87,8 @@ public class AppUI extends JFrame {
         theMenu.add(menuItem);
     }
 
-    // Adds panes
+    // MODIFIERS: this
+    // EFFECTS: Adds panes
     private void addPanes() {
         editorUI = new EditorUI(fsManager, WIDTH - 20);
         add(editorUI);

@@ -41,7 +41,7 @@ public class FileSystemManager {
         return rootDir;
     }
 
-    // EFFECTS: get file content with absolute path
+    // EFFECTS: get content of file with the given absolute path
     public String getFileContent(String absPath) {
         if (getFile(absPath) != null) {
             return getFile(absPath).getContent();
@@ -49,13 +49,14 @@ public class FileSystemManager {
         return "Can't get file content!";
     }
 
+    // MODIFIES: this
     // EFFECTS: update the file with given absolute path with given content
     public void updateFileContent(String absPath, String content) {
         Date now = Calendar.getInstance().getTime();
         getFile(absPath).update(content, now);
     }
 
-    // EFFECTS: get file with absolution path
+    // EFFECTS: get file with absolution path, returns null if the path is invalid
     private File getFile(String absPath) {
         try {
             String dirPath = getLocationFromPath(absPath);
@@ -68,7 +69,9 @@ public class FileSystemManager {
     }
 
     // MODIFIES: this
-    // EFFECTS:  create a new file with the given absolute path
+    // EFFECTS:  create a new file with the given absolute path,
+    //    throws NotFoundException if the target directory to add the file doesn't exist,
+    //    throws IllegalNameException if the
     public void createFile(String absPath) throws NotFoundException, IllegalNameException, DuplicateException {
         String dirPath = getLocationFromPath(absPath);
         String fileName = getNameFromPath(absPath);
@@ -87,6 +90,7 @@ public class FileSystemManager {
 
     // EFFECTS: break the absolute path of a file or directory and return the absolute path of the directory
     //     where the file or the directory is, i.e., the absolute path of the parent node
+    //     throws IllegalNameException if the path is invalid
     private String getLocationFromPath(String absPath) throws IllegalNameException {
         if (absPath.isBlank() || !absPath.startsWith("~/")) {
             throw new IllegalNameException("FIleSystemManager.getLocationFromPath:\nabsolute path is invalid.");
@@ -130,7 +134,7 @@ public class FileSystemManager {
         }
     }
 
-    // EFFECTS: find and return the directory with the given
+    // EFFECTS: find and return the directory with the given absolute path
     private Dir findTargetDir(String absPath) throws NotFoundException {
         String[] dirStrs = absPath.split("/");
         if (!dirStrs[0].equals("~")) {
