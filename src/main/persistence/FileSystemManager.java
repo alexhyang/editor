@@ -55,9 +55,9 @@ public class FileSystemManager {
 
     // EFFECTS: get file with absolution path
     private File getFile(String absPath) {
-        String dirPath = getLocationFromPath(absPath);
-        String fileName = getNameFromPath(absPath);
         try {
+            String dirPath = getLocationFromPath(absPath);
+            String fileName = getNameFromPath(absPath);
             Dir targetDir = findTargetDir(dirPath);
             return targetDir.getFile(fileName);
         } catch (NotFoundException | IllegalNameException e) {
@@ -85,7 +85,10 @@ public class FileSystemManager {
 
     // EFFECTS: break the absolute path of a file or directory and return the absolute path of the directory
     //     where the file or the directory is, i.e., the absolute path of the parent node
-    private String getLocationFromPath(String absPath) {
+    private String getLocationFromPath(String absPath) throws IllegalNameException {
+        if (absPath.isBlank() || !absPath.startsWith("~/")) {
+            throw new IllegalNameException("FIleSystemManager.getLocationFromPath:\nabsolute path is invalid.");
+        }
         int indexOfDirFileDivider = absPath.lastIndexOf("/");
         return absPath.substring(0, indexOfDirFileDivider);
     }
