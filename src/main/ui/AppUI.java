@@ -45,24 +45,25 @@ public class AppUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic('F');
-        addMenuItem(fileMenu, new OpenFileAction(), KeyStroke.getKeyStroke("control O"));
-        addMenuItem(fileMenu, new SaveFileAction(), KeyStroke.getKeyStroke("control S"));
+        addMenuItem(fileMenu, new OpenFileAction(), KeyStroke.getKeyStroke("control O"), true);
+        addMenuItem(fileMenu, new SaveFileAction(), KeyStroke.getKeyStroke("control S"), true);
         menuBar.add(fileMenu);
 
-        JMenu terminalMenu = new JMenu("Terminal");
+        JMenu terminalMenu = new JMenu("Terminal (unfinished)");
         terminalMenu.setMnemonic('T');
-        addMenuItem(terminalMenu, new OpenTerminalAction(), KeyStroke.getKeyStroke("control T"));
-        addMenuItem(terminalMenu, new CloseTerminalAction(), null);
+        addMenuItem(terminalMenu, new OpenTerminalAction(), KeyStroke.getKeyStroke("control T"), false);
+        addMenuItem(terminalMenu, new CloseTerminalAction(), null, false);
         menuBar.add(terminalMenu);
 
         setJMenuBar(menuBar);
     }
 
     // Adds an item with given handler to the given menu
-    private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
+    private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator, boolean enabled) {
         JMenuItem menuItem = new JMenuItem(action);
         menuItem.setMnemonic(menuItem.getText().charAt(0));
         menuItem.setAccelerator(accelerator);
+        menuItem.setEnabled(enabled);
         theMenu.add(menuItem);
     }
 
