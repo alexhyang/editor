@@ -1,9 +1,15 @@
 package persistence;
 
 import model.Dir;
+import model.File;
+import model.exceptions.IllegalNameException;
+import model.exceptions.NotFoundException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 public class FileSystemManager {
     private static final String JSON_STORE = "./data/fileSystem.json";
@@ -11,6 +17,9 @@ public class FileSystemManager {
     private static JsonReader jsonReader;
     private static Dir rootDir;
 
+    // MODIFIES: this
+    // EFFECTS:  create a file system manager that load file system from ./data/fileSystem.json,
+    //     if the file system file doesn't exist, create a new file system with an empty root directory
     public FileSystemManager() {
         Dir rootDirTmp;
         jsonWriter = new JsonWriter(JSON_STORE);
@@ -24,15 +33,100 @@ public class FileSystemManager {
         rootDir = rootDirTmp;
     }
 
-    // EFFECTS: fetch the saved file system from ./data/fileSystem.json
-    //   and return the root dir
+    // EFFECTS: return the root dir
     public Dir getRootDir() {
         return rootDir;
     }
 
-    // EFFECTS: save the current state of file system to ./data/fileSystem.json
-    //   with the given root dir
-    public void saveFileSystemState(Dir rootDir) {
+    // EFFECTS: get file content with absolute path
+    public String getFileContent(String absPath) {
+        if (getFile(absPath) != null) {
+            return getFile(absPath).getContent();
+        }
+        return "Can't get file content!";
+    }
+
+    // EFFECTS: update the file with given absolute path with given content
+    public void updateFileContent(String absPath, String content) {
+        Date now = Calendar.getInstance().getTime();
+        getFile(absPath).update(content, now);
+    }
+
+    // EFFECTS: get file with absolution path
+    private File getFile(String absPath) {
+        int indexOfDirFileDivider = absPath.lastIndexOf("/");
+        String dirPath = absPath.substring(0, indexOfDirFileDivider);
+        String fileName = absPath.substring(indexOfDirFileDivider + 1);
+        try {
+            Dir targetDir = findTargetDir(dirPath);
+            return targetDir.getFile(fileName);
+        } catch (NotFoundException | IllegalNameException e) {
+            return null;
+        }
+    }
+
+    // EFFECTS: get metadata of directory with the given absolute path
+    public String getDirInfo(String absPath) {
+        try {
+            Dir targetDir = findTargetDir(absPath);
+            return targetDir.toString();
+        } catch (NotFoundException e) {
+            return "No such directory";
+        }
+    }
+
+    // EFFECTS: find and return the directory with the given
+    private Dir findTargetDir(String absPath) throws NotFoundException {
+        String[] dirStrs = absPath.split("/");
+        if (!dirStrs[0].equals("~")) {
+            throw new NotFoundException("FileSystemManager.findTargetDir: the first dir string must be ~");
+        }
+        Dir targetDir;
+        targetDir = findDirectory(rootDir, Arrays.copyOfRange(dirStrs, 1, dirStrs.length));
+        return targetDir;
+    }
+
+    // EFFECTS:  find directory based on the given array of relative path, if target dir exists,
+    //               returns its dirNode, otherwise throws NotFoundException
+    public Dir findDirectory(Dir currentDir, String[] dirStrs) throws NotFoundException {
+        if (dirStrs.length == 0) {
+            return currentDir;
+        }
+        Dir nextDir = findNextDirectory(currentDir, dirStrs[0]);
+        if (dirStrs.length == 1) {
+            return nextDir;
+        } else {
+            String[] remainingDirStrs = Arrays.copyOfRange(dirStrs, 1, dirStrs.length);
+            return findDirectory(nextDir, remainingDirStrs);
+        }
+    }
+
+    // EFFECTS:  return the next directory based on the given dir and nextDirName,
+    //               throws NotFoundException if the directory can't be found
+    private Dir findNextDirectory(Dir dir, String nextDirName) throws NotFoundException {
+        if (nextDirName.equals("..")) {
+            if (dir.isRootDir()) {
+                return rootDir;
+            } else {
+                return dir.getParentDir();
+            }
+        } else if (nextDirName.equals("~")) {
+            return rootDir;
+        } else if (dir.containsSubDir(nextDirName)) {
+            try {
+                return dir.getSubDir(nextDirName);
+            } catch (IllegalNameException e) {
+                System.err.println(e.getMessage());
+                throw new NotFoundException(
+                        "FileSystemManager.findNextDirectory: Can't find directory with illegal name.");
+            }
+        } else {
+            throw new NotFoundException("FileSystemManager.findNextDirectory: no such directory.");
+        }
+    }
+
+    // EFFECTS: save the current file system state to ./data/fileSystem.json
+    public void save() {
         try {
             jsonWriter.open();
             jsonWriter.write(rootDir);
