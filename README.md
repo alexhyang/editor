@@ -50,3 +50,7 @@ Visual component in GUI:
     from now on. To save the updated content, navigate to "File" -> "Save File" or use the shortcut "Ctrl + s". If the
     save action is not performed, all of changes will be lost.
 1.  Due to the nature of an text editor, the state of this application will be loaded when the program is started.
+
+## References
+1.  [startScreen1 image]("./data/startScreen1.jgp"): https://pbs.twimg.com/media/BnI4JxfCEAA5fZA.jpg
+1.  [startScreen2 image]("./data/startScreen2.jpg"): https://i.imgur.com/Ofj8dxE.jpeg
