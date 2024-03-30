@@ -52,5 +52,5 @@ Visual component in GUI:
 1.  Due to the nature of an text editor, the state of this application will be loaded when the program is started.
 
 ## References
-1.  [startScreen1 image]("./data/startScreen1.jgp"): https://pbs.twimg.com/media/BnI4JxfCEAA5fZA.jpg
-1.  [startScreen2 image]("./data/startScreen2.jpg"): https://i.imgur.com/Ofj8dxE.jpeg
+1.  [startScreen1 image](./data/startScreen1.jpg): https://pbs.twimg.com/media/BnI4JxfCEAA5fZA.jpg
+1.  [startScreen2 image](./data/startScreen2.jpg): https://i.imgur.com/Ofj8dxE.jpeg
