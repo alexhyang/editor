@@ -18,7 +18,6 @@ public class AppUI extends JFrame implements WindowListener {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 1000;
     private EditorUI editorUI;
-    private TerminalUI terminalUI;
 
     private final FileSystemManager fsManager;
 
