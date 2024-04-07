@@ -40,7 +40,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(this);
 
-        editorPane = generateEditorPane();
+        editorPane = initializeEditorPane();
         editorView = new JScrollPane(editorPane);
         treeView = new JScrollPane(tree);
         splitPane = generateSplitPane(treeView, editorView);
@@ -57,7 +57,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     }
 
     // EFFECTS: generate, set up, and return a new editor pane
-    private JEditorPane generateEditorPane() {
+    private JEditorPane initializeEditorPane() {
         JEditorPane editorPane = new JEditorPane();
         editorPane.setContentType("text/html");
 
@@ -139,6 +139,9 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
             NodeInfo fileNode = (NodeInfo) nodeInfo;
             currentAbsPath = fileNode.absPath;
             editorPane.setEditable(true);
+            editorPane.setFont(new Font("Arial", Font.PLAIN, 13));
+            editorPane.setText("");
+            editorPane.setContentType("text");
             editorPane.setText(fsManager.getFileContent(currentAbsPath));
         } else {
             NodeInfo dirNode = (NodeInfo) nodeInfo;
