@@ -27,6 +27,7 @@ public class Dir implements Writable {
     private final Set<String> fileNames;
     private int numFiles;
     private int numSubDirs;
+    private EventLog eventLog = EventLog.getInstance();
 
     /*
      * EFFECTS:   create an empty (no file, no subdirectory) root directory
@@ -70,6 +71,7 @@ public class Dir implements Writable {
         files.add(file);
         fileNames.add(file.getName());
         numFiles++;
+        eventLog.logEvent(new Event("added file: " + file.getName()));
     }
 
     /*
@@ -86,6 +88,7 @@ public class Dir implements Writable {
         files.add(new File(fileName));
         fileNames.add(fileName);
         numFiles++;
+        eventLog.logEvent(new Event("added file: " + fileName));
     }
 
     /*
@@ -120,6 +123,7 @@ public class Dir implements Writable {
         if (files.removeIf(file -> file.getName().equals(fileName))) {
             numFiles--;
             fileNames.remove(fileName);
+            eventLog.logEvent(new Event("removed file: " + fileName));
         }
     }
 
@@ -137,6 +141,7 @@ public class Dir implements Writable {
         dir.addParentDir(this);
         numSubDirs++;
         subDirNames.add(dir.getName());
+        eventLog.logEvent(new Event("added directory: " + dir.getName()));
     }
 
     /*
@@ -157,6 +162,7 @@ public class Dir implements Writable {
         child.addParentDir(this);
         numSubDirs++;
         subDirNames.add(dirName);
+        eventLog.logEvent(new Event("added directory: " + dirName));
     }
 
     /*
@@ -208,6 +214,7 @@ public class Dir implements Writable {
         if (subDirs.removeIf(child -> child.getName().equals(dirName))) {
             numSubDirs--;
             subDirNames.remove(dirName);
+            eventLog.logEvent(new Event("removed directory: " + dirName));
         }
     }
 

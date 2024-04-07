@@ -18,6 +18,7 @@ public class File implements Writable {
     private String content;
     private int size;
     private final String illegalFileNameMsg = "File name must be nonempty string.";
+    private EventLog eventLog = EventLog.getInstance();
 
     /*
      * EFFECTS:   create an empty file with the given name and current time stamp;
@@ -111,6 +112,7 @@ public class File implements Writable {
         this.content = content;
         this.size = content.length();
         this.dateModified = now;
+        eventLog.logEvent(new Event("updated file: " + name));
     }
 
     @Override
