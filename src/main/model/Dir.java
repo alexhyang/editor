@@ -71,7 +71,7 @@ public class Dir implements Writable {
         files.add(file);
         fileNames.add(file.getName());
         numFiles++;
-        eventLog.logEvent(new Event("added file: " + file.getName()));
+        eventLog.logEvent(new Event("added file to " + name + ": " + file.getName()));
     }
 
     /*
@@ -88,7 +88,7 @@ public class Dir implements Writable {
         files.add(new File(fileName));
         fileNames.add(fileName);
         numFiles++;
-        eventLog.logEvent(new Event("added file: " + fileName));
+        eventLog.logEvent(new Event("added file to " + name + ": " + fileName));
     }
 
     /*
@@ -123,7 +123,7 @@ public class Dir implements Writable {
         if (files.removeIf(file -> file.getName().equals(fileName))) {
             numFiles--;
             fileNames.remove(fileName);
-            eventLog.logEvent(new Event("removed file: " + fileName));
+            eventLog.logEvent(new Event("removed file from " + name + ": " + fileName));
         }
     }
 
@@ -141,7 +141,7 @@ public class Dir implements Writable {
         dir.addParentDir(this);
         numSubDirs++;
         subDirNames.add(dir.getName());
-        eventLog.logEvent(new Event("added directory: " + dir.getName()));
+        eventLog.logEvent(new Event("added directory to " + name + ": " + dir.getName()));
     }
 
     /*
@@ -162,7 +162,7 @@ public class Dir implements Writable {
         child.addParentDir(this);
         numSubDirs++;
         subDirNames.add(dirName);
-        eventLog.logEvent(new Event("added directory: " + dirName));
+        eventLog.logEvent(new Event("added directory to " + name + ": " + dirName));
     }
 
     /*
@@ -214,7 +214,7 @@ public class Dir implements Writable {
         if (subDirs.removeIf(child -> child.getName().equals(dirName))) {
             numSubDirs--;
             subDirNames.remove(dirName);
-            eventLog.logEvent(new Event("removed directory: " + dirName));
+            eventLog.logEvent(new Event("removed directory from " + name + ": " + dirName));
         }
     }
 
