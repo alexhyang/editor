@@ -1,6 +1,7 @@
 package ui;
 
-import model.Dir;
+import model.Event;
+import model.EventLog;
 import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
@@ -8,10 +9,12 @@ import model.exceptions.NotFoundException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 // Represents an AppUI
 // Citation: class is based on CPSC210/AlarmSystem
-public class AppUI extends JFrame {
+public class AppUI extends JFrame implements WindowListener {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 1000;
     private EditorUI editorUI;
@@ -27,6 +30,7 @@ public class AppUI extends JFrame {
         // create and set up the window
         JPanel panel = new JPanel(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(this);
 
         setContentPane(panel);
         setTitle("Editor");
@@ -97,6 +101,42 @@ public class AppUI extends JFrame {
         // JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         // splitPane.setTopComponent(editorPane);
         // splitPane.setTopComponent(terminalPane);
+
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        for (Event event: EventLog.getInstance()) {
+            System.out.println(event);
+        }
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
 
     }
 
