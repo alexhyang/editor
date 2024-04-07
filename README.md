@@ -9,13 +9,13 @@ built-in Notepad software. Although reinventing the wheel is not a good approach
 in practical software construction, it provides an ideal chance to understand 
 the problems that will occur under similar circumstances.
 
-## User Stories
-### Phase 0 requirements:
+## Phase 0 requirements:
+### User Stories
 - be able to add X to Y
 - be able to view a list of X in Y
 - (and two more user stories)
 
-### Phase 2 requirements:
+## Phase 2 requirements:
 - be able to save the entire state of the application
 - be able to reload the saved state
 
@@ -26,7 +26,7 @@ the problems that will occur under similar circumstances.
 - As a user, I want to be able to edit and save files in the editor
 - As a user, I want to be able to view a list of all files in the directory
 
-### Phase 3 requirements:
+## Phase 3 requirements:
 Stories supported in GUI:
 - As a user, I want to be able to add multiple files to a directory (root directory or any subdirectories)
 - As a user, I want to be able to read the content of any file in the directory
@@ -50,6 +50,19 @@ Visual component in GUI:
     from now on. To save the updated content, navigate to "File" -> "Save File" or use the shortcut "Ctrl + s". If the
     save action is not performed, all of changes will be lost.
 1.  Due to the nature of an text editor, the state of this application will be loaded when the program is started.
+
+## Phase 4 requirements:
+- log event when a directory or file is added to and removed from an existing directory
+
+### Task 2
+```
+Sun Apr 07 14:49:05 PDT 2024
+added file to root: file2
+Sun Apr 07 14:49:05 PDT 2024
+added file to root: fileToTestEventLog
+Sun Apr 07 14:49:09 PDT 2024
+updated file: fileToTestEventLog
+```
 
 ## References
 1.  [startScreen1 image](./data/startScreen1.jpg): https://pbs.twimg.com/media/BnI4JxfCEAA5fZA.jpg
