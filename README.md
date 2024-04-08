@@ -64,6 +64,24 @@ Sun Apr 07 14:49:09 PDT 2024
 updated file: fileToTestEventLog
 ```
 
+### Task 3
+1. UML diagram:
+[UML Design Diagram](./UML_Design_Diagram.png)
+
+1.  Project Potential Improvements and Refactoring:
+    1.  The composite design pattern can be applied to the model.Dir and model.File. The custom file system supporting
+        the editor is a tree structure. Each directory in the file system can contain files or subdirectories. It would
+        be ideal to apply the composite design pattern for the two classes. An interface named "DirNode" can be added to
+        model package and be implemented by the two classes.
+    1.  The current implementation of Dir deals with the CRUD operations of files and subdirectories in the same class.
+        It violates the single responsibility rule. Future development will need to separate the class into two task
+        managers, e.g. file manager and directory manager.
+    1.  The graphical user interface (specifically EditorUI class) regenerates JTree every time a file or directory is
+        created or deleted. This implementation mirrors the directory tree structure to the DefaultTreeModel. When the
+        file system is small and simple, the time it takes to recreate the JTree can be ignored. However, when the file
+        structure gets a lot more complicated, it would be a better idea to implement a custom tree model and custom
+        node type based on the directory tree structure.
+
 ## References
 1.  [startScreen1 image](./data/startScreen1.jpg): https://pbs.twimg.com/media/BnI4JxfCEAA5fZA.jpg
 1.  [startScreen2 image](./data/startScreen2.jpg): https://i.imgur.com/Ofj8dxE.jpeg
