@@ -66,7 +66,7 @@ updated file: fileToTestEventLog
 
 ### Task 3
 1. UML diagram:
-[UML Design Diagram](./UML_Design_Diagram.png)
+![UML Design Diagram](./UML_Design_Diagram.png)
 
 1.  Project Potential Improvements and Refactoring:
     1.  The composite design pattern can be applied to the model.Dir and model.File. The custom file system supporting
