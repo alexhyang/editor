@@ -1,3 +1,5 @@
 *.class
 workspace.xml
 /out
+/src/main/META-INF/MANIFEST.MF
+/data/fileSystem.json
