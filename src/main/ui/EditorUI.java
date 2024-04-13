@@ -1,6 +1,7 @@
 package ui;
 
 import model.Dir;
+import model.exceptions.DuplicateException;
 import model.exceptions.IllegalNameException;
 import model.exceptions.NotFoundException;
 
@@ -9,8 +10,11 @@ import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Random;
 
@@ -27,6 +31,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     private final JScrollPane editorView;
     private JScrollPane treeView;
     private JTree tree;
+    private TreePopup treePopup;
 
     private final FileSystemManager fsManager;
     private String currentAbsPath;
@@ -37,8 +42,17 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         this.fsManager = fsManager;
 
         tree = generateTree();
+        treePopup = new TreePopup(tree);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(this);
+        tree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    treePopup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
 
         editorPane = initializeEditorPane();
         editorView = new JScrollPane(editorPane);
@@ -161,7 +175,18 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     public void updateTree() {
         tree = generateTree();
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        treePopup = new TreePopup(tree);
         tree.addTreeSelectionListener(this);
+        tree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    treePopup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
+        editorPane.setText("");
         treeView = new JScrollPane(tree);
         splitPane.setLeftComponent(treeView);
         splitPane.setDividerSize(DIVIDER_SIZE);
@@ -181,6 +206,135 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
 
         public String toString() {
             return name;
+        }
+    }
+
+    // represents TreePopup menu
+    private class TreePopup extends JPopupMenu {
+        public TreePopup(JTree tree) {
+            addNewFileMenuItems();
+            addNewFolderMenuItems();
+            addDeleteMenuItem();
+        }
+
+        // EFFECTS: generate and initialize the "new file" operation for non-leaf tree node
+        private void addNewFileMenuItems() {
+            JMenuItem newFile = new JMenuItem("New File");
+            newFile.addActionListener(ae -> {
+                TreePath selectedPath = tree.getSelectionPath();
+                String fileName = JOptionPane.showInputDialog(null,
+                        "Enter File Name",
+                        "Create a new file",
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (selectedPath != null) {
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
+                    try {
+                        createLeafNode(selectedNode, fileName);
+                    } catch (NotFoundException | IllegalNameException | DuplicateException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
+            add(newFile);
+        }
+
+        // EFFECTS: add file with the given nodePath
+        private void createLeafNode(DefaultMutableTreeNode node, String fileName)
+                throws DuplicateException, NotFoundException, IllegalNameException {
+            String parentNodePath = getAbsPathFromNode(node);
+            if (!isLeafNode(node)) {
+                String leafNodePath = parentNodePath + "/" + fileName;
+                fsManager.createFile(leafNodePath);
+                fsManager.save();
+                updateTree();
+                JOptionPane.showMessageDialog(null, "File Created!", "File Created!",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        }
+
+        // EFFECTS: generate and initialize the "new file" operation for non-leaf tree node
+        private void addNewFolderMenuItems() {
+            JMenuItem newFile = new JMenuItem("New Folder");
+            newFile.addActionListener(ae -> {
+                TreePath selectedPath = tree.getSelectionPath();
+                String dirName = JOptionPane.showInputDialog(null,
+                        "Enter Folder Name",
+                        "Create a new folder",
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (selectedPath != null) {
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
+                    try {
+                        createNonLeafNode(selectedNode, dirName);
+                    } catch (NotFoundException | IllegalNameException | DuplicateException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
+            add(newFile);
+        }
+
+        // EFFECTS: add file with the given nodePath
+        private void createNonLeafNode(DefaultMutableTreeNode node, String dirName)
+                throws DuplicateException, NotFoundException, IllegalNameException {
+            String parentNodePath = getAbsPathFromNode(node);
+            if (!isLeafNode(node)) {
+                String leafNodePath = parentNodePath + "/" + dirName;
+                fsManager.createDir(leafNodePath);
+                fsManager.save();
+                updateTree();
+                JOptionPane.showMessageDialog(null, "File Created!", "File Created!",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        }
+
+        // EFFECTS: generate and initialize the "delete" operation for tree nodes
+        private void addDeleteMenuItem() {
+            JMenuItem delete = new JMenuItem("Delete");
+            delete.addActionListener(ae -> {
+                TreePath selectedPath = tree.getSelectionPath();
+                if (selectedPath != null) {
+                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
+                    try {
+                        deleteNode(selectedNode);
+                    } catch (NotFoundException | IllegalNameException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
+            add(delete);
+        }
+
+        // EFFECTS: delete file or subdirectories with the given nodePath
+        private void deleteNode(DefaultMutableTreeNode node) throws NotFoundException, IllegalNameException {
+            String msg = "";
+            String nodePath = getAbsPathFromNode(node);
+            if (isLeafNode(node)) {
+                fsManager.deleteFile(nodePath);
+                msg = "Deleted file: " + nodePath;
+            } else {
+                fsManager.deleteDir(nodePath);
+                msg = "Deleted directory: " + nodePath;
+            }
+            fsManager.save();
+            updateTree();
+            JOptionPane.showMessageDialog(null, msg, "Deleted!", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        // EFFECTS: return true if the given node is a leaf node
+        private boolean isLeafNode(DefaultMutableTreeNode node) {
+            return node.isLeaf() && !node.getAllowsChildren();
+        }
+
+        // EFFECTS: return absPath in file system given the DefaultTreeNode
+        private String getAbsPathFromNode(DefaultMutableTreeNode node) {
+            return ((NodeInfo) node.getUserObject()).absPath;
         }
     }
 }
