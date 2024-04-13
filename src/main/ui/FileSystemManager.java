@@ -71,7 +71,7 @@ public class FileSystemManager {
     // MODIFIES: this
     // EFFECTS:  create a new file with the given absolute path,
     //    throws NotFoundException if the target directory to add the file doesn't exist,
-    //    throws IllegalNameException if the
+    //    throws IllegalNameException if the file name is blank
     public void createFile(String absPath) throws NotFoundException, IllegalNameException, DuplicateException {
         String dirPath = getLocationFromPath(absPath);
         String fileName = getNameFromPath(absPath);
@@ -117,7 +117,10 @@ public class FileSystemManager {
     }
 
     // MODIFIES: this
-    // EFFECTS:  create a new directory with the given absolute path
+    // EFFECTS:  creates a new directory with the given absolute path
+    //    throws NotFoundException if the target directory location doesn't exist
+    //    throws IllegalNameException if the name is blank
+    //    throws DuplicateException if the directory already exists
     public void createDir(String absPath) throws NotFoundException, IllegalNameException, DuplicateException {
         String parentDirPath = getLocationFromPath(absPath);
         String newDirName = getNameFromPath(absPath);
