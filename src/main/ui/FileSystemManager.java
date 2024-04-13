@@ -88,6 +88,24 @@ public class FileSystemManager {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS:  delete a file with the given absolute path,
+    //    throws IllegalNameException if the file name is blank
+    //    throws NotFoundException if the file can't be found
+    public void deleteFile(String absPath) throws IllegalNameException, NotFoundException {
+        String dirPath = getLocationFromPath(absPath);
+        String fileName = getNameFromPath(absPath);
+        try {
+            Dir targetDir = findTargetDir(dirPath);
+            targetDir.deleteFile(fileName);
+            save();
+        } catch (IllegalNameException e) {
+            throw new IllegalNameException("FileSystemManager.deleteFile: file name must be nonblank string.");
+        } catch (NotFoundException e) {
+            throw new NotFoundException("FileSystemManager.deleteFile: file cannot be found.");
+        }
+    }
+
     // EFFECTS: break the absolute path of a file or directory and return the absolute path of the directory
     //     where the file or the directory is, i.e., the absolute path of the parent node
     //     throws IllegalNameException if the path is invalid
@@ -134,6 +152,24 @@ public class FileSystemManager {
             throw new IllegalNameException("FileSystemManager.createDir: directory name must be nonblank string.");
         } catch (DuplicateException e) {
             throw new DuplicateException("FileSystemManager.createDir: directory already exists.");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS:  delete a new file with the given absolute path,
+    //    throws IllegalNameException if the file name is blank
+    //    throws NotFoundException if the file can't be found
+    public void deleteDir(String absPath) throws IllegalNameException, NotFoundException {
+        String parentDirPath = getLocationFromPath(absPath);
+        String subdirName = getNameFromPath(absPath);
+        try {
+            Dir targetDir = findTargetDir(parentDirPath);
+            targetDir.deleteSubDir(subdirName);
+            save();
+        } catch (IllegalNameException e) {
+            throw new IllegalNameException("FileSystemManager.deleteFile: file name must be nonblank string.");
+        } catch (NotFoundException e) {
+            throw new NotFoundException("FileSystemManager.deleteFile: file cannot be found.");
         }
     }
 
