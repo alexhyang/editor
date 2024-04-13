@@ -139,7 +139,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
             NodeInfo fileNode = (NodeInfo) nodeInfo;
             currentAbsPath = fileNode.absPath;
             editorPane.setEditable(true);
-            editorPane.setFont(new Font("Arial", Font.PLAIN, 13));
+            editorPane.setFont(new Font("Arial", Font.PLAIN, 14));
             editorPane.setText("");
             editorPane.setContentType("text");
             editorPane.setText(fsManager.getFileContent(currentAbsPath));
