@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
@@ -223,6 +224,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
             if (!isLeafNode(selectedNode)) {
                 addNewFileMenuItems();
                 addNewFolderMenuItems();
+                addExpandMenuItems();
             }
             addDeleteMenuItem();
         }
