@@ -7,6 +7,6 @@ public class Main {
         // Terminal terminal = new Terminal();
         // terminal.start();
         // terminal.endProgram();
-        new AppUI();
+        new AppGUI();
     }
 }

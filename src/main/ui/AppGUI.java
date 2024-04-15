@@ -12,9 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-// Represents an AppUI
+// Represents an AppGUI
 // Citation: class is based on CPSC210/AlarmSystem
-public class AppUI extends JFrame implements WindowListener {
+public class AppGUI extends JFrame implements WindowListener {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 1000;
     private EditorUI editorUI;
@@ -22,7 +22,7 @@ public class AppUI extends JFrame implements WindowListener {
     private final FileSystemManager fsManager;
 
     // EFFECTS: create a GUI
-    public AppUI() {
+    public AppGUI() {
         // load file system
         fsManager = new FileSystemManager();
 
