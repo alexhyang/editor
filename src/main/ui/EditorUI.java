@@ -287,7 +287,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
                 fsManager.createDir(leafNodePath);
                 fsManager.save();
                 updateTree();
-                JOptionPane.showMessageDialog(null, "File Created!", "File Created!",
+                JOptionPane.showMessageDialog(null, "Folder Created!", "Folder Created!",
                         JOptionPane.INFORMATION_MESSAGE);
             }
 
