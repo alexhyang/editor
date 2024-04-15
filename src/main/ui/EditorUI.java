@@ -42,17 +42,9 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         this.fsManager = fsManager;
 
         tree = generateTree();
-        treePopup = new TreePopup(tree);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(this);
-        tree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    treePopup.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        });
+        tree.addMouseListener(new TreeNodeRightClickListener());
 
         editorPane = initializeEditorPane();
         editorView = new JScrollPane(editorPane);
@@ -175,16 +167,8 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     public void updateTree() {
         tree = generateTree();
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        treePopup = new TreePopup(tree);
         tree.addTreeSelectionListener(this);
-        tree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    treePopup.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        });
+        tree.addMouseListener(new TreeNodeRightClickListener());
 
         editorPane.setText("");
         treeView = new JScrollPane(tree);
@@ -209,11 +193,37 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         }
     }
 
+    // represents the MouseListener class that shows the popup menu when
+    //     there is a right-click on tree nodes
+    private class TreeNodeRightClickListener extends MouseAdapter {
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (SwingUtilities.isRightMouseButton(e)) {
+                int row = tree.getRowForLocation(e.getX(), e.getY());
+                if (row != -1) {
+                    tree.setSelectionRow(row);
+                    TreePath selectedPath = tree.getPathForLocation(e.getX(), e.getY());
+                    if (selectedPath != null) {
+                        DefaultMutableTreeNode selectedNode =
+                                (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
+                        treePopup = new TreePopup(selectedNode);
+                        treePopup.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            }
+        }
+    }
+
     // represents TreePopup menu
     private class TreePopup extends JPopupMenu {
-        public TreePopup(JTree tree) {
-            addNewFileMenuItems();
-            addNewFolderMenuItems();
+        private final DefaultMutableTreeNode selectedNode;
+
+        public TreePopup(DefaultMutableTreeNode selectedNode) {
+            this.selectedNode = selectedNode;
+            if (!isLeafNode(selectedNode)) {
+                addNewFileMenuItems();
+                addNewFolderMenuItems();
+            }
             addDeleteMenuItem();
         }
 
@@ -221,20 +231,15 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         private void addNewFileMenuItems() {
             JMenuItem newFile = new JMenuItem("New File");
             newFile.addActionListener(ae -> {
-                TreePath selectedPath = tree.getSelectionPath();
                 String fileName = JOptionPane.showInputDialog(null,
                         "Enter File Name",
                         "Create a new file",
                         JOptionPane.QUESTION_MESSAGE);
-
-                if (selectedPath != null) {
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-                    try {
-                        createLeafNode(selectedNode, fileName);
-                    } catch (NotFoundException | IllegalNameException | DuplicateException e) {
-                        JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                try {
+                    createLeafNode(selectedNode, fileName);
+                } catch (NotFoundException | IllegalNameException | DuplicateException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             });
             add(newFile);
@@ -259,20 +264,15 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         private void addNewFolderMenuItems() {
             JMenuItem newFile = new JMenuItem("New Folder");
             newFile.addActionListener(ae -> {
-                TreePath selectedPath = tree.getSelectionPath();
                 String dirName = JOptionPane.showInputDialog(null,
                         "Enter Folder Name",
                         "Create a new folder",
                         JOptionPane.QUESTION_MESSAGE);
-
-                if (selectedPath != null) {
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-                    try {
-                        createNonLeafNode(selectedNode, dirName);
-                    } catch (NotFoundException | IllegalNameException | DuplicateException e) {
-                        JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                try {
+                    createNonLeafNode(selectedNode, dirName);
+                } catch (NotFoundException | IllegalNameException | DuplicateException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             });
             add(newFile);
@@ -297,15 +297,11 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         private void addDeleteMenuItem() {
             JMenuItem delete = new JMenuItem("Delete");
             delete.addActionListener(ae -> {
-                TreePath selectedPath = tree.getSelectionPath();
-                if (selectedPath != null) {
-                    DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
-                    try {
-                        deleteNode(selectedNode);
-                    } catch (NotFoundException | IllegalNameException e) {
-                        JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                try {
+                    deleteNode(selectedNode);
+                } catch (NotFoundException | IllegalNameException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             });
             add(delete);
@@ -313,7 +309,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
 
         // EFFECTS: delete file or subdirectories with the given nodePath
         private void deleteNode(DefaultMutableTreeNode node) throws NotFoundException, IllegalNameException {
-            String msg = "";
+            String msg;
             String nodePath = getAbsPathFromNode(node);
             if (isLeafNode(node)) {
                 fsManager.deleteFile(nodePath);
