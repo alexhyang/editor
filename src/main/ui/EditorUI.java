@@ -257,8 +257,6 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
                 fsManager.createFile(leafNodePath);
                 fsManager.save();
                 updateTree();
-                JOptionPane.showMessageDialog(null, "File Created!", "File Created!",
-                        JOptionPane.INFORMATION_MESSAGE);
             }
 
         }
@@ -290,9 +288,9 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
                 fsManager.createDir(leafNodePath);
                 fsManager.save();
                 updateTree();
-                JOptionPane.showMessageDialog(null, "Folder Created!", "Folder Created!",
-                        JOptionPane.INFORMATION_MESSAGE);
             }
+
+        }
 
         }
 
