@@ -110,6 +110,7 @@ public class AppGUI extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
+        System.out.println("\n\n");
         for (Event event: EventLog.getInstance()) {
             System.out.println(event);
         }
