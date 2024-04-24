@@ -47,6 +47,8 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(this);
         tree.addMouseListener(new TreeNodeRightClickListener());
+        TreeNode root = (TreeNode) tree.getModel().getRoot();
+        expandAllChildNodes(new TreePath(root));
 
         editorPane = initializeEditorPane();
         editorView = new JScrollPane(editorPane);
@@ -178,6 +180,9 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         splitPane.setDividerSize(DIVIDER_SIZE);
         splitPane.setDividerLocation(DIVIDER_LOCATION);
         splitPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        TreeNode root = (TreeNode) tree.getModel().getRoot();
+        expandAllChildNodes(new TreePath(root));
     }
 
     // represents information of a tree node
@@ -193,6 +198,19 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         public String toString() {
             return name;
         }
+    }
+
+    // EFFECTS: expand the node of the given path
+    private void expandAllChildNodes(TreePath parentPath) {
+        TreeNode node = (TreeNode) parentPath.getLastPathComponent();
+        if (node.getChildCount() >= 0) {
+            for (int i = 0; i < node.getChildCount(); i++) {
+                TreeNode childNode = node.getChildAt(i);
+                TreePath path = parentPath.pathByAddingChild(childNode);
+                expandAllChildNodes(path);
+            }
+        }
+        tree.expandPath(parentPath);
     }
 
     // represents the MouseListener class that shows the popup menu when
@@ -292,6 +310,14 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
 
         }
 
+        // EFFECTS: generate and initialize the "new file" operation for non-leaf tree node
+        private void addExpandMenuItems() {
+            JMenuItem newFile = new JMenuItem("Expand");
+            newFile.addActionListener(ae -> {
+                TreeNode[] pathToNode = ((DefaultMutableTreeNode) selectedNode).getPath();
+                expandAllChildNodes(new TreePath(pathToNode));
+            });
+            add(newFile);
         }
 
         // EFFECTS: generate and initialize the "delete" operation for tree nodes
