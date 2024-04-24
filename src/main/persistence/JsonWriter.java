@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.io.*;
 
 // Represents a writer that writes JSON representation of Directory to file
-// Cite: this class is based on CPSC210/JsonSerializationDemo repository
+// Cite: this class is based on JsonSerializationDemo course repository
 public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;

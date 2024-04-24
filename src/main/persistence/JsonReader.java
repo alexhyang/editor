@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.stream.Stream;
 
 // Represents a reader that reads JSON representation to terminal
-// Cite: this class is based on CPSC210/JsonSerializationDemo
+// Cite: this class is based on JsonSerializationDemo course repository
 public class JsonReader {
     private String source;
 

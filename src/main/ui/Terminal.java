@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 // represents the editor terminal ui
-// the design of fields and some methods are based on FitLifeGymKiosk project from CPSC210 class
+// the design of fields and some methods are based on FitLifeGymKiosk course project
 public class Terminal {
     private static final String TERMINAL_NAME = "esh";
     private static final String HELP_COMMAND = "help";
