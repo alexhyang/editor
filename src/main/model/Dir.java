@@ -451,6 +451,6 @@ public class Dir implements Writable {
      */
     @Override
     public String toString() {
-        return getName() + " (" + getNumFiles() + " files)";
+        return getName() + " (" + getNumSubDirs() + " folders, " + getNumFiles() + " files)";
     }
 }
