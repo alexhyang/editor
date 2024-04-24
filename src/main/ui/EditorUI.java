@@ -26,6 +26,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
     private static int WIDTH;
     private static int HEIGHT = 700;
     private static final int DIVIDER_SIZE = 4;
+    private static final int DIVIDER_LOCATION = 300;
 
     private final JSplitPane splitPane;
     private final JEditorPane editorPane;
@@ -91,7 +92,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         editorView.setMinimumSize(editorMinimumSize);
         treeView.setMinimumSize(treeMinimumSize);
         splitPane.setDividerSize(DIVIDER_SIZE);
-        splitPane.setDividerLocation(150);
+        splitPane.setDividerLocation(DIVIDER_LOCATION);
         splitPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         return splitPane;
@@ -175,7 +176,7 @@ public class EditorUI extends JPanel implements TreeSelectionListener {
         treeView = new JScrollPane(tree);
         splitPane.setLeftComponent(treeView);
         splitPane.setDividerSize(DIVIDER_SIZE);
-        splitPane.setDividerLocation(150);
+        splitPane.setDividerLocation(DIVIDER_LOCATION);
         splitPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
