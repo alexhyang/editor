@@ -15,7 +15,7 @@ import java.awt.event.WindowListener;
 // Represents an AppGUI
 // Citation: class is based on CPSC210/AlarmSystem
 public class AppGUI extends JFrame implements WindowListener {
-    private static final int WIDTH = 800;
+    private static final int WIDTH = 1200;
     private static final int HEIGHT = 1000;
     private EditorUI editorUI;
 
