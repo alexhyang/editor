@@ -24,6 +24,7 @@ public class Terminal {
     private static final String CHANGE_DIRECTORY_COMMAND = "cd";
     private static final String CREATE_DIRECTORY_COMMAND = "mkdir";
     private static final String REMOVE_DIRECTORY_COMMAND = "rmdir";
+    private static final String LAUNCH_EDITOR_GUI_COMMAND = "editor";
     private static final String QUIT_COMMAND = "q";
 
     private static final String CONSOLE_TEXT_RESET = "\033[0m";
@@ -108,6 +109,9 @@ public class Terminal {
                     removeDirectory(arg);
                     saveFileSystem();
                     break;
+                case LAUNCH_EDITOR_GUI_COMMAND:
+                    launchGUI();
+                    break;
                 case QUIT_COMMAND:
                     saveFileSystem();
                     runProgram = false;
@@ -132,6 +136,7 @@ public class Terminal {
         System.out.println("   " + PRINT_WORKING_DIRECTORY_COMMAND + "                print current working directory");
         System.out.println("   " + LIST_ALL_COMMAND + "                 list all directories and files");
         System.out.println("   " + TREE_COMMAND + "               print content of current directory as tree");
+        System.out.println("   " + LAUNCH_EDITOR_GUI_COMMAND + "             launch editor GUI");
         System.out.println("   " + QUIT_COMMAND + "                  quit terminal");
     }
 
@@ -241,6 +246,10 @@ public class Terminal {
         }
     }
 
+    // EFFECTS: launch Editor GUI
+    private void launchGUI() {
+        new AppGUI();
+    }
 
     // EFFECTS: list all subdirectories and files in current directory
     private void listAll() {
